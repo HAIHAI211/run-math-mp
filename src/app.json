@@ -1,6 +1,9 @@
 {
   "pages": [
     "pages/index/main",
+    "pages/gift/main",
+    "pages/doc/main",
+    "pages/me/main",
     "pages/animationtest/main",
     "pages/vanttest/main",
     "pages/filetest/main",
@@ -11,8 +14,23 @@
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "WeChat",
+    "navigationBarTitleText": "步步数学",
     "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "list": [{
+      "pagePath": "pages/index/main",
+      "text": "首页"
+    }, {
+      "pagePath": "pages/gift/main",
+      "text": "礼品"
+    },{
+      "pagePath": "pages/doc/main",
+      "text": "资料"
+    },{
+      "pagePath": "pages/me/main",
+      "text": "我的"
+    }]
   },
   "plugins": {
     "tencentvideo": {

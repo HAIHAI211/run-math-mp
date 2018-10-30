@@ -10,7 +10,7 @@
 	"miniprogramRoot": "dist/",
 	"compileType": "miniprogram",
 	"appid": "wx4badd3f7b610bc77",
-	"projectname": "common-mini-program",
+	"projectname": "run-math-mp",
 	"condition": {
 		"search": {
 			"current": -1,
