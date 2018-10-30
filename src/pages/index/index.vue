@@ -1,24 +1,30 @@
 <template>
-  <div class="container" @click="clickHandle('test click', $event)">
-    <button @click="openSetting">打开设置页</button>
-    <button open-type="getUserInfo" @getuserinfo="getuserinfo">登录</button>
-    <div class="userinfo" @click="bindViewTap">
-      <img class="userinfo-avatar" v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" background-size="cover" />
-      <div class="userinfo-nickname">
-        <card :text="userInfo.nickName"></card>
+  <div class="index-page" @click="clickHandle('test click', $event)">
+    首页
+    <scroll-view class="scroll-view" scroll-x style="width: 100%">
+      <div class="scroll-view-item-wrap">
+        <div class="scroll-view-item" v-for="(item,itemIndex) in 10" :key="itemIndex"></div>
       </div>
-    </div>
-    <div class="usermotto">
-      <div class="user-motto">
-        <card :text="motto"></card>
-      </div>
-    </div>
+    </scroll-view>
+    <!--<button @click="openSetting">打开设置页</button>-->
+    <!--<button open-type="getUserInfo" @getuserinfo="getuserinfo">登录</button>-->
+    <!--<div class="userinfo" @click="bindViewTap">-->
+      <!--<img class="userinfo-avatar" v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" background-size="cover" />-->
+      <!--<div class="userinfo-nickname">-->
+        <!--<card :text="userInfo.nickName"></card>-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<div class="usermotto">-->
+      <!--<div class="user-motto">-->
+        <!--<card :text="motto"></card>-->
+      <!--</div>-->
+    <!--</div>-->
 
-    <form class="form-container">
-      <input type="text" class="form-control" v-model="motto" placeholder="v-model" />
-      <input type="text" class="form-control" v-model.lazy="motto" placeholder="v-model.lazy" />
-    </form>
-    <a href="/pages/counter/main" class="counter">去往Vuex示例页面</a>
+    <!--<form class="form-container">-->
+      <!--<input type="text" class="form-control" v-model="motto" placeholder="v-model" />-->
+      <!--<input type="text" class="form-control" v-model.lazy="motto" placeholder="v-model.lazy" />-->
+    <!--</form>-->
+    <!--<a href="/pages/counter/main" class="counter">去往Vuex示例页面</a>-->
     <van-popup
       :show="show"
       z-index="10"
@@ -95,45 +101,45 @@ export default {
   },
 
   created () {
-
+    wx.checkSession({ // 判断是否登录
+      success () {
+        console.log('已登录')
+        // session_key 未过期，并且在本生命周期一直有效
+      },
+      fail () {
+        console.log('未登录')
+        // session_key 已经失效，需要重新执行登录流程
+        wx.login() // 重新登录
+      }
+    })
+  },
+  onShareAppMessage: function (res) {
+    if (res.from === 'button') {
+      // 来自页面内转发按钮
+      console.log(res.target)
+    }
+    return {
+      title: '自定义转发标题',
+      path: '/page/user?id=123'
+    }
   }
 }
 </script>
 
-<style scoped>
-.userinfo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.userinfo-avatar {
-  width: 128rpx;
-  height: 128rpx;
-  margin: 20rpx;
-  border-radius: 50%;
-}
-
-.userinfo-nickname {
-  color: #aaa;
-}
-
-.usermotto {
-  margin-top: 150px;
-}
-
-.form-control {
-  display: block;
-  padding: 0 12px;
-  margin-bottom: 5px;
-  border: 1px solid #ccc;
-}
-
-.counter {
-  display: inline-block;
-  margin: 10px auto;
-  padding: 5px 10px;
-  color: blue;
-  border: 1px solid blue;
-}
+<style scoped lang="stylus">
+  .index-page{
+    .scroll-view{
+      .scroll-view-item-wrap{
+        display flex
+        .scroll-view-item{
+          flex 0 0 auto
+          width 200rpx
+          height 200rpx
+          background lightseagreen
+          margin-left 40rpx
+          border-radius 8rpx
+        }
+      }
+    }
+  }
 </style>

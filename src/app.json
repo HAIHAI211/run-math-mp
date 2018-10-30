@@ -18,9 +18,15 @@
     "navigationBarTextStyle": "black"
   },
   "tabBar": {
+    "color": "",
+    "selectedColor": "",
+    "backgroundColor": "",
+    "borderStyle": "",
     "list": [{
       "pagePath": "pages/index/main",
-      "text": "首页"
+      "text": "首页",
+      "iconPath": "",
+      "selectedIconPath": ""
     }, {
       "pagePath": "pages/gift/main",
       "text": "礼品"
