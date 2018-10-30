@@ -19,6 +19,23 @@
       <input type="text" class="form-control" v-model.lazy="motto" placeholder="v-model.lazy" />
     </form>
     <a href="/pages/counter/main" class="counter">去往Vuex示例页面</a>
+    <van-popup
+      :show="show"
+      z-index="10"
+      :close-on-click-overlay="true"
+      :overlay="true"
+      @close="onClose"
+      custom-style="top:500rpx;"
+      duration="300"
+    >
+      <div class="wrap">
+        <div class="title">
+          登录需要获得您的授权
+        </div>
+        <button open-type="getUserInfo" @getuserinfo="getuserinfo">同意</button>
+        <div class="btn" @click="refuse">拒绝</div>
+      </div>
+    </van-popup>
   </div>
 </template>
 
@@ -29,7 +46,8 @@ export default {
   data () {
     return {
       motto: 'Hello World',
-      userInfo: {}
+      userInfo: {},
+      show: false
     }
   },
 
@@ -38,6 +56,9 @@ export default {
   },
 
   methods: {
+    agree () {
+
+    },
     bindViewTap () {
       const url = '../logs/main'
       wx.navigateTo({ url })
