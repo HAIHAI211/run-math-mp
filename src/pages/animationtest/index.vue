@@ -4,6 +4,7 @@
       <span class="num">{{ num }}</span>
     </div>
     <div class="btn" @click="c">开始</div>
+    <div class="circle animation-circle" style="margin-top: 300rpx"></div>
   </div>
 </template>
 
@@ -47,12 +48,13 @@ export default {
 </script>
 
 <style scoped lang="stylus">
+  @import "~@/common/style/mixin.styl"
   .animationtest{
     display flex
     flex-direction column
     align-items center
     .circle{
-      width 200rpx
+      width px2rpx(100px)
       height 200rpx
       border-radius 50%
       display flex
@@ -71,4 +73,10 @@ export default {
       background lightblue
     }
   }
+  .animation-circle{
+    /*animation lanimation 1s ease-in infinite*/
+    animation: lanimation .5s ease-in 0s infinite alternate;
+    /*animation-delay 0.6s*/
+  }
+
 </style>

@@ -1,6 +1,7 @@
 <template>
   <div class="index-page" @click="clickHandle('test click', $event)">
     首页
+    <a href="/pages/animationtest/main">去往动画页面</a>
     <scroll-view class="scroll-view" scroll-x style="width: 100%">
       <div class="scroll-view-item-wrap">
         <div class="scroll-view-item" v-for="(item,itemIndex) in 10" :key="itemIndex"></div>
