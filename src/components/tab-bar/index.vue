@@ -5,7 +5,10 @@
                :key="index"
                hover-class="none"
                :class="['bar-item',{'active': index === activeIndex}]"
-               @click.stop="toPage(index === activeIndex, item.url)">{{ item.label }}</div>
+               @click.stop="toPage(index === activeIndex, item.url)">
+      <span :class="['iconfont',item.icon]"/>
+      <span class="text">{{ item.label }}</span>
+    </div>
   </div>
 </template>
 <script>
@@ -20,16 +23,24 @@
       return {
         items: [
           {
-            label: '简介',
+            label: '首页',
+            icon: 'icon-shouye1',
             url: '/pages/index/main'
           },
           {
-            label: '文章',
-            url: '/pages/article/main'
+            label: '礼品',
+            icon: 'icon-lipin',
+            url: '/pages/gift/main'
           },
           {
-            label: '留言',
-            url: '/pages/msg/main'
+            label: '偷步数',
+            icon: 'icon-xiezi',
+            url: '/pages/step/main'
+          },
+          {
+            label: '我的',
+            icon: 'icon-wode',
+            url: '/pages/me/main'
           }
         ]
       }
@@ -57,16 +68,26 @@
     position: fixed;
     z-index: 1000;
     display: flex;
-    background: rgba(255,255,255,.4);
+    background: #fff;
     -webkit-backdrop-filter: blur(6px);
     .bar-item{
       flex: 1;
-      text-align: center;
-      line-height: 45px;
-      color: #999;
-      font-size: 15px;
+      display flex
+      flex-direction column
+      align-items center
+      justify-content center
+      .text{
+        color #999999
+        font-size 22rpx
+      }
+      .iconfont{
+        color #B3B3B3
+        font-size 38rpx
+      }
       &.active{
-        color: #000;
+        .text, .iconfont{
+          color: #3ACF7A
+        }
       }
     }
   }

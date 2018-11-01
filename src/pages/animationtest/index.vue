@@ -4,7 +4,11 @@
       <span class="num">{{ num }}</span>
     </div>
     <div class="btn" @click="c">开始</div>
-    <div class="circle animation-circle" style="margin-top: 300rpx"></div>
+    <div class="circle animation-circle"></div>
+    <div class="circle" style="width: 400rpx;height: 400rpx;flex-direction: column">
+      <div style="font-size: 30rpx">LOL S8 全球总决赛倒计时</div>
+      <div style="font-size: 38rpx;">{{ seconds }}秒</div>
+    </div>
   </div>
 </template>
 
@@ -18,10 +22,20 @@ export default {
       step: 15,
       useAnimation: true,
       plus: true,
-      timeId: null
+      timeId: null,
+      seconds: 0
     }
   },
-
+  created () {
+    const now = this.$moment()
+    const finalGameTime = this.$moment('2018-11-03 15:00')
+    this.seconds = finalGameTime.diff(now, 'seconds')
+  },
+  mounted () {
+    setInterval(() => {
+      this.seconds -= 1
+    }, 1000)
+  },
   methods: {
     c () {
       if (this.timeId) {
@@ -63,6 +77,7 @@ export default {
       font-size 50rpx
       background lightseagreen
       color #fff
+      margin-top 200rpx
     }
     .btn{
       width 250rpx

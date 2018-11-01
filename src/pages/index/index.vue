@@ -1,12 +1,14 @@
 <template>
-  <div class="index-page" @click="clickHandle('test click', $event)">
-    首页
-    <a href="/pages/animationtest/main">去往动画页面</a>
-    <scroll-view class="scroll-view" scroll-x style="width: 100%">
-      <div class="scroll-view-item-wrap">
-        <div class="scroll-view-item" v-for="(item,itemIndex) in 10" :key="itemIndex"></div>
-      </div>
-    </scroll-view>
+  <div class="index-page">
+
+    <!--<web-view src="https://mp.weixin.qq.com/"></web-view>-->
+    <!--<official-account @load='officialLoad' @error="officialError"></official-account>-->
+    <!--<a href="/pages/animationtest/main">去往动画页面</a>-->
+    <!--<scroll-view class="scroll-view" scroll-x style="width: 100%">-->
+      <!--<div class="scroll-view-item-wrap">-->
+        <!--<div class="scroll-view-item" v-for="(item,itemIndex) in 10" :key="itemIndex"></div>-->
+      <!--</div>-->
+    <!--</scroll-view>-->
     <!--<button @click="openSetting">打开设置页</button>-->
     <!--<button open-type="getUserInfo" @getuserinfo="getuserinfo">登录</button>-->
     <!--<div class="userinfo" @click="bindViewTap">-->
@@ -43,11 +45,12 @@
         <div class="btn" @click="refuse">拒绝</div>
       </div>
     </van-popup>
+    <tab-bar/>
   </div>
 </template>
 
 <script>
-import card from '@/components/card'
+import tabBar from '@/components/tab-bar'
 
 export default {
   data () {
@@ -59,12 +62,13 @@ export default {
   },
 
   components: {
-    card
+    tabBar
   },
-
   methods: {
-    agree () {
-
+    officialLoad (e) {
+      console.log('e', e.mp.detail)
+    },
+    officialError (e) {
     },
     bindViewTap () {
       const url = '../logs/main'

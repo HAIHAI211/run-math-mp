@@ -2,7 +2,7 @@
   "pages": [
     "pages/index/main",
     "pages/gift/main",
-    "pages/doc/main",
+    "pages/step/main",
     "pages/me/main",
     "pages/animationtest/main",
     "pages/vanttest/main",
@@ -12,31 +12,10 @@
     "pages/counter/main"
   ],
   "window": {
-    "backgroundTextStyle": "light",
+    "backgroundTextStyle": "dark",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "步步数学",
     "navigationBarTextStyle": "black"
-  },
-  "tabBar": {
-    "color": "",
-    "selectedColor": "",
-    "backgroundColor": "",
-    "borderStyle": "",
-    "list": [{
-      "pagePath": "pages/index/main",
-      "text": "首页",
-      "iconPath": "",
-      "selectedIconPath": ""
-    }, {
-      "pagePath": "pages/gift/main",
-      "text": "礼品"
-    },{
-      "pagePath": "pages/doc/main",
-      "text": "资料"
-    },{
-      "pagePath": "pages/me/main",
-      "text": "我的"
-    }]
   },
   "plugins": {
     "tencentvideo": {
