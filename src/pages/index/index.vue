@@ -8,12 +8,12 @@
       </div>
       <div class="coin-charge-btn">{{chargeText}}</div>
       <div class="check-day">连续签到{{checkDays}}天</div>
-      <div class="check-in-btn">
+      <div class="check-in-btn up-down-animation">
         <div class="icon"></div>
         <span class="text">签到</span>
       </div>
       <div class="rule">活动规则></div>
-      <div class="share-btn">
+      <div class="share-btn up-down-animation">
         <div class="icon"></div>
         <span class="text">分享即领数学币</span>
       </div>
@@ -40,7 +40,7 @@
     </div>
     <div class="exchange">
       <div class="title">礼品兑换</div>
-      <div class="gift-item" v-for="gift in giftList">
+      <div class="gift-item" v-for="(gift,giftIndex) in giftList" :key="giftIndex">
         <image class="left-img" :src="gift.img" />
         <div class="right">
           <div class="title">{{ gift.title }}</div>
@@ -127,6 +127,8 @@ export default {
   created () {
     this.createFakeRankList()
     this.createFakeGiftList()
+  },
+  mounted () {
   },
   methods: {
     createFakeRankList () {
@@ -258,7 +260,7 @@ export default {
       }
       .coin-charge-btn{
         bg-image('index_buttn_big')
-        bg-size(240rpx,60rpx)
+        bg-size(250rpx,75rpx)
         center()
         margin-top 24rpx
         color #fff
@@ -475,5 +477,8 @@ export default {
         }
       }
     }
+  }
+  .up-down-animation{
+    animation: up-down-animation .5s ease-in 0s infinite alternate;
   }
 </style>
