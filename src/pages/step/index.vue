@@ -1,7 +1,7 @@
 <template>
   <div class="step-page">
     偷步数
-    <tab-bar :active-index="2"/>
+    <!--<tab-bar :active-index="2"/>-->
   </div>
 </template>
 

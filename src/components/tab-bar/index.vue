@@ -49,7 +49,10 @@
       toPage (isCurrentPage, toUrl) {
         if (!isCurrentPage) {
           console.log('不是相同页')
-          wx.redirectTo({
+          // wx.redirectTo({
+          //   url: toUrl
+          // })
+          wx.switchTab({
             url: toUrl
           })
         } else {

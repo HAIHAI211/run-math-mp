@@ -52,6 +52,18 @@
     </van-popup>-->
   </div>
 </template>
+<!--
+
+  "usingComponents": {
+    "van-button": "/static/vant/button/index",
+    "van-tab": "/static/vant/tab/index",
+    "van-tabs": "/static/vant/tabs/index",
+    "van-popup": "/static/vant/popup/index",
+    "van-switch-cell": "/static/vant/switch-cell/index"
+  }
+
+
+-->
 
 <script>
 // import Notify from '@/../static/vant/notify'

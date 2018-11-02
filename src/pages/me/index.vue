@@ -1,7 +1,7 @@
 <template>
   <div class="me-page">
     我的
-    <tab-bar :active-index="3"/>
+    <!--<tab-bar :active-index="3"/>-->
   </div>
 </template>
 

@@ -27,9 +27,9 @@ export default {
     }
   },
   created () {
-    const now = this.$moment()
-    const finalGameTime = this.$moment('2018-11-03 15:00')
-    this.seconds = finalGameTime.diff(now, 'seconds')
+    // const now = this.$moment()
+    // const finalGameTime = this.$moment('2018-11-03 15:00')
+    // this.seconds = finalGameTime.diff(now, 'seconds')
   },
   mounted () {
     setInterval(() => {

@@ -1,7 +1,7 @@
 <template>
   <div class="gift-page">
     礼品
-    <tab-bar :active-index="1"/>
+    <!--<tab-bar :active-index="1"/>-->
   </div>
 </template>
 
