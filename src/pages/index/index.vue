@@ -63,24 +63,7 @@
     <!--<official-account @load='officialLoad' @error="officialError"></official-account>-->
     <!--<a href="/pages/animationtest/main">去往动画页面</a>-->
 
-    <!--<button @click="openSetting">打开设置页</button>-->
-    <!--<button open-type="getUserInfo" @getuserinfo="getuserinfo">登录</button>-->
-    <!--<div class="userinfo" @click="bindViewTap">-->
-      <!--<img class="userinfo-avatar" v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" background-size="cover" />-->
-      <!--<div class="userinfo-nickname">-->
-        <!--<card :text="userInfo.nickName"></card>-->
-      <!--</div>-->
-    <!--</div>-->
-    <!--<div class="usermotto">-->
-      <!--<div class="user-motto">-->
-        <!--<card :text="motto"></card>-->
-      <!--</div>-->
-    <!--</div>-->
 
-    <!--<form class="form-container">-->
-      <!--<input type="text" class="form-control" v-model="motto" placeholder="v-model" />-->
-      <!--<input type="text" class="form-control" v-model.lazy="motto" placeholder="v-model.lazy" />-->
-    <!--</form>-->
     <!--<a href="/pages/counter/main" class="counter">去往Vuex示例页面</a>-->
 <!--    <van-popup
       :show="show"
@@ -101,10 +84,7 @@
     </van-popup>-->
   </div>
 </template>
-
 <script>
-import tabBar from '@/components/tab-bar'
-
 export default {
   data () {
     return {
@@ -122,7 +102,6 @@ export default {
   },
 
   components: {
-    tabBar
   },
   created () {
     this.createFakeRankList()
@@ -471,7 +450,7 @@ export default {
         }
       }
       .ad-wrap{
-        padding-bottom 90rpx
+        padding-bottom 46rpx
         .ad{
           bg-size(684rpx, 257rpx)
         }
