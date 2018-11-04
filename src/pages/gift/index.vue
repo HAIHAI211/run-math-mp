@@ -1,25 +1,29 @@
 <template>
   <div class="gift-page">
-    <div class="tab-wrap">
-      <div class="tab">
-        <div :class="['tab-item', {'active': tabIndex === activeTabIndex}]"
-             v-for="(item,tabIndex) in tabItems" :key="tabIndex" @click="activeTabIndex = tabIndex">
-          {{ item }}
-        </div>
-      </div>
+    <tab :items="tabItems" :activeTabIndex.sync="activeTabIndex"/>
+    <div class="content" v-if="activeTabIndex === 0">
+      数学资料
+      <!--<div class="bar">-->
+        <!--<div :class="['bar-item', {'active': index===activeIndex}]" @click="pickActiveItem(item,index)" v-for="(item,index) in bar">-->
+          <!--<span>{{ item }}</span>-->
+          <!--<span class="iconfont icon-sanjiao"/>-->
+        <!--</div>-->
+      <!--</div>-->
     </div>
-    <div class="content">
+    <div class="content" v-else>
+     实物礼品
     </div>
   </div>
 </template>
-
 <script>
+import tab from '@/components/tab'
 export default {
   components: {
+    tab
   },
   data () {
     return {
-      activeTabIndex: 0,
+      activeTabIndex: 1,
       tabItems: ['数学资料', '实物礼品']
     }
   },
