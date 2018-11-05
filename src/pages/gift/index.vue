@@ -39,7 +39,9 @@
             :checked=switchCellchecked
             @change="onSwitchCellChange"></switch-cell>
         </div>
-        <div class="confirm-btn" @click="pickSx()"><span>确定</span></div>
+        <div class="confirm-btn-wrap">
+          <div class="confirm-btn" @click="pickSx()">确定</div>
+        </div>
       </scroll-view>
       <div class="wrap-2" v-if="activeBarIndex === 2">
         <div
@@ -125,12 +127,23 @@ export default {
   },
   methods: {
     pickActiveItem (item, index) {
-      // console.log('点击')
       if (this.activeBarIndex === index) {
-        this.activeBarIndex = -1
+        wx.showTabBar({
+          complete: () => {
+            this.activeBarIndex = -1
+          }
+        })
         return
       }
-      this.activeBarIndex = index
+      if (index === 1) { // 如果是筛选下拉框，就隐藏系统的tabbar(此处代码无业务逻辑，单纯是为了样式美观一些)
+        wx.hideTabBar({
+          complete: () => {
+            this.activeBarIndex = index
+          }
+        })
+      } else {
+        this.activeBarIndex = index
+      }
     },
     pickType (index) {
       this.activeTypeIndex = index
@@ -231,7 +244,7 @@ export default {
               justify-content center
               align-items center
               width 200rpx
-              height 65rpx
+              height 68rpx
               box-sizing border-box
               font-size 26rpx
               letter-spacing 1rpx
@@ -250,20 +263,25 @@ export default {
             }
           }
         }
-        .confirm-btn{
+        .confirm-btn-wrap{
           position fixed
           bottom 0
           left 0
           z-index 101
-          background main-color
+          width 750rpx
+          padding-bottom 13rpx
           display flex
           justify-content center
-          align-items center
-          width 750rpx
-          height 100rpx
-          color #fff
-          font-size 38rpx
-          letter-spacing 1rpx
+          .confirm-btn{
+            background main-color
+            center()
+            width 685rpx
+            height 97rpx
+            border-radius 47rpx
+            color #fff
+            font-size 34rpx
+            letter-spacing 1rpx
+          }
         }
       }
     }
@@ -278,7 +296,7 @@ export default {
         color #777
       }
       /deep/ .van-switch--on{
-        background lightseagreen
+        background main-color
       }
     }
   }
