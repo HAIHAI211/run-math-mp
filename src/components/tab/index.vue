@@ -32,7 +32,7 @@ export default {
   .tab-wrap{
     background #fff
     padding-bottom 13rpx
-    border-bottom 2rpx solid #DBDBDB
+    border-bottom 0rpx solid #DBDBDB
     .tab{
       display flex
       width 370rpx
