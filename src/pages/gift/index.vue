@@ -1,7 +1,7 @@
 <template>
   <div class="gift-page">
     <tab :items="tabItems" :activeTabIndex.sync="activeTabIndex"/>
-    <div class="content" v-if="activeTabIndex === 0">
+    <div class="content math" v-if="activeTabIndex === 0">
       <div class="bar">
         <div :class="['bar-item', {'active': barIndex===activeBarIndex}]"
              @click="pickActiveItem(item,barIndex)"
@@ -10,9 +10,22 @@
           <span class="iconfont icon-sanjiao"/>
         </div>
       </div>
+      <div class="math-gift-list">
+        <math-gift v-for="(mg, mgIndex) in mathGifts"
+                   :key="mgIndex"
+                   :name="mg.name"
+                   :price="mg.price"
+                   :docType="mg.docType"/>
+      </div>
     </div>
-    <div class="content" v-else>
-     实物礼品
+    <div class="content physical" v-else>
+      <physical-gift v-for="(pg,pgIndex) in physicalGifts"
+                     :key="pgIndex"
+                     :img="pg.img"
+                     :name="pg.name"
+                     :postage="pg.postage"
+                     :price="pg.price"
+                     :oldPrice="pg.oldPrice"/>
     </div>
     <div class="overlay" v-if="activeBarIndex !== -1" @click="activeBarIndex=-1">
       <div class="wrap-0" v-if="activeBarIndex === 0" @click.stop="">
@@ -57,9 +70,14 @@
 </template>
 <script>
 import tab from '@/components/tab'
+import physicalGift from '@/components/physical-gift'
+import mathGift from '@/components/math-gift'
+
 export default {
   components: {
-    tab
+    tab,
+    physicalGift,
+    mathGift
   },
   data () {
     return {
@@ -111,6 +129,23 @@ export default {
           valueCs: [false, false, false],
           groupCount: 1
         }
+      ],
+      physicalGifts: [
+        {
+          name: '极客数学帮专属定制笔记本， 超值优惠大放送',
+          img: 'https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/img_02%402x.png',
+          postage: true,
+          price: 99,
+          oldPrice: 5
+        }
+      ],
+      mathGifts: [
+        {
+          name: '【三年级英语】期末考试试题解析.doc',
+          docType: 0,
+          docClass: '2',
+          price: 66
+        }
       ]
     }
   },
@@ -123,6 +158,7 @@ export default {
   watch: {
     activeTabIndex (v) {
       this.activeBarIndex = -1
+      wx.showTabBar()
     }
   },
   methods: {
@@ -155,7 +191,11 @@ export default {
     },
     pickSx () {
       // todo
-      this.activeBarIndex = -1
+      wx.showTabBar({
+        complete: () => {
+          this.activeBarIndex = -1
+        }
+      })
     },
     classBtnSelect (classIndex, i) {
       console.log('classIndex', classIndex, 'i', i)
@@ -283,6 +323,16 @@ export default {
             letter-spacing 1rpx
           }
         }
+      }
+    }
+    .content{
+      &.math{
+        .math-gift-list{
+          padding 20rpx 32.5rpx
+        }
+      }
+      &.physical{
+        padding 20rpx 32.5rpx
       }
     }
     /*

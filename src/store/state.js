@@ -1,4 +1,5 @@
 const state = {
-  openId: ''
+  openId: '',
+  systemInfo: null
 }
 export default state

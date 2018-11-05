@@ -85,6 +85,8 @@
   </div>
 </template>
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   data () {
     return {
@@ -104,12 +106,14 @@ export default {
   components: {
   },
   created () {
+    this.SET_SYSTEM_INFO()
     this.createFakeRankList()
     this.createFakeGiftList()
   },
   mounted () {
   },
   methods: {
+    ...mapActions(['SET_SYSTEM_INFO']),
     createFakeRankList () {
       let result = []
       for (let i = 1; i <= 10; i++) {

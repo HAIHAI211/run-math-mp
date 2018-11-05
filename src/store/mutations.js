@@ -7,6 +7,9 @@ const mutations = {
   * */
   [types.SET_OPEN_ID] (state, v) {
     state.openId = v
+  },
+  [types.SET_SYSTEM_INFO] (state, v) {
+    state.systemInfo = v
   }
 }
 
