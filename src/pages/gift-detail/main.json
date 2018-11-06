@@ -1,5 +1,6 @@
 {
   "usingComponents": {
-    "switch-cell": "/static/vant/switch-cell/index"
+    "van-tab": "/static/vant/tab/index",
+    "van-tabs": "/static/vant/tabs/index"
   }
 }

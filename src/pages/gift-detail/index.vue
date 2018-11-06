@@ -1,7 +1,7 @@
 <template>
   <div class="gift-detail-page">
     <div class="swiper-wrap">
-      <swiper class="swiper" :current="current" @change="swiperChange">
+      <swiper class="swiper" :current="current" @change="swiperChange" :interval="2000" autoplay>
         <swiper-item v-for="(imgUrl,imgUrlIndex) in imgUrls" :key="imgUrlIndex">
           <image :src="imgUrl" class="slide-image"/>
         </swiper-item>
@@ -30,12 +30,31 @@
         </div>
       </div>
     </div>
+    <van-tabs :active="activeTabIndex" @change="tabChange" color="#3ACF7A" :line-width="lineWidth">
+      <van-tab title="兑换记录">
+        <div class="exchange-record" v-for="(record,recordIndex) in exchangeRecords" :key="recordIndex">
+          <div class="user">
+            <image :src="record.avatar" class="avatar"/>
+            <div class="name">{{ record.name }}</div>
+          </div>
+          <div class="info">兑换了{{ record.info }}</div>
+          <div class="time">
+            {{ record.time }}前
+          </div>
+        </div>
+      </van-tab>
+      <van-tab title="商品介绍">内容 2</van-tab>
+    </van-tabs>
+    <div class="confirm-btn-wrap">
+      <div class="confirm-btn">立即兑换</div>
+    </div>
   </div>
 </template>
 <script>
 export default {
   data () {
     return {
+      activeTabIndex: 0,
       imgUrls: [
         'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
         'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg',
@@ -46,13 +65,23 @@ export default {
       postage: true,
       leftCount: 2, // 今日剩余数量
       price: 135,
-      oldPrice: 5
+      oldPrice: 5,
+      exchangeRecords: [
+        {
+          name: '沈佳宜',
+          avatar: 'http://img5.duitang.com/uploads/item/201412/12/20141212014311_jwiC8.jpeg',
+          time: '一天'
+        }
+      ]
     }
   },
   methods: {
     swiperChange (res) {
       console.log(res.mp.detail.current)
       this.current = res.mp.detail.current
+    },
+    tabChange (event) {
+      this.activeTabIndex = event.mp.detail.index
     }
   }
 }
@@ -155,6 +184,24 @@ export default {
           color main-color
           font-size 30rpx
         }
+      }
+    }
+    .confirm-btn-wrap{
+      width 750rpx
+      position fixed
+      bottom 15rpx
+      left 0rpx
+      display flex
+      justify-content center
+      .confirm-btn{
+        background main-color
+        center()
+        width 685rpx
+        height 97rpx
+        border-radius 47rpx
+        color #fff
+        font-size 34rpx
+        letter-spacing 1rpx
       }
     }
   }
