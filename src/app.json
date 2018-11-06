@@ -13,6 +13,7 @@
   ],
   "window": {
     "backgroundTextStyle": "dark",
+    "backgroundColor": "#F5F5F5",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "步步数学",
     "navigationBarTextStyle": "black"
@@ -21,7 +22,7 @@
     "color": "#999999",
     "selectedColor": "#3ACF7A",
     "backgroundColor": "#fff",
-    "borderStyle": "white",
+    "borderStyle": "black",
     "list": [{
       "pagePath": "pages/index/main",
       "text": "首页",

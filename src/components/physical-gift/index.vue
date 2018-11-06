@@ -61,7 +61,7 @@ export default {
   @import "~@/common/style/mixin.styl"
   @import "~@/common/style/color.styl"
   .physical-gift{
-    margin-bottom 20rpx
+    margin-bottom 36rpx
     width 685rpx
     height 258rpx
     border-radius 6rpx

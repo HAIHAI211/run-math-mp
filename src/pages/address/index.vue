@@ -30,23 +30,24 @@
     />
     <van-field
       v-model="detailAddress"
-      label="详细地址"
-      type="textarea"
-      placeholder="请输入详细信息如:小区几栋几单元"
-      :focus="focus && !areaPickerShow"
       required
-      autosize
+      clearable
+      label="详细地址"
+      placeholder="如小区几栋几单元门牌号"
+      :focus="focus && !areaPickerShow"
     />
-    <div class="overlay" v-if="areaPickerShow" @click="areaPickerShow=false">
+    <div class="confirm-btn-wrap">
+      <div class="confirm-btn">保存</div>
+    </div>
+    <van-popup
+      :show="areaPickerShow"
+      position="bottom">
       <van-area :area-list="areaList"
                 class="area-picker"
                 @click.stop=""
                 @cancel="areaPickerCancel"
                 @confirm="areaPickerConfirm"/>
-    </div>
-    <div class="confirm-btn-wrap">
-      <div class="confirm-btn">保存</div>
-    </div>
+    </van-popup>
   </div>
 </template>
 <script>
@@ -109,8 +110,6 @@ export default {
     }
     .area-picker{
       width 750rpx
-      position fixed
-      bottom 0
     }
     .confirm-btn-wrap{
       margin-top 50rpx

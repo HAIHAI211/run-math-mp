@@ -1,5 +1,5 @@
 <template>
-  <div class="loading">正在加载...</div>
+  <div class="loading">正在加载╭(′▽`)╭(′▽`)╯</div>
 </template>
 <script>
   export default {
@@ -8,10 +8,13 @@
 <style scoped lang="stylus">
   .loading{
     position fixed
-    text-align center
-    width 100%
+    width 750rpx
     height 60rpx
-    bottom 100rpx
     left 0
+    bottom 0
+    font-size 26rpx
+    display flex
+    justify-content center
+    align-items center
   }
 </style>

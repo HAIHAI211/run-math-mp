@@ -36,7 +36,7 @@
       <navigator class="order-item" style="margin-bottom: 17rpx" url="">
         <div class="left">
           <div class="icon icon-1"></div>
-          <div class="name">已兑换</div>
+          <div class="name">全部订单</div>
         </div>
         <span class="iconfont icon-fanhui"/>
       </navigator>

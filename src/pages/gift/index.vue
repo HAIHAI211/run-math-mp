@@ -27,6 +27,7 @@
                      :price="pg.price"
                      :oldPrice="pg.oldPrice"/>
     </div>
+    <loading v-if="loadingShow"/>
     <div class="overlay" v-if="activeBarIndex !== -1" @click="activeBarIndex=-1">
       <div class="wrap-0" v-if="activeBarIndex === 0" @click.stop="">
         <div
@@ -70,17 +71,21 @@
 </template>
 <script>
 import tab from '@/components/tab'
+import loading from '@/components/loading'
 import physicalGift from '@/components/physical-gift'
 import mathGift from '@/components/math-gift'
+import { sleep } from '@/utils'
 
 export default {
   components: {
     tab,
+    loading,
     physicalGift,
     mathGift
   },
   data () {
     return {
+      loadingShow: false,
       activeTabIndex: 0,
       tabItems: ['数学资料', '实物礼品'],
       types: [
@@ -130,7 +135,36 @@ export default {
           groupCount: 1
         }
       ],
-      physicalGifts: [
+      physicalGifts: [],
+      fakerPhysicalGifts: [
+        {
+          name: '极客数学帮专属定制笔记本， 超值优惠大放送',
+          img: 'https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/img_02%402x.png',
+          postage: true,
+          price: 99,
+          oldPrice: 5
+        },
+        {
+          name: '极客数学帮专属定制笔记本， 超值优惠大放送',
+          img: 'https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/img_02%402x.png',
+          postage: true,
+          price: 99,
+          oldPrice: 5
+        },
+        {
+          name: '极客数学帮专属定制笔记本， 超值优惠大放送',
+          img: 'https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/img_02%402x.png',
+          postage: true,
+          price: 99,
+          oldPrice: 5
+        },
+        {
+          name: '极客数学帮专属定制笔记本， 超值优惠大放送',
+          img: 'https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/img_02%402x.png',
+          postage: true,
+          price: 99,
+          oldPrice: 5
+        },
         {
           name: '极客数学帮专属定制笔记本， 超值优惠大放送',
           img: 'https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/img_02%402x.png',
@@ -139,7 +173,32 @@ export default {
           oldPrice: 5
         }
       ],
-      mathGifts: [
+      mathGifts: [],
+      fakerMathGifts: [
+        {
+          name: '【三年级英语】期末考试试题解析.doc',
+          docType: 0,
+          docClass: '2',
+          price: 66
+        },
+        {
+          name: '【三年级英语】期末考试试题解析.doc',
+          docType: 0,
+          docClass: '2',
+          price: 66
+        },
+        {
+          name: '【三年级英语】期末考试试题解析.doc',
+          docType: 0,
+          docClass: '2',
+          price: 66
+        },
+        {
+          name: '【三年级英语】期末考试试题解析.doc',
+          docType: 0,
+          docClass: '2',
+          price: 66
+        },
         {
           name: '【三年级英语】期末考试试题解析.doc',
           docType: 0,
@@ -159,6 +218,9 @@ export default {
     activeTabIndex (v) {
       this.activeBarIndex = -1
       wx.showTabBar()
+      if (v === 1 && !this.physicalGifts.length) {
+        wx.startPullDownRefresh()
+      }
     }
   },
   methods: {
@@ -178,6 +240,7 @@ export default {
           }
         })
       } else {
+        wx.showTabBar()
         this.activeBarIndex = index
       }
     },
@@ -207,6 +270,36 @@ export default {
       console.log(e.mp)
       this.switchCellchecked = e.mp.detail
     }
+  },
+  async onPullDownRefresh () { // 下拉刷新
+    console.log('下拉刷新')
+    await sleep(1200)
+    if (this.activeTabIndex === 0) { // 数学资料
+      this.mathGifts = this.fakerMathGifts
+    } else {
+      this.physicalGifts = this.fakerPhysicalGifts
+    }
+    wx.stopPullDownRefresh()
+  },
+  async onReachBottom () { // 上拉加载
+    console.log('上拉加载')
+    this.loadingShow = true
+    await sleep(1200)
+    this.loadingShow = false
+    if (this.activeTabIndex === 0) { // 数学资料
+      if (this.mathGifts.length < 10) {
+        this.mathGifts = [...this.fakerMathGifts, ...this.fakerMathGifts]
+      }
+    } else {
+      if (this.physicalGifts.length < 10) {
+        this.physicalGifts = [...this.fakerPhysicalGifts, ...this.fakerPhysicalGifts]
+      }
+    }
+  },
+  async mounted () {
+    console.log('mounted')
+    await sleep(50)
+    wx.startPullDownRefresh()
   }
 }
 </script>
