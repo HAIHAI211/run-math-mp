@@ -6,6 +6,7 @@
       clearable
       label="联系人"
       placeholder="请输入联系人姓名"
+      :focus="focus && !areaPickerShow"
     />
 
     <van-field
@@ -14,30 +15,37 @@
       label="手机号码"
       placeholder="请输入联系人手机号码"
       required
+      :focus="focus && !areaPickerShow"
     />
 
     <van-field
       v-model="addressArrStr"
       label="选择地区"
-      placeholder="选择所在地区"
+      placeholder="请选择所在地区"
       icon="location"
       @clickIcon="chooseAddress"
-      @focus="chooseAddress"
+      @click="chooseAddress"
+      readonly
       required
     />
     <van-field
       v-model="detailAddress"
       label="详细地址"
       type="textarea"
-      placeholder="请输入详细地址信息如:小区几栋几单元"
+      placeholder="请输入详细信息如:小区几栋几单元"
+      :focus="focus && !areaPickerShow"
       required
       autosize
     />
     <div class="overlay" v-if="areaPickerShow" @click="areaPickerShow=false">
       <van-area :area-list="areaList"
                 class="area-picker"
+                @click.stop=""
                 @cancel="areaPickerCancel"
                 @confirm="areaPickerConfirm"/>
+    </div>
+    <div class="confirm-btn-wrap">
+      <div class="confirm-btn">保存</div>
     </div>
   </div>
 </template>
@@ -52,7 +60,8 @@ export default {
       address: '',
       detailAddress: '',
       areaPickerShow: false,
-      addressArr: null
+      addressArr: null,
+      focus: false
     }
   },
   computed: {
@@ -75,12 +84,12 @@ export default {
       this.areaPickerShow = true
     },
     areaPickerCancel () {
-      // this.areaPickerShow = false
+      this.areaPickerShow = false
     },
     areaPickerConfirm (res) {
       console.log(res.mp.detail.values)
       this.addressArr = res.mp.detail.values
-      // this.areaPickerShow = false
+      this.areaPickerShow = false
     }
   }
 }
@@ -102,6 +111,21 @@ export default {
       width 750rpx
       position fixed
       bottom 0
+    }
+    .confirm-btn-wrap{
+      margin-top 50rpx
+      display flex
+      justify-content center
+      .confirm-btn{
+        background main-color
+        center()
+        width 685rpx
+        height 97rpx
+        border-radius 47rpx
+        color #fff
+        font-size 34rpx
+        letter-spacing 1rpx
+      }
     }
   }
 </style>
