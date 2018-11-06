@@ -25,36 +25,36 @@
     </div>
     <div class="order">
       <div class="title">我的订单</div>
-      <div class="order-item">
+      <navigator class="order-item" url="">
         <div class="left">
           <div class="icon icon-0"></div>
           <div class="name">待发货</div>
         </div>
         <span class="iconfont icon-fanhui"/>
         <div class="line"></div>
-      </div>
-      <div class="order-item" style="margin-bottom: 17rpx">
+      </navigator>
+      <navigator class="order-item" style="margin-bottom: 17rpx" url="">
         <div class="left">
           <div class="icon icon-1"></div>
           <div class="name">已兑换</div>
         </div>
         <span class="iconfont icon-fanhui"/>
-      </div>
-      <div class="order-item">
+      </navigator>
+      <navigator class="order-item" url="/pages/address/main">
         <div class="left">
           <div class="icon icon-2"></div>
           <div class="name">地址管理</div>
         </div>
         <span class="iconfont icon-fanhui"/>
         <div class="line"></div>
-      </div>
-      <div class="order-item">
+      </navigator>
+      <navigator class="order-item">
         <div class="left">
           <div class="icon icon-3"></div>
           <div class="name">联系我们</div>
         </div>
         <span class="iconfont icon-fanhui"/>
-      </div>
+      </navigator>
     </div>
     <div class="ad-wrap">
       <div class="ad" :style="{backgroundImage: 'url(' + ad +')'}" v-if="ad.length">

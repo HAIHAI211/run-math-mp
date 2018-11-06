@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "van-field": "/static/vant/field/index",
+    "van-area": "/static/vant/area/index"
+  },
+  "navigationBarTitleText": "地址管理"
+}

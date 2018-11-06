@@ -8,7 +8,8 @@
     "pages/filetest/main",
     "pages/videotest/main",
     "pages/logs/main",
-    "pages/counter/main"
+    "pages/counter/main",
+    "pages/address/main"
   ],
   "window": {
     "backgroundTextStyle": "dark",
