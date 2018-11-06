@@ -2,6 +2,7 @@
   "pages": [
     "pages/index/main",
     "pages/gift/main",
+    "pages/gift-detail/main",
     "pages/step/main",
     "pages/me/main",
     "pages/animationtest/main",

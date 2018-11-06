@@ -15,7 +15,7 @@
                    :key="mgIndex"
                    :name="mg.name"
                    :price="mg.price"
-                   :docType="mg.docType"/>
+                   :docType="mg.docType" :giftId="mgIndex"/>
       </div>
     </div>
     <div class="content physical" v-else>

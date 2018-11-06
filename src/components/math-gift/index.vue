@@ -1,5 +1,5 @@
 <template>
-  <div class="math-gift">
+  <navigator class="math-gift" :url="url">
     <div :class="['left', 'type-' + docType]"></div>
     <div class="right">
       <div class="name">{{ name }}</div>
@@ -8,7 +8,7 @@
         <div class="suffix">数学币</div>
       </div>
     </div>
-  </div>
+  </navigator>
 </template>
 <script>
 import {mapState} from 'vuex'
@@ -29,6 +29,10 @@ export default {
     price: {
       type: Number,
       default: 0
+    },
+    giftId: {
+      type: Number,
+      default: 0
     }
   },
   data () {
@@ -39,7 +43,10 @@ export default {
     console.log('系统信息', this.systemInfo)
   },
   computed: {
-    ...mapState(['systemInfo'])
+    ...mapState(['systemInfo']),
+    url () {
+      return `/pages/gift-detail/main?giftId=${this.giftId}`
+    }
   }
 }
 </script>
