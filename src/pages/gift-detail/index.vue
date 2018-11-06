@@ -69,7 +69,26 @@ export default {
       exchangeRecords: [
         {
           name: '沈佳宜',
-          avatar: 'http://img5.duitang.com/uploads/item/201412/12/20141212014311_jwiC8.jpeg',
+          avatar: 'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
+          info: '日式竹炭牙刷 软毛刷子',
+          time: '一天'
+        },
+        {
+          name: '沈佳宜',
+          avatar: 'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
+          info: '日式竹炭牙刷 软毛刷子',
+          time: '一天'
+        },
+        {
+          name: '沈佳宜',
+          avatar: 'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
+          info: '日式竹炭牙刷 软毛刷子',
+          time: '一天'
+        },
+        {
+          name: '沈佳宜',
+          avatar: 'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
+          info: '日式竹炭牙刷 软毛刷子',
           time: '一天'
         }
       ]
@@ -184,6 +203,37 @@ export default {
           color main-color
           font-size 30rpx
         }
+      }
+    }
+    .exchange-record{
+      display flex
+      align-items center
+      justify-content space-between
+      padding 20rpx
+      .user{
+        flex 0 0 auto
+        display flex
+        align-items center
+        .avatar{
+          width 60rpx
+          height 60rpx
+          border-radius 50%
+          margin-right 16rpx
+        }
+        .name{
+          font-size 26rpx
+          color #333
+        }
+      }
+      .info{
+        font-size 26rpx
+        color #999
+        flex 0 0 400rpx
+        no-wrap()
+      }
+      .time{
+        font-size 26rpx
+        color #999
       }
     }
     .confirm-btn-wrap{
