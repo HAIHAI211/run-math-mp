@@ -3,7 +3,7 @@
     <div class="tab">
       <div :class="['tab-item', {'active': tabIndex === selfActiveTabIndex}]"
            v-for="(item,tabIndex) in items" :key="tabIndex" @click="selfActiveTabIndex = tabIndex">
-        {{ item }}
+        {{ item.name }}
       </div>
     </div>
   </div>

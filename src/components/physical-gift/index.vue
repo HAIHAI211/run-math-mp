@@ -1,58 +1,62 @@
 <template>
-  <div class="physical-gift">
+  <navigator class="physical-gift":url="url">
     <div class="left"
-         :style="{backgroundImage: 'url(' + img + ')'}"></div>
+         :style="{backgroundImage: 'url(' + gift.coverPicUrl + ')'}"></div>
     <div class="right">
-      <div class="right-top">{{ name }}</div>
+      <div class="right-top">{{ gift.name }}</div>
       <div class="right-middle">
-        <div class="postage" v-if="postage">包邮</div>
+        <div class="postage" v-if="gift.postage">包邮</div>
       </div>
       <div class="right-bottom">
         <div class="price">
-          <span class="num">{{ price }}</span>
+          <span class="num">{{ gift.price }}</span>
           <span class="suffix">数学币</span>
         </div>
-        <div class="old-price">
-          原价￥{{oldPrice}}
+        <div class="old-price" v-if="!usedByOrder">
+          原价￥{{gift.originalPrice}}
         </div>
       </div>
+      <!--<div class="count" v-if="usedByOrder">-->
+        <!--x{{ gift.count }}-->
+      <!--</div>-->
+      <div class="state" v-if="usedByOrder">
+        <span v-if="gift.state === 0" class="state-0">待发货</span>
+        <span v-else class="state-1">已发货</span>
+      </div>
     </div>
-  </div>
+  </navigator>
 </template>
 <script>
 export default {
   props: {
-    name: {
-      type: String,
-      default: ''
-    },
-    price: {
-      type: Number,
-      default: 0
-    },
-    oldPrice: {
-      type: Number,
-      default: 0
-    },
-    img: {
-      type: String,
-      default: ''
-    },
-    count: {
-      type: Number,
-      default: -1
-    },
-    state: {
-      type: Number,
-      default: -1
-    },
-    postage: {
+    usedByOrder: { // 是否用于订单页面
       type: Boolean,
-      default: true
+      default: false
+    },
+    gift: {
+      type: Object,
+      default () {
+        return {
+          id: 0,
+          name: '',
+          type: 0, // 礼品类型 0:文档 1:视频 2:实物
+          coverPicUrl: '', // 封面图
+          fileType: 'doc', // 文件类型
+          price: 0,
+          postage: 1, // 是否包邮
+          originalPrice: 0, // 原价
+          state: 0 // 0:未发货 1:发货
+        }
+      }
     }
   },
   data () {
     return {
+    }
+  },
+  computed: {
+    url () {
+      return `/pages/gift-detail/main?giftId=${this.gift.id}&type=${this.gift.type}` // type = 2 表示是实物奖品
     }
   }
 }
@@ -75,6 +79,7 @@ export default {
       margin-right 31rpx
     }
     .right{
+      position relative
       flex 1 0 0
       display flex
       flex-direction column
@@ -116,6 +121,26 @@ export default {
           color #999
           font-size 26rpx
           text-decoration line-through
+        }
+      }
+      .count{
+        position absolute
+        top 0rpx
+        right 0rpx
+        font-size 30rpx
+        transform scale(1,1.1)
+        color #333333
+      }
+      .state{
+        position absolute
+        bottom 0rpx
+        right 0rpx
+        font-size 30rpx
+        .state-0{
+          color #FF5409
+        }
+        .state-1{
+          color #B3B3B3
         }
       }
     }

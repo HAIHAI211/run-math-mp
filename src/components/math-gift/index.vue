@@ -1,51 +1,43 @@
 <template>
   <navigator class="math-gift" :url="url">
-    <div :class="['left', 'type-' + docType]"></div>
+    <div :class="['left', 'type-' + gift.fileType]"></div>
     <div class="right">
-      <div class="name">{{ name }}</div>
+      <div class="name">{{ gift.name }}</div>
       <div class="price">
-        <div class="num">{{ price }}</div>
+        <div class="num">{{ gift.price }}</div>
         <div class="suffix">数学币</div>
       </div>
     </div>
   </navigator>
 </template>
 <script>
-import {mapState} from 'vuex'
+// import {mapState} from 'vuex'
 export default {
   props: {
-    name: {
-      type: String,
-      default: ''
-    },
-    docType: {
-      type: Number,
-      default: 0 // 0:doc 1:pdf 2:video
-    },
-    docClass: {
-      type: Number,
-      default: 0 // 一年级数学 依次类推
-    },
-    price: {
-      type: Number,
-      default: 0
-    },
-    giftId: {
-      type: Number,
-      default: 0
+    gift: {
+      type: Object,
+      default () {
+        return {
+          id: 0,
+          name: '',
+          type: 0, // 礼品类型 0:文档 1:视频 2:实物
+          coverPicUrl: '', // 封面图
+          fileType: 'doc', // 文件类型
+          price: 0,
+          postage: 1, // 是否包邮
+          originalPrice: 0 // 原价
+        }
+      }
     }
   },
   data () {
     return {
     }
   },
-  mounted () {
-    console.log('系统信息', this.systemInfo)
-  },
   computed: {
-    ...mapState(['systemInfo']),
+    // ...mapState(['systemInfo']),
     url () {
-      return `/pages/gift-detail/main?giftId=${this.giftId}`
+      return `/pages/gift-detail/main?giftId=${this.gift.id}&type=${this.gift.type}` // giftType = 0 || 1 表示是数学资料
     }
   }
 }

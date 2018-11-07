@@ -13,7 +13,7 @@
     <div class="gift-info">
       <div class="name">{{ name }}</div>
       <div class="middle">
-        <div class="postage">包邮</div>
+        <div class="postage" v-if="giftType===1">包邮</div>
         <div class="shengyu">今日剩余：{{ leftCount }}份</div>
       </div>
       <div class="bottom">
@@ -22,7 +22,7 @@
             <span class="num">{{ price }}</span>
             <span class="suffix">数学币</span>
           </div>
-          <div class="old">原价￥{{ oldPrice }}</div>
+          <div class="old" v-if="giftType===1">原价￥{{ oldPrice }}</div>
         </div>
         <div class="share">
           分享好友
@@ -30,16 +30,18 @@
         </div>
       </div>
     </div>
-    <van-tabs :active="activeTabIndex" @change="tabChange" color="#3ACF7A" :line-width="lineWidth">
+    <van-tabs :active="activeTabIndex" @change="tabChange" color="#3ACF7A">
       <van-tab title="兑换记录">
-        <div class="exchange-record" v-for="(record,recordIndex) in exchangeRecords" :key="recordIndex">
-          <div class="user">
-            <image :src="record.avatar" class="avatar"/>
-            <div class="name">{{ record.name }}</div>
-          </div>
-          <div class="info">兑换了{{ record.info }}</div>
-          <div class="time">
-            {{ record.time }}前
+        <div class="exchange-record-wrap">
+          <div class="exchange-record" v-for="(record,recordIndex) in exchangeRecords" :key="recordIndex">
+            <div class="user">
+              <image :src="record.avatar" class="avatar"/>
+              <div class="name">{{ record.name }}</div>
+            </div>
+            <div class="info">兑换了{{ record.info }}</div>
+            <div class="time">
+              {{ record.time }}前
+            </div>
           </div>
         </div>
       </van-tab>
@@ -54,6 +56,14 @@
 export default {
   data () {
     return {
+      id: 0,
+      totalAmount: 10,
+      price: 0,
+      postage: 0,
+      originalPrice: 0,
+      infoPicUrlList: '',
+      recordList: '',
+      giftType: 0,
       activeTabIndex: 0,
       imgUrls: [
         'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
@@ -62,9 +72,7 @@ export default {
       ],
       current: 0,
       name: '极客数学帮专属定制笔记本，超值优惠大放送',
-      postage: true,
       leftCount: 2, // 今日剩余数量
-      price: 135,
       oldPrice: 5,
       exchangeRecords: [
         {
@@ -102,6 +110,11 @@ export default {
     tabChange (event) {
       this.activeTabIndex = event.mp.detail.index
     }
+  },
+  onLoad (options) {
+    console.log(options)
+    this.giftId = options.giftId
+    this.giftType = parseInt(options.giftType)
   }
 }
 </script>
@@ -168,7 +181,7 @@ export default {
           color #FF4520
           border-radius 16rpx
           font-size 24rpx
-          padding 2rpx
+          padding 2rpx 3rpx
           center()
         }
       }
@@ -186,7 +199,7 @@ export default {
             .num{
               color main-color
               font-size 36rpx
-              transform scale(1,1.2)
+              transform scale(1,1.1)
             }
             .suffix{
               font-size 26rpx
@@ -205,37 +218,42 @@ export default {
         }
       }
     }
-    .exchange-record{
-      display flex
-      align-items center
-      justify-content space-between
-      padding 20rpx
-      .user{
-        flex 0 0 auto
+    .exchange-record-wrap{
+      padding-bottom 130rpx
+      background #fff
+      .exchange-record{
         display flex
         align-items center
-        .avatar{
-          width 60rpx
-          height 60rpx
-          border-radius 50%
-          margin-right 16rpx
+        justify-content space-between
+        padding 20rpx
+        .user{
+          flex 0 0 auto
+          display flex
+          align-items center
+          .avatar{
+            width 60rpx
+            height 60rpx
+            border-radius 50%
+            margin-right 16rpx
+          }
+          .name{
+            font-size 26rpx
+            color #333
+          }
         }
-        .name{
+        .info{
           font-size 26rpx
-          color #333
+          color #999
+          flex 0 0 400rpx
+          no-wrap()
         }
-      }
-      .info{
-        font-size 26rpx
-        color #999
-        flex 0 0 400rpx
-        no-wrap()
-      }
-      .time{
-        font-size 26rpx
-        color #999
+        .time{
+          font-size 26rpx
+          color #999
+        }
       }
     }
+
     .confirm-btn-wrap{
       width 750rpx
       position fixed

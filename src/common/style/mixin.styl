@@ -18,9 +18,12 @@ no-wrap()
 
 // n行省略号
 wrap($n)
-  display:-webkit-box
-  -webkit-line-clamp: $n/*第几行裁剪*/
-  -webkit-box-orient:vertical
+  display -webkit-box
+  overflow hidden
+  text-overflow ellipsis
+  word-break break-all
+  -webkit-box-orient vertical
+  -webkit-line-clamp $n/*第几行裁剪*/
 
 // 内部水平和垂直方向都居中
 center()

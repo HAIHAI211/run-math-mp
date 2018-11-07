@@ -10,22 +10,14 @@
           <span class="iconfont icon-sanjiao"/>
         </div>
       </div>
-      <div class="math-gift-list">
-        <math-gift v-for="(mg, mgIndex) in mathGifts"
-                   :key="mgIndex"
-                   :name="mg.name"
-                   :price="mg.price"
-                   :docType="mg.docType" :giftId="mgIndex"/>
+      <div class="gift-list">
+        <run-gift v-for="(gift, giftIndex) in gifts" :key="giftIndex" :gift="gift"/>
       </div>
     </div>
     <div class="content physical" v-else>
-      <physical-gift v-for="(pg,pgIndex) in physicalGifts"
-                     :key="pgIndex"
-                     :img="pg.img"
-                     :name="pg.name"
-                     :postage="pg.postage"
-                     :price="pg.price"
-                     :oldPrice="pg.oldPrice"/>
+      <div class="gift-list">
+        <run-gift v-for="(gift, giftIndex) in gifts" :key="giftIndex" :gift="gift"/>
+      </div>
     </div>
     <loading v-if="loadingShow"/>
     <div class="overlay" v-if="activeBarIndex !== -1" @click="activeBarIndex=-1">
@@ -74,20 +66,36 @@ import tab from '@/components/tab'
 import loading from '@/components/loading'
 import physicalGift from '@/components/physical-gift'
 import mathGift from '@/components/math-gift'
+import runGift from '@/components/run-gift'
 import { sleep } from '@/utils'
+import { getGiftList } from '@/http/api'
 
 export default {
   components: {
     tab,
     loading,
+    runGift,
     physicalGift,
     mathGift
   },
   data () {
     return {
       loadingShow: false,
-      activeTabIndex: 0,
-      tabItems: ['数学资料', '实物礼品'],
+      activeTabIndex: 0, // 0：数学资料 1：实物礼品
+      tabItems: [
+        {
+          name: '数学资料',
+          pageNum: 1, // 当前页
+          pageSize: 10, // 一页多少条数据
+          pageCount: 10 // 一共多少页
+        },
+        {
+          name: '实物礼品',
+          pageNum: 1, // 当前页
+          pageSize: 10, // 一页多少条数据
+          pageCount: 10 // 一共多少页
+        }
+      ],
       types: [
         {
           id: 0,
@@ -116,6 +124,7 @@ export default {
         {
           id: 0,
           name: '小学',
+          tags: [0, 1, 2, 3, 4, 5],
           values: ['一年级', '二年级', '三年级', '四年级', '五年级', '六年级'],
           valueCs: [false, false, false, false, false, false],
           groupCount: 2
@@ -123,6 +132,7 @@ export default {
         {
           id: 1,
           name: '初中',
+          tags: [6, 7, 8],
           values: ['初一', '初二', '初三'],
           valueCs: [false, false, false],
           groupCount: 1
@@ -130,85 +140,40 @@ export default {
         {
           id: 2,
           name: '高中',
+          tags: [9, 10, 11],
           values: ['高一', '高二', '高三'],
           valueCs: [false, false, false],
           groupCount: 1
         }
       ],
-      physicalGifts: [],
-      fakerPhysicalGifts: [
-        {
-          name: '极客数学帮专属定制笔记本， 超值优惠大放送',
-          img: 'https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/img_02%402x.png',
-          postage: true,
-          price: 99,
-          oldPrice: 5
-        },
-        {
-          name: '极客数学帮专属定制笔记本， 超值优惠大放送',
-          img: 'https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/img_02%402x.png',
-          postage: true,
-          price: 99,
-          oldPrice: 5
-        },
-        {
-          name: '极客数学帮专属定制笔记本， 超值优惠大放送',
-          img: 'https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/img_02%402x.png',
-          postage: true,
-          price: 99,
-          oldPrice: 5
-        },
-        {
-          name: '极客数学帮专属定制笔记本， 超值优惠大放送',
-          img: 'https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/img_02%402x.png',
-          postage: true,
-          price: 99,
-          oldPrice: 5
-        },
-        {
-          name: '极客数学帮专属定制笔记本， 超值优惠大放送',
-          img: 'https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/img_02%402x.png',
-          postage: true,
-          price: 99,
-          oldPrice: 5
-        }
-      ],
-      mathGifts: [],
-      fakerMathGifts: [
-        {
-          name: '【三年级英语】期末考试试题解析.doc',
-          docType: 0,
-          docClass: '2',
-          price: 66
-        },
-        {
-          name: '【三年级英语】期末考试试题解析.doc',
-          docType: 0,
-          docClass: '2',
-          price: 66
-        },
-        {
-          name: '【三年级英语】期末考试试题解析.doc',
-          docType: 0,
-          docClass: '2',
-          price: 66
-        },
-        {
-          name: '【三年级英语】期末考试试题解析.doc',
-          docType: 0,
-          docClass: '2',
-          price: 66
-        },
-        {
-          name: '【三年级英语】期末考试试题解析.doc',
-          docType: 0,
-          docClass: '2',
-          price: 66
-        }
-      ]
+      gifts: []
     }
   },
   computed: {
+    fitGrade () {
+      let result = []
+      for (let i = 0; i < this.classes.length; i++) {
+        let cla = this.classes[i]
+        for (let j = 0; j < cla.valueCs.length; j++) {
+          let vc = cla.valueCs[j]
+          if (vc) {
+            result.push(cla.tags[j])
+          }
+        }
+      }
+      return result
+    },
+    presentType () {
+      if (this.activeTabIndex === 1) { // 实物礼品
+        return 2
+      } else { // 数学资料中的
+        if (this.activeTypeIndex === 0) { // 文档
+          return 0
+        } else { // 视频
+          return 1
+        }
+      }
+    },
     bar () {
       let result = [this.types[this.activeTypeIndex].name, '筛选', '排序']
       return result
@@ -250,7 +215,7 @@ export default {
     },
     pickSort (index) {
       this.activeSortIndex = index
-      this.activeSortIndex = -1
+      this.activeBarIndex = -1
     },
     pickSx () {
       // todo
@@ -273,12 +238,24 @@ export default {
   },
   async onPullDownRefresh () { // 下拉刷新
     console.log('下拉刷新')
-    await sleep(1200)
-    if (this.activeTabIndex === 0) { // 数学资料
-      this.mathGifts = this.fakerMathGifts
-    } else {
-      this.physicalGifts = this.fakerPhysicalGifts
+    let params = {
+      pageNum: this.tabItems[this.activeTabIndex].pageNum,
+      pageSize: this.tabItems[this.activeTabIndex].pageSize,
+      presentType: this.presentType,
+      fitGrade: this.fitGrade,
+      hasChanged: this.switchCellchecked,
+      sort: this.activeSortIndex
     }
+    console.log('请求礼物列表的参数', params)
+    const result = await getGiftList(params)
+    console.log(result)
+    this.gifts = result.data
+    // await sleep(1200)
+    // if (this.activeTabIndex === 0) { // 数学资料
+    //   this.mathGifts = this.fakerMathGifts
+    // } else {
+    //   this.physicalGifts = this.fakerPhysicalGifts
+    // }
     wx.stopPullDownRefresh()
   },
   async onReachBottom () { // 上拉加载
@@ -420,12 +397,11 @@ export default {
     }
     .content{
       &.math{
-        .math-gift-list{
-          padding 20rpx 32.5rpx
-        }
       }
       &.physical{
-        padding 20rpx 32.5rpx
+      }
+      .gift-list{
+        padding 20rpx 32.5rpx 50rpx 32.5rpx
       }
     }
     /*

@@ -1,21 +1,13 @@
-# common-mini-program
+属性状态码：
+  1、已兑换的实物礼品
+    0:代发货 1:已发货
 
-> A Mpvue project
+  2、礼物页的数学资料的类型
+    0:文档 1:视频 2:实物礼品
 
-## Build Setup
+  3、礼物页的数学资料的筛选条件
+    0:一年级 1:二年级.....11:高三
 
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-```
-
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+  4、礼物也的数学资料的排序
+    0: 价格由低到高排序
+    1: 价格由高到低排序

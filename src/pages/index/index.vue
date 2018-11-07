@@ -105,12 +105,10 @@ export default {
 
   components: {
   },
-  created () {
+  mounted () {
     this.SET_SYSTEM_INFO()
     this.createFakeRankList()
     this.createFakeGiftList()
-  },
-  mounted () {
   },
   methods: {
     ...mapActions(['SET_SYSTEM_INFO']),

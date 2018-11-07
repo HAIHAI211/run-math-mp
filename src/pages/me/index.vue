@@ -25,18 +25,18 @@
     </div>
     <div class="order">
       <div class="title">我的订单</div>
-      <navigator class="order-item" url="">
+      <navigator class="order-item" url="/pages/order/main?tag=0">
         <div class="left">
           <div class="icon icon-0"></div>
-          <div class="name">待发货</div>
+          <div class="name">数学资料</div>
         </div>
         <span class="iconfont icon-fanhui"/>
         <div class="line"></div>
       </navigator>
-      <navigator class="order-item" style="margin-bottom: 17rpx" url="">
+      <navigator class="order-item" style="margin-bottom: 17rpx" url="/pages/order/main?tag=1">
         <div class="left">
           <div class="icon icon-1"></div>
-          <div class="name">全部订单</div>
+          <div class="name">实物礼品</div>
         </div>
         <span class="iconfont icon-fanhui"/>
       </navigator>

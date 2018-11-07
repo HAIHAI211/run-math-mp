@@ -25,7 +25,7 @@ const host = config.host
 
 // 通用的get请求
 export const get = (params) => {
-  return fly.get(`${host}${params.url}`, qs.stringify(params.data))
+  return fly.get(`${host}${params.url}`, qs.stringify(params.data, {indices: false}))
 }
 
 // 通用的post请求
@@ -35,4 +35,13 @@ export const post = (params) => {
 // 封装的登录请求，根据后台接收方式选择是否加qs.stringify
 export const login = params => {
   return fly.post('/login', params)
+}
+
+// 礼物列表
+export const getGiftList = params => {
+  let p = {
+    data: params,
+    url: '/getGiftList'
+  }
+  return get(p)
 }
