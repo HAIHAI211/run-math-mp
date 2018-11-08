@@ -244,11 +244,13 @@ export default {
       this.activeTypeIndex = index
       this.barClosedByConfirmBtn = false
       this.activeBarIndex = -1
+      wx.startPullDownRefresh()
     },
     pickSort (index) {
       this.activeSortIndex = index
       this.barClosedByConfirmBtn = false
       this.activeBarIndex = -1
+      wx.startPullDownRefresh()
     },
     pickSx () {
       this.barClosedByConfirmBtn = true
@@ -292,10 +294,10 @@ export default {
         pageNum: this.activeTab.pageNum,
         pageSize: this.activeTab.pageSize,
         presentType: this.presentType,
-        hasChanged: this.switchCellchecked,
         sort: this.activeSortIndex
       }
       if (this.presentType !== 2) {
+        params.hasChanged = this.switchCellchecked
         params.fitGrade = this.fitGrade
       }
       console.log('请求礼物列表的参数', params)

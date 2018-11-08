@@ -1,7 +1,7 @@
 <template>
   <div class="run-gift" :url="url" >
     <div class="math-gift" v-if="gift.type === 0 || gift.type === 1">
-      <div :class="['left', 'type-' + gift.fileType]"></div>
+      <div :class="['left', 'type-' + gift.fileType, {'type-player': gift.type === 1}]"></div>
       <div class="right">
         <div class="name">{{ gift.name }}</div>
         <div class="price">
@@ -74,7 +74,7 @@ export default {
         &.type-pdf{
           bg-image('pdf')
         }
-        &.type-2{
+        &.type-player{
           bg-image('player')
         }
       }
