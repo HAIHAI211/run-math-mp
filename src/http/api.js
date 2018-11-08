@@ -25,6 +25,7 @@ const host = config.host
 
 // 通用的get请求
 export const get = (params) => {
+  console.log('params', qs.stringify(params.data, {indices: false}))
   return fly.get(`${host}${params.url}`, qs.stringify(params.data, {indices: false}))
 }
 

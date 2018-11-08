@@ -34,7 +34,12 @@
         <div class="wrap-item"  v-for="(cla, claIndex) in classes" :key="claIndex">
           <div class="title">{{ cla.name }}</div>
           <div class="btns-container">
-            <div :class="['class-btn', {'row-end': (i+1)%3===0}, {'active': cla.valueCs[i]}]" v-for="(item,i) in cla.values" :key="i" @click="classBtnSelect(claIndex, i)">{{ item }}</div>
+          <div v-for="(classLabel,classLabelIndex) in cla.labels"
+               :key="classLabelIndex"
+               :class="['class-btn', {'row-end': (classLabelIndex+1)%3===0},{'active': cla.showValues[classLabelIndex]}]"
+               @click="classBtnSelect(claIndex, classLabelIndex)">
+              {{ classLabel }}
+            </div>
           </div>
         </div>
         <div class="wrap-item" :style="{paddingBottom: '160rpx'}">
@@ -122,30 +127,31 @@ export default {
       activeSortIndex: 0,
       activeBarIndex: -1, // 正在定位哪一项[类别、筛选、排序]
       switchCellchecked: false,
+      barClosedByConfirmBtn: false, // 筛选框是否点击了确认按钮关闭的
       classes: [
         {
           id: 0,
           name: '小学',
           tags: [0, 1, 2, 3, 4, 5],
-          values: ['一年级', '二年级', '三年级', '四年级', '五年级', '六年级'],
-          valueCs: [false, false, false, false, false, false],
-          groupCount: 2
+          labels: ['一年级', '二年级', '三年级', '四年级', '五年级', '六年级'],
+          values: [false, false, false, false, false, false],
+          showValues: [false, false, false, false, false, false]
         },
         {
           id: 1,
           name: '初中',
           tags: [6, 7, 8],
-          values: ['初一', '初二', '初三'],
-          valueCs: [false, false, false],
-          groupCount: 1
+          labels: ['初一', '初二', '初三'],
+          values: [false, false, false],
+          showValues: [false, false, false]
         },
         {
           id: 2,
           name: '高中',
           tags: [9, 10, 11],
-          values: ['高一', '高二', '高三'],
-          valueCs: [false, false, false],
-          groupCount: 1
+          labels: ['高一', '高二', '高三'],
+          values: [false, false, false],
+          showValues: [false, false, false]
         }
       ]
     }
@@ -158,9 +164,8 @@ export default {
       let result = []
       for (let i = 0; i < this.classes.length; i++) {
         let cla = this.classes[i]
-        for (let j = 0; j < cla.valueCs.length; j++) {
-          let vc = cla.valueCs[j]
-          if (vc) {
+        for (let j = 0; j < cla.values.length; j++) {
+          if (cla.values[j]) {
             result.push(cla.tags[j])
           }
         }
@@ -190,9 +195,29 @@ export default {
       if (v === 1 && !this.activeTab.gifts.length) {
         wx.startPullDownRefresh()
       }
+    },
+    activeBarIndex (v) {
+      if (v === 1) { // 如果是打开筛选框，就将values赋值给showValues
+        for (let i = 0; i < this.classes.length; i++) { // valueReal = value
+          let cla = this.classes[i]
+          cla.showValues = [...cla.values]
+        }
+      }
     }
   },
   methods: {
+    clearAllTempSelects () {
+      for (let i = 0; i < this.classes.length; i++) {
+        let cla = this.classes[i]
+        for (let j = 0; j < cla.valueCs.length; j++) {
+          let vc = cla.valueCs[j]
+          if (vc) {
+            cla.valueCs[j] = false
+          }
+        }
+      }
+      this.classes = [...this.classes]
+    },
     pickActiveItem (item, index) {
       if (this.activeBarIndex === index) {
         wx.showTabBar({
@@ -215,25 +240,32 @@ export default {
     },
     pickType (index) {
       this.activeTypeIndex = index
+      this.barClosedByConfirmBtn = false
       this.activeBarIndex = -1
     },
     pickSort (index) {
       this.activeSortIndex = index
+      this.barClosedByConfirmBtn = false
       this.activeBarIndex = -1
     },
     pickSx () {
-      // todo
+      this.barClosedByConfirmBtn = true
       wx.showTabBar({
         complete: () => {
           this.activeBarIndex = -1
         }
       })
+      for (let i = 0; i < this.classes.length; i++) { // valueReal = value
+        let cla = this.classes[i]
+        cla.values = [...cla.showValues]
+      }
+      console.log('fg', this.fitGrade)
     },
     classBtnSelect (classIndex, i) {
-      console.log('classIndex', classIndex, 'i', i)
-      this.classes[classIndex].valueCs[i] = !this.classes[classIndex].valueCs[i]
+      this.classes[classIndex].showValues[i] = !this.classes[classIndex].showValues[i]
       this.classes = [...this.classes]
-      console.log(this.classes)
+      console.log('values', this.classes[0].values)
+      console.log('showValues', this.classes[0].showValues)
     },
     onSwitchCellChange (e) {
       console.log(e.mp)
@@ -347,7 +379,7 @@ export default {
         }
       }
       .wrap-1{
-        width 100%
+        width 750rpx
         height 500rpx
         box-sizing border-box
         background #fff
