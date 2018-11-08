@@ -10,11 +10,11 @@
           <span class="iconfont icon-sanjiao"/>
         </div>
       </div>
-      <div class="gift-list">
+      <div class="gift-list" v-if="activeBarIndex!==1">
         <run-gift v-for="(gift, giftIndex) in activeTab.gifts" :key="giftIndex" :gift="gift"/>
       </div>
     </div>
-    <div class="content physical" v-else>
+    <div class="content physical" v-if="activeTabIndex === 1">
       <div class="gift-list">
         <run-gift v-for="(gift, giftIndex) in activeTab.gifts" :key="giftIndex" :gift="gift"/>
       </div>
@@ -47,7 +47,7 @@
           <switch-cell
             class="vsc"
             title="显示已兑换的资料"
-            :checked=switchCellchecked
+            :checked=ShowSwitchCellchecked
             @change="onSwitchCellChange"></switch-cell>
         </div>
         <div class="confirm-btn-wrap">
@@ -127,6 +127,7 @@ export default {
       activeSortIndex: 0,
       activeBarIndex: -1, // 正在定位哪一项[类别、筛选、排序]
       switchCellchecked: false,
+      ShowSwitchCellchecked: false,
       barClosedByConfirmBtn: false, // 筛选框是否点击了确认按钮关闭的
       classes: [
         {
@@ -198,6 +199,7 @@ export default {
     },
     activeBarIndex (v) {
       if (v === 1) { // 如果是打开筛选框，就将values赋值给showValues
+        this.ShowSwitchCellchecked = this.switchCellchecked
         for (let i = 0; i < this.classes.length; i++) { // valueReal = value
           let cla = this.classes[i]
           cla.showValues = [...cla.values]
@@ -255,11 +257,13 @@ export default {
           this.activeBarIndex = -1
         }
       })
-      for (let i = 0; i < this.classes.length; i++) { // valueReal = value
+      this.switchCellchecked = this.ShowSwitchCellchecked
+      for (let i = 0; i < this.classes.length; i++) {
         let cla = this.classes[i]
         cla.values = [...cla.showValues]
       }
       console.log('fg', this.fitGrade)
+      wx.startPullDownRefresh()
     },
     classBtnSelect (classIndex, i) {
       this.classes[classIndex].showValues[i] = !this.classes[classIndex].showValues[i]
@@ -269,7 +273,7 @@ export default {
     },
     onSwitchCellChange (e) {
       console.log(e.mp)
-      this.switchCellchecked = e.mp.detail
+      this.ShowSwitchCellchecked = e.mp.detail
     },
     async fetchGiftList (isRefresh = true) {
       if (isRefresh) {
@@ -288,9 +292,11 @@ export default {
         pageNum: this.activeTab.pageNum,
         pageSize: this.activeTab.pageSize,
         presentType: this.presentType,
-        fitGrade: this.fitGrade,
         hasChanged: this.switchCellchecked,
         sort: this.activeSortIndex
+      }
+      if (this.presentType !== 2) {
+        params.fitGrade = this.fitGrade
       }
       console.log('请求礼物列表的参数', params)
       this.loadingState = 1
@@ -357,7 +363,7 @@ export default {
     }
     .overlay{
       overflow hidden
-      position absolute
+      position fixed
       top 150rpx
       bottom 0
       left 0
