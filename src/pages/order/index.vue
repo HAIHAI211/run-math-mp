@@ -20,13 +20,11 @@
   </div>
 </template>
 <script>
-import loading from '@/components/loading'
 import physicalGift from '@/components/physical-gift'
 import mathGift from '@/components/math-gift'
 // import { sleep } from '@/utils'
 export default {
   components: {
-    loading,
     physicalGift,
     mathGift
   },

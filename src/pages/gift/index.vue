@@ -11,15 +11,15 @@
         </div>
       </div>
       <div class="gift-list">
-        <run-gift v-for="(gift, giftIndex) in gifts" :key="giftIndex" :gift="gift"/>
+        <run-gift v-for="(gift, giftIndex) in activeTab.gifts" :key="giftIndex" :gift="gift"/>
       </div>
     </div>
     <div class="content physical" v-else>
       <div class="gift-list">
-        <run-gift v-for="(gift, giftIndex) in gifts" :key="giftIndex" :gift="gift"/>
+        <run-gift v-for="(gift, giftIndex) in activeTab.gifts" :key="giftIndex" :gift="gift"/>
       </div>
     </div>
-    <loading v-if="loadingShow"/>
+    <runLoading :state="loadingState"/>
     <div class="overlay" v-if="activeBarIndex !== -1" @click="activeBarIndex=-1">
       <div class="wrap-0" v-if="activeBarIndex === 0" @click.stop="">
         <div
@@ -63,7 +63,7 @@
 </template>
 <script>
 import tab from '@/components/tab'
-import loading from '@/components/loading'
+import runLoading from '@/components/run-loading'
 import physicalGift from '@/components/physical-gift'
 import mathGift from '@/components/math-gift'
 import runGift from '@/components/run-gift'
@@ -73,27 +73,29 @@ import { getGiftList } from '@/http/api'
 export default {
   components: {
     tab,
-    loading,
+    runLoading,
     runGift,
     physicalGift,
     mathGift
   },
   data () {
     return {
-      loadingShow: false,
+      loadingState: 0, // 0:不可见 1:正在加载 2:全部加载完毕 3:异常
       activeTabIndex: 0, // 0：数学资料 1：实物礼品
       tabItems: [
         {
           name: '数学资料',
           pageNum: 1, // 当前页
           pageSize: 10, // 一页多少条数据
-          pageCount: 10 // 一共多少页
+          pageCount: 10, // 一共多少页
+          gifts: [] // 礼物
         },
         {
           name: '实物礼品',
           pageNum: 1, // 当前页
           pageSize: 10, // 一页多少条数据
-          pageCount: 10 // 一共多少页
+          pageCount: 10, // 一共多少页
+          gifts: [] // 礼物
         }
       ],
       types: [
@@ -145,11 +147,13 @@ export default {
           valueCs: [false, false, false],
           groupCount: 1
         }
-      ],
-      gifts: []
+      ]
     }
   },
   computed: {
+    activeTab () {
+      return this.tabItems[this.activeTabIndex]
+    },
     fitGrade () {
       let result = []
       for (let i = 0; i < this.classes.length; i++) {
@@ -175,15 +179,15 @@ export default {
       }
     },
     bar () {
-      let result = [this.types[this.activeTypeIndex].name, '筛选', '排序']
-      return result
+      return [this.types[this.activeTypeIndex].name, '筛选', '排序']
     }
   },
   watch: {
     activeTabIndex (v) {
       this.activeBarIndex = -1
+      this.loadingState = 0
       wx.showTabBar()
-      if (v === 1 && !this.physicalGifts.length) {
+      if (v === 1 && !this.activeTab.gifts.length) {
         wx.startPullDownRefresh()
       }
     }
@@ -234,44 +238,53 @@ export default {
     onSwitchCellChange (e) {
       console.log(e.mp)
       this.switchCellchecked = e.mp.detail
+    },
+    async fetchGiftList (isRefresh = true) {
+      if (isRefresh) {
+        this.activeTab.pageNum = 1
+        this.activeTab.pageCount = 0
+      } else {
+        this.activeTab.pageNum += 1
+        if (this.activeTab.pageNum > this.activeTab.pageCount) {
+          // todo 数据已经请求到了最后一页
+          this.loadingState = 2
+          this.activeTab.pageNum -= 1
+          return
+        }
+      }
+      let params = {
+        pageNum: this.activeTab.pageNum,
+        pageSize: this.activeTab.pageSize,
+        presentType: this.presentType,
+        fitGrade: this.fitGrade,
+        hasChanged: this.switchCellchecked,
+        sort: this.activeSortIndex
+      }
+      console.log('请求礼物列表的参数', params)
+      this.loadingState = 1
+      try {
+        const result = await getGiftList(params)
+        this.loadingState = 0
+        console.log('gifts', result)
+        if (isRefresh) {
+          this.activeTab.gifts = result.data
+        } else {
+          this.activeTab.gifts = [...this.activeTab.gifts, ...result.data]
+        }
+        this.activeTab.pageCount = result.pageCount
+      } catch (e) {
+        this.loadingState = 3
+      }
     }
   },
   async onPullDownRefresh () { // 下拉刷新
     console.log('下拉刷新')
-    let params = {
-      pageNum: this.tabItems[this.activeTabIndex].pageNum,
-      pageSize: this.tabItems[this.activeTabIndex].pageSize,
-      presentType: this.presentType,
-      fitGrade: this.fitGrade,
-      hasChanged: this.switchCellchecked,
-      sort: this.activeSortIndex
-    }
-    console.log('请求礼物列表的参数', params)
-    const result = await getGiftList(params)
-    console.log(result)
-    this.gifts = result.data
-    // await sleep(1200)
-    // if (this.activeTabIndex === 0) { // 数学资料
-    //   this.mathGifts = this.fakerMathGifts
-    // } else {
-    //   this.physicalGifts = this.fakerPhysicalGifts
-    // }
+    this.fetchGiftList()
     wx.stopPullDownRefresh()
   },
   async onReachBottom () { // 上拉加载
     console.log('上拉加载')
-    this.loadingShow = true
-    await sleep(1200)
-    this.loadingShow = false
-    if (this.activeTabIndex === 0) { // 数学资料
-      if (this.mathGifts.length < 10) {
-        this.mathGifts = [...this.fakerMathGifts, ...this.fakerMathGifts]
-      }
-    } else {
-      if (this.physicalGifts.length < 10) {
-        this.physicalGifts = [...this.fakerPhysicalGifts, ...this.fakerPhysicalGifts]
-      }
-    }
+    this.fetchGiftList(false)
   },
   async mounted () {
     console.log('mounted')
@@ -401,7 +414,7 @@ export default {
       &.physical{
       }
       .gift-list{
-        padding 20rpx 32.5rpx 50rpx 32.5rpx
+        padding 20rpx 32.5rpx 10rpx 32.5rpx
       }
     }
     /*
