@@ -48,7 +48,7 @@
       <van-tab title="商品介绍">内容 2</van-tab>
     </van-tabs>
     <div class="confirm-btn-wrap">
-      <div class="confirm-btn">立即兑换</div>
+      <navigator class="confirm-btn" url="/pages/change-success/main">立即兑换</navigator>
     </div>
   </div>
 </template>
