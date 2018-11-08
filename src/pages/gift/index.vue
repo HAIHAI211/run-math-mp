@@ -69,8 +69,6 @@
 <script>
 import tab from '@/components/tab'
 import runLoading from '@/components/run-loading'
-import physicalGift from '@/components/physical-gift'
-import mathGift from '@/components/math-gift'
 import runGift from '@/components/run-gift'
 import { sleep } from '@/utils'
 import { getGiftList } from '@/http/api'
@@ -79,9 +77,7 @@ export default {
   components: {
     tab,
     runLoading,
-    runGift,
-    physicalGift,
-    mathGift
+    runGift
   },
   data () {
     return {

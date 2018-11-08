@@ -3,16 +3,11 @@
     <van-tabs :active="tag" @change="tabChange" color="#3ACF7A">
       <van-tab title="数学资料">
         <div class="gift-list math" v-if="mathGifts.length">
-          <math-gift
-            v-for="(mg,mgIndex) in mathGifts"
-            :key="mgIndex"
-            :gift="mg"/>
         </div>
         <div class="empty" v-else>暂无数据</div>
       </van-tab>
       <van-tab title="实物礼品">
         <div class="gift-list physical" v-if="mathGifts.length">
-          <physical-gift v-for="(pg,pgIndex) in physicalGifts" :key="pgIndex"/>
         </div>
         <div class="empty" v-else>暂无数据</div>
       </van-tab>
@@ -20,13 +15,9 @@
   </div>
 </template>
 <script>
-import physicalGift from '@/components/physical-gift'
-import mathGift from '@/components/math-gift'
 // import { sleep } from '@/utils'
 export default {
   components: {
-    physicalGift,
-    mathGift
   },
   data () {
     return {

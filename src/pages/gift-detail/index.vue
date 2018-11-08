@@ -13,7 +13,7 @@
     <div class="gift-info">
       <div class="name">{{ name }}</div>
       <div class="middle">
-        <div class="postage" v-if="giftType===1">包邮</div>
+        <div class="postage" v-if="giftType===2">包邮</div>
         <div class="shengyu">今日剩余：{{ leftCount }}份</div>
       </div>
       <div class="bottom">
@@ -22,7 +22,7 @@
             <span class="num">{{ price }}</span>
             <span class="suffix">数学币</span>
           </div>
-          <div class="old" v-if="giftType===1">原价￥{{ oldPrice }}</div>
+          <div class="old" v-if="giftType===2">原价￥{{ oldPrice }}</div>
         </div>
         <div class="share">
           分享好友

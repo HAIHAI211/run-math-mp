@@ -1,5 +1,5 @@
 <template>
-  <div class="run-gift" :url="url" >
+  <navigator class="run-gift" :url="url" >
     <div class="math-gift" v-if="gift.type === 0 || gift.type === 1">
       <div :class="['left', 'type-' + gift.fileType, {'type-player': gift.type === 1}]"></div>
       <div class="right">
@@ -29,7 +29,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </navigator>
 </template>
 <script>
 export default {
@@ -48,6 +48,11 @@ export default {
           originalPrice: 0 // 原价
         }
       }
+    }
+  },
+  computed: {
+    url () {
+      return `/pages/gift-detail/main?giftId=${this.gift.id}&giftType=${this.gift.type}`
     }
   }
 }
