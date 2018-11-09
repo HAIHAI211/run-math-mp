@@ -1,12 +1,12 @@
 <template>
-  <div class="pic-pop" v-if="selfPopShow">
-    <div class="overlay" @touchmove.stop="" @click="clickOverlay"></div>
-    <!--<div class="content" v-if="selfPopShow">-->
-      <!--<div class="pic-wrap">-->
-        <!--<image :src="url" class="pic"/>-->
-        <!--<image src="/static/img/delete@2x.png" class="close-btn" @click="clickOverlay"/>-->
-      <!--</div>-->
-    <!--</div>-->
+  <div class="pic-pop"  v-if="selfPopShow" @click.stop="" @touchmove.stop="" >
+    <div class="overlay"></div>
+    <div class="content" v-if="selfPopShow">
+      <div class="pic-wrap">
+        <image :src="url" class="pic"/>
+        <image src="/static/img/delete@2x.png" class="close-btn" @click="selfPopShow=false"/>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -35,10 +35,6 @@ export default {
     }
   },
   methods: {
-    clickOverlay () {
-      console.log('点击了overlay')
-      this.selfPopShow = false
-    }
   }
 }
 </script>
@@ -64,14 +60,18 @@ export default {
       bottom 0
       display flex
       center()
-      .close-btn{
-        width 70rpx
-        height 70rpx
-      }
       .pic-wrap{
+        position relative
         .pic{
           width 476rpx
           height 648rpx
+        }
+        .close-btn{
+          position absolute
+          top -80rpx
+          right 0
+          width 70rpx
+          height 70rpx
         }
       }
     }

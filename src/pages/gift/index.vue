@@ -192,9 +192,7 @@ export default {
       this.activeBarIndex = -1
       this.loadingState = 0
       wx.showTabBar()
-      if (v === 1 && !this.activeTab.gifts.length) {
-        wx.startPullDownRefresh()
-      }
+      wx.startPullDownRefresh()
     },
     activeBarIndex (v) {
       if (v === 1) { // 如果是打开筛选框，就将values赋值给showValues
