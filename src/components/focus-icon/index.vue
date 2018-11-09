@@ -3,7 +3,7 @@
     <image src="/static/img/box@2x.png" class="box"></image>
     <image src="/static/img/box_text@2x.png" class="box-text fade-scale-animation"></image>
     <image src="/static/img/content@2x.png" class="box-content rotate-animation"></image>
-    <pic-pop :popShow.sync="popShow" url="/static/img/Popup_window@2x.png"/>
+    <pic-pop :popShow.sync="popShow"/>
   </div>
 </template>
 <script>
