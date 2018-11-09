@@ -7,7 +7,8 @@
         <image src="/static/img/delete@2x.png" class="close-btn" @click="selfPopShow=false"/>
         <div class="detail" v-if="popType !==2">
           <div class="title">关注<span class="bold">回复“{{ boldTitle }}”</span>，{{ suffixTitle }}</div>
-          <div :class="['btn','btn-'+popType]">{{ detailBtnText }}</div>
+          <!--<div :class="['btn','btn-'+popType]">{{ detailBtnText }}</div>-->
+          <button open-type="contact":class="['btn','btn-'+popType]">{{ detailBtnText }}</button>
         </div>
       </div>
     </div>
