@@ -126,7 +126,7 @@ export default {
         .detail{
           position absolute
           left 0rpx
-          bottom 30rpx
+          bottom 50rpx
           width 100%
           display flex
           flex-direction column
