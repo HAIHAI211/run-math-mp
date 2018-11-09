@@ -185,6 +185,17 @@ export default {
   //   //   }
   //   // })
   // },
+  created () {
+    wx.login({
+      success (res) {
+        if (res.code) {
+          console.log(res.code)
+        } else {
+          console.log('登录失败！' + res.errMsg)
+        }
+      }
+    })
+  },
   onShareAppMessage: function (res) {
     if (res.from === 'button') {
       // 来自页面内转发按钮
@@ -458,8 +469,5 @@ export default {
         }
       }
     }
-  }
-  .up-down-animation{
-    animation: up-down-animation .5s ease-in 0s infinite alternate;
   }
 </style>

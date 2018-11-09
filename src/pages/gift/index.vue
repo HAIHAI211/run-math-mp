@@ -64,12 +64,14 @@
         >{{ sort.name }}</div>
       </div>
     </div>
+    <focus-icon/>
   </div>
 </template>
 <script>
 import tab from '@/components/tab'
 import runLoading from '@/components/run-loading'
 import runGift from '@/components/run-gift'
+import focusIcon from '@/components/focus-icon'
 import { sleep } from '@/utils'
 import { getGiftList } from '@/http/api'
 
@@ -77,7 +79,8 @@ export default {
   components: {
     tab,
     runLoading,
-    runGift
+    runGift,
+    focusIcon
   },
   data () {
     return {
@@ -204,6 +207,9 @@ export default {
     }
   },
   methods: {
+    test () {
+      console.log('test')
+    },
     clearAllTempSelects () {
       for (let i = 0; i < this.classes.length; i++) {
         let cla = this.classes[i]
@@ -362,6 +368,7 @@ export default {
     .overlay{
       overflow hidden
       position fixed
+      z-index 100
       top 150rpx
       bottom 0
       left 0

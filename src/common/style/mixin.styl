@@ -63,4 +63,25 @@ px2rpx($px)
   to {transform: translateY(12rpx)}
 }
 
+@-webkit-keyframes fade-scale-animation
+{
+  from {
+    opacity 0.5
+    transform: scale(.5,.5)
+  }
+  to {
+    opacity 1
+    transform: scale(1.5,1.5)
+  }
+}
+@-webkit-keyframes rotate-animation
+{
+  from {
+    transform: rotate(-5deg)
+  }
+  to {
+    transform: rotate(5deg)
+  }
+}
+
 
