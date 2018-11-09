@@ -48,26 +48,27 @@
         <span class="iconfont icon-fanhui"/>
         <div class="line"></div>
       </navigator>
-      <navigator class="order-item">
+      <div class="order-item" @click="picPopShow=true">
         <div class="left">
           <div class="icon icon-3"></div>
           <div class="name">联系我们</div>
         </div>
         <span class="iconfont icon-fanhui"/>
-      </navigator>
+      </div>
     </div>
     <div class="ad-wrap">
       <div class="ad" :style="{backgroundImage: 'url(' + ad +')'}" v-if="ad.length">
       </div>
     </div>
+    <pic-pop :popType="1" :popShow.sync="picPopShow"/>
   </div>
 </template>
 
 <script>
-import tabBar from '@/components/tab-bar'
+import picPop from '@/components/pic-pop'
 export default {
   components: {
-    tabBar
+    picPop
   },
   data () {
     return {
@@ -77,7 +78,8 @@ export default {
       friendNums: 60,
       todayStolenSteps: 2800,
       todayTotalSteps: 30020,
-      ad: 'https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/index_banner%402x.png' // 广告地址
+      ad: 'https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/index_banner%402x.png', // 广告地址
+      picPopShow: false
     }
   },
 
@@ -201,5 +203,11 @@ export default {
         bg-size(750rpx, 250rpx)
       }
     }
+/*    .contact{
+      position absolute
+      width 100%
+      height 100%
+      opacity 0
+    }*/
   }
 </style>
