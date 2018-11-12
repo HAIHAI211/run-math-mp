@@ -59,38 +59,18 @@
         </div>
       </div>
     </div>
-    <!--<web-view src="https://mp.weixin.qq.com/"></web-view>-->
-    <!--<official-account @load='officialLoad' @error="officialError"></official-account>-->
-    <!--<a href="/pages/animationtest/main">去往动画页面</a>-->
-
-
-    <!--<a href="/pages/counter/main" class="counter">去往Vuex示例页面</a>-->
-<!--    <van-popup
-      :show="show"
-      z-index="10"
-      :close-on-click-overlay="true"
-      :overlay="true"
-      @close="onClose"
-      custom-style="top:500rpx;"
-      duration="300"
-    >
-      <div class="wrap">
-        <div class="title">
-          登录需要获得您的授权
-        </div>
-        <button open-type="getUserInfo" @getuserinfo="getuserinfo">同意</button>
-        <div class="btn" @click="refuse">拒绝</div>
-      </div>
-    </van-popup>-->
+    <accredit-pop :show.sync="accreditPopShow" :type="accreditType"/>
   </div>
 </template>
 <script>
 import { mapActions } from 'vuex'
-
+import accreditPop from '@/components/accredit-pop'
+// import auths from '@/utils/auths'
 export default {
   data () {
     return {
-      motto: 'Hello World',
+      accreditPopShow: true,
+      accreditType: 'all', // 微信运动和用户信息权限都要获取
       userInfo: {},
       show: false,
       coinNum: 451,
@@ -104,9 +84,41 @@ export default {
   },
 
   components: {
+    accreditPop
+  },
+  onShow () {
+    this.accreditPopShow = true
+    // auths.werun()
+    // wx.getWeRunData({
+    //   success: (res) => {
+    //     console.log(res)
+    //   }
+    // })
+    // wx.getSetting({
+    //   success: (res) => {
+    //     console.log(res.authSetting)
+    //     let authSetting = res.authSetting
+    //     let userInfoScope = authSetting['scope.userInfo']
+    //     let werunScope = authSetting['scope.werun']
+    //     this.accreditPopShow = !userInfoScope || !werunScope
+    //     if (!userInfoScope && !werunScope) {
+    //       this.accreditType = 'both'
+    //     }
+    //     if (userInfoScope && !werunScope) {
+    //       this.accreditType = 'werun'
+    //     }
+    //     if (!userInfoScope && werunScope) {
+    //       this.accreditType = 'userinfo'
+    //     }
+    //     if (userInfoScope && werunScope) {
+    //     }
+    //     console.log('accreditType：', this.accreditType)
+    //   },
+    //   fail: (res) => {
+    //   }
+    // })
   },
   mounted () {
-    this.SET_SYSTEM_INFO()
     this.createFakeRankList()
     this.createFakeGiftList()
   },
@@ -186,15 +198,15 @@ export default {
   //   // })
   // },
   created () {
-    wx.login({
-      success (res) {
-        if (res.code) {
-          console.log(res.code)
-        } else {
-          console.log('登录失败！' + res.errMsg)
-        }
-      }
-    })
+    // wx.login({
+    //   success (res) {
+    //     if (res.code) {
+    //       console.log(res.code)
+    //     } else {
+    //       console.log('登录失败！' + res.errMsg)
+    //     }
+    //   }
+    // })
   },
   onShareAppMessage: function (res) {
     if (res.from === 'button') {

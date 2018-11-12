@@ -2,9 +2,11 @@
   <div class="me-page">
     <div class="top">
       <div class="user">
-        <image class="avatar" :src="avatar"/>
+        <!--<image class="avatar" :src="avatar"/>-->
+        <open-data type="userAvatarUrl" class="avatar"></open-data>
         <div class="text">
-          <div class="name">{{ name }}</div>
+          <!--<div class="name">{{ name }}</div>-->
+          <open-data type="userNickName" class="name"></open-data>
           <div class="run-days">已经连续运动了{{ runDays }}天</div>
         </div>
       </div>
@@ -104,6 +106,7 @@ export default {
         .avatar{
           width 108rpx
           height 108rpx
+          overflow hidden
           border-radius 50%
           margin-right 36rpx
         }
