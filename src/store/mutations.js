@@ -10,6 +10,9 @@ const mutations = {
   },
   [types.SET_SYSTEM_INFO] (state, v) {
     state.systemInfo = v
+  },
+  [types.SET_WE_RUN] (state, v) {
+    state.werun = v
   }
 }
 

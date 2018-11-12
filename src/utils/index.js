@@ -24,6 +24,17 @@ export function formatTime (date) {
   return `${t1} ${t2}`
 }
 
+export function pf (method, options = {}) {
+  return new Promise((resolve, reject) => {
+    // 将options对象赋值 然后再传给下面调用的方法中
+    options.success = resolve
+    options.fail = err => {
+      reject(err)
+    }
+    wx[method](options)
+  })
+}
+
 export default {
   formatNumber,
   formatTime

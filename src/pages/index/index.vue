@@ -18,6 +18,12 @@
         <span class="text">分享即领数学币</span>
       </div>
     </div>
+    <div class="werun" v-if="!werun">
+      <span class="title">打开微信运动，步数换数学币</span>
+      <div class="run-btn-wrap">
+        <run-btn openType="openSetting" title="去打开" class="rb"/>
+      </div>
+    </div>
     <div class="rank">
       <div class="rank-head">
         <div class="icon"></div>
@@ -59,18 +65,15 @@
         </div>
       </div>
     </div>
-    <accredit-pop :show.sync="accreditPopShow" :type="accreditType"/>
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex'
-import accreditPop from '@/components/accredit-pop'
-// import auths from '@/utils/auths'
+import { mapActions, mapMutations, mapState } from 'vuex'
+import auths from '@/utils/auths'
+import runBtn from '@/components/run-btn'
 export default {
   data () {
     return {
-      accreditPopShow: true,
-      accreditType: 'all', // 微信运动和用户信息权限都要获取
       userInfo: {},
       show: false,
       coinNum: 451,
@@ -82,41 +85,12 @@ export default {
       ad: 'https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/index_banner%402x.png' // 广告地址
     }
   },
-
-  components: {
-    accreditPop
+  computed: {
+    ...mapState(['werun'])
   },
-  onShow () {
-    this.accreditPopShow = true
-    // auths.werun()
-    // wx.getWeRunData({
-    //   success: (res) => {
-    //     console.log(res)
-    //   }
-    // })
-    // wx.getSetting({
-    //   success: (res) => {
-    //     console.log(res.authSetting)
-    //     let authSetting = res.authSetting
-    //     let userInfoScope = authSetting['scope.userInfo']
-    //     let werunScope = authSetting['scope.werun']
-    //     this.accreditPopShow = !userInfoScope || !werunScope
-    //     if (!userInfoScope && !werunScope) {
-    //       this.accreditType = 'both'
-    //     }
-    //     if (userInfoScope && !werunScope) {
-    //       this.accreditType = 'werun'
-    //     }
-    //     if (!userInfoScope && werunScope) {
-    //       this.accreditType = 'userinfo'
-    //     }
-    //     if (userInfoScope && werunScope) {
-    //     }
-    //     console.log('accreditType：', this.accreditType)
-    //   },
-    //   fail: (res) => {
-    //   }
-    // })
+  components: {
+    runBtn
+    // accreditPop
   },
   mounted () {
     this.createFakeRankList()
@@ -124,6 +98,7 @@ export default {
   },
   methods: {
     ...mapActions(['SET_SYSTEM_INFO']),
+    ...mapMutations(['SET_WE_RUN']),
     createFakeRankList () {
       let result = []
       for (let i = 1; i <= 10; i++) {
@@ -184,6 +159,11 @@ export default {
       })
     }
   },
+  async onShow () { // 获取运动权限
+    const isAuthOfWerun = await auths.werun()
+    this.SET_WE_RUN(isAuthOfWerun)
+    console.log('isWerunAuth', isAuthOfWerun)
+  },
   // created () {
   //   // wx.checkSession({ // 判断是否登录
   //   //   success () {
@@ -197,7 +177,7 @@ export default {
   //   //   }
   //   // })
   // },
-  created () {
+  async created () {
     // wx.login({
     //   success (res) {
     //     if (res.code) {
@@ -322,6 +302,26 @@ export default {
         right 31rpx
         font-size 26rpx
         color main-color
+      }
+    }
+    .werun{
+      display flex
+      align-items center
+      background: #44A08D;  /* fallback for old browsers */
+      background: -webkit-linear-gradient(to right, #093637, #44A08D);  /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(to right, #093637, #44A08D); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+      span.title{
+        padding 0 50rpx
+        font-size 26rpx
+        color #fff
+      }
+      .run-btn-wrap{
+        background orange
+        width 180rpx
+        height 86rpx
+        center()
+        font-size 28rpx
+        letter-spacing 1rpx
       }
     }
     .rank{
