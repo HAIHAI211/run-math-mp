@@ -19,9 +19,12 @@
       </div>
     </div>
     <div class="werun" v-if="!werun">
-      <span class="title">打开微信运动，步数换数学币</span>
-      <div class="run-btn-wrap">
-        <run-btn openType="openSetting" title="去打开" class="rb"/>
+      <div class="title">
+        <div class="alarm">!</div>
+        打开微信运动，步数换数学币
+      </div>
+      <div class="run-btn-wrap scale-animation">
+        <run-btn openType="openSetting" title="去打开"/>
       </div>
     </div>
     <div class="rank">
@@ -307,18 +310,34 @@ export default {
     .werun{
       display flex
       align-items center
+      justify-content space-between
+      padding 15rpx
+      margin-bottom 50rpx
       background: #44A08D;  /* fallback for old browsers */
       background: -webkit-linear-gradient(to right, #093637, #44A08D);  /* Chrome 10-25, Safari 5.1-6 */
       background: linear-gradient(to right, #093637, #44A08D); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-      span.title{
-        padding 0 50rpx
-        font-size 26rpx
+      .title{
+        display flex
+        align-items center
+        font-size 27rpx
         color #fff
+        .alarm{
+          width 35rpx
+          height 35rpx
+          margin-right 10rpx
+          font-size 28rpx
+          center()
+          color #fff
+          border-radius 50%
+          background #FFB75E;
+        }
       }
       .run-btn-wrap{
-        background orange
-        width 180rpx
-        height 86rpx
+        color #fff
+        background main-color
+        width 150rpx
+        height 70rpx
+        border-radius 10rpx
         center()
         font-size 28rpx
         letter-spacing 1rpx

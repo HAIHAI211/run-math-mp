@@ -13,6 +13,9 @@ export default {
     .fade-scale-animation{
       animation fade-scale-animation .9s ease-in 0s infinite alternate;
     }
+    .scale-animation{
+      animation scale-animation .5s ease-in 0s infinite alternate;
+    }
     .rotate-animation{
       animation rotate-animation .5s ease-in 0s infinite alternate;
     }

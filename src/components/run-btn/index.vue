@@ -23,11 +23,15 @@ export default {
   @import "~@/common/style/color.styl"
   .run-btn{
     position relative
+    width 100%
+    height 100%
     center()
     .wx-btn{
       position absolute
       width 100%
       height 100%
+      top 0
+      left 0
       opacity 0
     }
   }
