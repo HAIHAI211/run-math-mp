@@ -20,6 +20,7 @@ export default {
   methods: {
     ...mapMutations(['SET_WE_RUN']),
     opensetting (e) {
+      console.log('hah')
       const authSetting = e.mp.detail.authSetting
       this.SET_WE_RUN(!!authSetting['scope.werun'])
       this.$emit('opensetting', e)

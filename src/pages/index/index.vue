@@ -99,10 +99,12 @@ export default {
     // accreditPop
   },
   async onShow () {
+    console.log('onShow页面')
     const isAuthOfWerun = await auths.werun()
     this.SET_WE_RUN(isAuthOfWerun)
   },
   async mounted () {
+    console.log('mounted')
     this.createFakeRankList()
     this.createFakeGiftList()
   },
@@ -161,20 +163,7 @@ export default {
     },
     getuserinfo (e) {
       console.log(e.mp.detail)
-    },
-    openSetting () {
-      wx.openSetting({
-        success (res) {
-          console.log(res.authSetting)
-          // res.authSetting = {
-          //   "scope.userInfo": true,
-          //   "scope.userLocation": true
-          // }
-        }
-      })
     }
-  },
-  async onShow () { // 获取运动权限
   },
   // created () {
   //   // wx.checkSession({ // 判断是否登录

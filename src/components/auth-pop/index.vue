@@ -6,7 +6,7 @@
         <div class="title">提示</div>
         <div class="sub-title">需要微信运动步数授权，才能兑换数学币哦~</div>
         <image class="icon" src="/static/img/auth.png"/>
-        <div class="btn-wrap">
+        <div class="btn-wrap" @click="close">
           <run-btn openType="openSetting" title="确定" @opensetting="os"/>
         </div>
       </div>
@@ -23,8 +23,13 @@ export default {
     runBtn
   },
   methods: {
-    os () {
+    os () { // 不会执行 因为按钮所在弹窗已经close了
+      console.log('1')
+      // this.selfShow = false
+    },
+    close () {
       this.selfShow = false
+      console.log('2')
     }
   }
 }
