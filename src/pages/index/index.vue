@@ -6,9 +6,9 @@
         <span class="coin-num">{{ coinNum }}</span>
         <span class="step-hint">可兑换步数{{ stepNum }}</span>
       </div>
-      <div class="coin-charge-btn" @click="coinChargeClick">一键兑换数学币</div>
+      <div class="coin-charge-btn" @click="_coinChargeClick">一键兑换数学币</div>
       <div class="check-day">连续签到{{checkDays}}天</div>
-      <div class="check-in-btn up-down-animation">
+      <div class="check-in-btn up-down-animation" @click="_sign">
         <div class="icon"></div>
         <span class="text">签到</span>
       </div>
@@ -74,17 +74,19 @@
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex'
 import auths from '@/utils/auths'
+import { formatTime } from '@/utils'
 import runBtn from '@/components/run-btn'
 import authPop from '@/components/auth-pop'
+import { sign } from '@/http/api'
 export default {
   data () {
     return {
       authPopShow: false,
       userInfo: {},
       show: false,
-      coinNum: 451,
-      stepNum: 35500,
-      checkDays: 2,
+      coinNum: 0,
+      stepNum: 0,
+      checkDays: 0,
       rankList: [],
       giftList: [],
       ad: 'https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/index_banner%402x.png' // 广告地址
@@ -116,7 +118,13 @@ export default {
   methods: {
     ...mapActions(['SET_SYSTEM_INFO', 'login']),
     ...mapMutations(['SET_WE_RUN']),
-    coinChargeClick () {
+    _sign () { // 签到
+      sign({
+        openId: this.openId,
+        signTime: formatTime(new Date())
+      })
+    },
+    _coinChargeClick () { // 一键兑换数学币
       if (!this.werun) {
         this.authPopShow = true
       }

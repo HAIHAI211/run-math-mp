@@ -41,6 +41,14 @@ export const login = params => {
   })
 }
 
+// 签到
+export const sign = params => {
+  return post({
+    url: '/user/sign',
+    data: params
+  })
+}
+
 // 礼物列表
 export const getGiftList = params => {
   return get({
