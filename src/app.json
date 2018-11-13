@@ -2,16 +2,16 @@
   "pages": [
     "pages/index/main",
     "pages/gift/main",
-    "pages/gift-detail/main",
-    "pages/change-success/main",
     "pages/step/main",
     "pages/me/main",
+    "pages/gift-detail/main",
+    "pages/change-success/main",
+    "pages/address/main",
+    "pages/order-confirm/main",
+    "pages/order/main",
     "pages/animationtest/main",
     "pages/filetest/main",
-    "pages/videotest/main",
-    "pages/logs/main",
-    "pages/counter/main",
-    "pages/address/main"
+    "pages/videotest/main"
   ],
   "window": {
     "backgroundTextStyle": "dark",
