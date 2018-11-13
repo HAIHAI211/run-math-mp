@@ -31,18 +31,20 @@ export const get = (params) => {
 
 // 通用的post请求
 export const post = (params) => {
-  return fly.post(`${host}${params.url}`, qs.stringify(params.data))
+  return fly.post(`${host}${params.url}`, params.data)
 }
 // 封装的登录请求，根据后台接收方式选择是否加qs.stringify
 export const login = params => {
-  return fly.post('/login', params)
+  return post({
+    url: '/user/login',
+    data: params
+  })
 }
 
 // 礼物列表
 export const getGiftList = params => {
-  let p = {
+  return get({
     data: params,
     url: '/getGiftList'
-  }
-  return get(p)
+  })
 }

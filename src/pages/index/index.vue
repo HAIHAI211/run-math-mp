@@ -91,25 +91,30 @@ export default {
     }
   },
   computed: {
-    ...mapState(['werun'])
+    ...mapState(['werun', 'isLogin', 'openId'])
   },
   components: {
     runBtn,
     authPop
     // accreditPop
   },
+  created () {
+    this.login()
+    this.createFakeRankList()
+    this.createFakeGiftList()
+  },
   async onShow () {
     console.log('onShow页面')
     const isAuthOfWerun = await auths.werun()
     this.SET_WE_RUN(isAuthOfWerun)
+    console.log('isLogin', this.isLogin)
+    console.log('openId', this.openId)
   },
   async mounted () {
     console.log('mounted')
-    this.createFakeRankList()
-    this.createFakeGiftList()
   },
   methods: {
-    ...mapActions(['SET_SYSTEM_INFO']),
+    ...mapActions(['SET_SYSTEM_INFO', 'login']),
     ...mapMutations(['SET_WE_RUN']),
     coinChargeClick () {
       if (!this.werun) {
@@ -178,17 +183,6 @@ export default {
   //   //   }
   //   // })
   // },
-  async created () {
-    // wx.login({
-    //   success (res) {
-    //     if (res.code) {
-    //       console.log(res.code)
-    //     } else {
-    //       console.log('登录失败！' + res.errMsg)
-    //     }
-    //   }
-    // })
-  },
   onShareAppMessage: function (res) {
     if (res.from === 'button') {
       // 来自页面内转发按钮
