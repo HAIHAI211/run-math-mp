@@ -13,6 +13,7 @@ const mutations = {
   },
   [types.SET_WE_RUN] (state, v) {
     state.werun = v
+    console.log('isWerunAuth', v)
   }
 }
 

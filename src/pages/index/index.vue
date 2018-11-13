@@ -6,7 +6,7 @@
         <span class="coin-num">{{ coinNum }}</span>
         <span class="step-hint">可兑换步数{{ stepNum }}</span>
       </div>
-      <div class="coin-charge-btn">{{chargeText}}</div>
+      <div class="coin-charge-btn" @click="coinChargeClick">一键兑换数学币</div>
       <div class="check-day">连续签到{{checkDays}}天</div>
       <div class="check-in-btn up-down-animation">
         <div class="icon"></div>
@@ -68,20 +68,22 @@
         </div>
       </div>
     </div>
+    <auth-pop :show.sync="authPopShow"/>
   </div>
 </template>
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex'
 import auths from '@/utils/auths'
 import runBtn from '@/components/run-btn'
+import authPop from '@/components/auth-pop'
 export default {
   data () {
     return {
+      authPopShow: false,
       userInfo: {},
       show: false,
       coinNum: 451,
       stepNum: 35500,
-      chargeText: '一键兑换数学币',
       checkDays: 2,
       rankList: [],
       giftList: [],
@@ -92,16 +94,26 @@ export default {
     ...mapState(['werun'])
   },
   components: {
-    runBtn
+    runBtn,
+    authPop
     // accreditPop
   },
-  mounted () {
+  async onShow () {
+    const isAuthOfWerun = await auths.werun()
+    this.SET_WE_RUN(isAuthOfWerun)
+  },
+  async mounted () {
     this.createFakeRankList()
     this.createFakeGiftList()
   },
   methods: {
     ...mapActions(['SET_SYSTEM_INFO']),
     ...mapMutations(['SET_WE_RUN']),
+    coinChargeClick () {
+      if (!this.werun) {
+        this.authPopShow = true
+      }
+    },
     createFakeRankList () {
       let result = []
       for (let i = 1; i <= 10; i++) {
@@ -163,9 +175,6 @@ export default {
     }
   },
   async onShow () { // 获取运动权限
-    const isAuthOfWerun = await auths.werun()
-    this.SET_WE_RUN(isAuthOfWerun)
-    console.log('isWerunAuth', isAuthOfWerun)
   },
   // created () {
   //   // wx.checkSession({ // 判断是否登录

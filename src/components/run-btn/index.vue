@@ -1,10 +1,11 @@
 <template>
   <div class="run-btn">
     <span>{{ title }}</span>
-    <button class="wx-btn" :open-type="openType"></button>
+    <button class="wx-btn" :open-type="openType" @opensetting="opensetting"></button>
   </div>
 </template>
 <script>
+import { mapMutations } from 'vuex'
 export default {
   props: {
     openType: {
@@ -14,6 +15,14 @@ export default {
     title: {
       type: String,
       default: ''
+    }
+  },
+  methods: {
+    ...mapMutations(['SET_WE_RUN']),
+    opensetting (e) {
+      const authSetting = e.mp.detail.authSetting
+      this.SET_WE_RUN(!!authSetting['scope.werun'])
+      this.$emit('opensetting', e)
     }
   }
 }
