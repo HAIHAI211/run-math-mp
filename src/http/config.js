@@ -12,7 +12,7 @@ const fly = new Fly()
 // //定义公共headers
 // fly.config.headers={xx:5,bb:6,dd:7}
 // //设置超时
-fly.config.timeout = 20000
+fly.config.timeout = 8000
 // //设置请求基地址
 fly.config.baseURL = config.host
 
@@ -28,7 +28,7 @@ fly.interceptors.request.use((request) => {
   // return Promise.reject(new Error(""))
   wx.showLoading({
     title: '加载中',
-    mask: 'true'
+    mask: true
   })
   // 可以显式返回request, 也可以不返回，没有返回值时拦截器中默认返回request
   return request

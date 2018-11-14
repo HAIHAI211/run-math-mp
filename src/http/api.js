@@ -57,6 +57,14 @@ export const decrypt = params => {
   })
 }
 
+// 排行榜
+export const getRank = params => {
+  return get({
+    url: '/user/rank',
+    data: params
+  })
+}
+
 // 礼物列表
 export const getGiftList = params => {
   return get({

@@ -54,6 +54,12 @@ const actions = {
         openId: state.openId,
         type: 'step'
       })
+      console.log('发往后台获取步数的参数', {
+        encryptedData,
+        iv,
+        openId: state.openId,
+        type: 'step'
+      })
       commit(types.SET_STEPS_EXCHANGED, decryptResult.data.canBeExchangedToday)
       console.log('获取剩余步数信息', decryptResult)
     } catch (e) {

@@ -1,15 +1,12 @@
 <template>
   <div class="step-page">
-    偷步数
-    <!--<tab-bar :active-index="2"/>-->
+    <image class="bg-img" src="https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/bg%403x.png"/>
   </div>
 </template>
-
 <script>
-import tabBar from '@/components/tab-bar'
 export default {
   components: {
-    tabBar
+    // tabBar
   },
   data () {
     return {
@@ -23,5 +20,10 @@ export default {
 
 <style scoped lang="stylus">
   .step-page{
+    .bg-img{
+      scale = 1931/1125
+      width 750rpx
+      height 750rpx * scale
+    }
   }
 </style>

@@ -27,7 +27,7 @@
         <run-btn openType="openSetting" title="去打开"/>
       </div>
     </div>
-    <div class="rank">
+    <div class="rank" v-if="rankList.length">
       <div class="rank-head">
         <div class="icon"></div>
         <div class="title">偷步数赚数学币<div class="arrow"></div></div>
@@ -39,10 +39,10 @@
             <div class="avatar">
               <div :class="['crown', 'crown-'+itemIndex]" v-if="itemIndex<=2"></div>
               <!--<image class="circle" :src="item.avatar"/>-->
-              <div class="circle" :style="{backgroundImage: 'url(' + item.avatar + ')'}"></div>
+              <div class="circle" :style="{backgroundImage: 'url(' + item.avatarUrl + ')'}"></div>
             </div>
-            <div class="name">{{item.name}}</div>
-            <div class="step-num">{{item.stepNum}}</div>
+            <div class="name">{{item.nickName}}</div>
+            <div class="step-num">{{item.todayStep}}</div>
           </div>
         </div>
       </scroll-view>
@@ -75,7 +75,7 @@
 import { mapActions, mapState } from 'vuex'
 import runBtn from '@/components/run-btn'
 import authPop from '@/components/auth-pop'
-// import { sign } from '@/http/api'
+import * as api from '@/http/api'
 export default {
   components: {
     runBtn,
@@ -103,13 +103,13 @@ export default {
   methods: {
     ...mapActions(['SET_SYSTEM_INFO', 'LOGIN', 'AUTH_OF_WERUN', 'SET_STEP_EXCHANGE', 'SIGN']),
     // ...mapMutations(['SET_WE_RUN']),
-    // async _sign () { // 签到
-    //   const result = await sign({
-    //     openId: this.openId,
-    //     signTime: formatTime(new Date())
-    //   })
-    //   console.log('签到结果', result)
-    // },
+    async _getRank () { // 获取排行榜
+      const rankResult = await api.getRank()
+      if (rankResult.code === 0) {
+        this.rankList = rankResult.data
+      }
+      console.log('排行榜数据', rankResult)
+    },
     _coinChargeClick () { // 一键兑换数学币
       if (!this.werun) {
         this.authPopShow = true
@@ -142,7 +142,8 @@ export default {
   },
   async onLoad () {
     console.log('onLoad页面')
-    this.createFakeRankList()
+    this._getRank()
+    // this.createFakeRankList()
     this.createFakeGiftList()
   },
   async onShow () {
@@ -381,12 +382,13 @@ export default {
             .name{
               margin-top 7rpx
               width 140rpx
-              font-size 24rpx
+              font-size 22rpx
               color #666
+              text-align center
               no-wrap()
             }
             .step-num{
-              margin-top 5rpx
+              margin-top 8rpx
               background #ECFFF4
               width 101rpx
               height 32rpx
