@@ -30,7 +30,7 @@
     <div class="rank" v-if="rankList.length">
       <div class="rank-head">
         <div class="icon"></div>
-        <div class="title">偷步数赚数学币<div class="arrow"></div></div>
+        <div class="title" @click="_toStealCoin">偷步数赚数学币<div class="arrow"></div></div>
       </div>
       <scroll-view class="rank-scroll-view" scroll-x>
         <div class="scroll-view-item-wrap">
@@ -47,7 +47,7 @@
         </div>
       </scroll-view>
     </div>
-    <div class="exchange">
+    <div class="exchange" v-if="giftList.length">
       <div class="title">礼品兑换</div>
       <div class="gift-item" v-for="(gift,giftIndex) in giftList" :key="giftIndex">
         <image class="left-img" :src="gift.img" />
@@ -103,6 +103,11 @@ export default {
   methods: {
     ...mapActions(['SET_SYSTEM_INFO', 'LOGIN', 'AUTH_OF_WERUN', 'SET_STEP_EXCHANGE', 'SIGN']),
     // ...mapMutations(['SET_WE_RUN']),
+    _toStealCoin () {
+      wx.switchTab({
+        url: '/pages/step/main'
+      })
+    },
     async _getRank () { // 获取排行榜
       const rankResult = await api.getRank()
       if (rankResult.code === 0) {
@@ -144,7 +149,7 @@ export default {
     console.log('onLoad页面')
     this._getRank()
     // this.createFakeRankList()
-    this.createFakeGiftList()
+    // this.createFakeGiftList()
   },
   async onShow () {
     console.log('onShow页面')
