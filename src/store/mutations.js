@@ -24,6 +24,12 @@ const mutations = {
   [types.SET_WE_RUN] (state, v) {
     state.werun = v
     console.log('isWerunAuth', v)
+  },
+  [types.SET_STEPS_EXCHANGED] (state, v) {
+    state.stepsOfTodayCanExchanged = v
+  },
+  [types.SET_CONTINUES] (state, v) {
+    state.continues = v
   }
 }
 

@@ -4,11 +4,11 @@
       <div class="coin-center">
         <span class="coin-hint">我的数学币</span>
         <span class="coin-num">{{ coinNum }}</span>
-        <span class="step-hint">可兑换步数{{ stepNum }}</span>
+        <span class="step-hint">可兑换步数{{ stepsOfTodayCanExchanged }}</span>
       </div>
       <div class="coin-charge-btn" @click="_coinChargeClick">一键兑换数学币</div>
       <div class="check-day">连续签到{{checkDays}}天</div>
-      <div class="check-in-btn up-down-animation" @click="_sign">
+      <div class="check-in-btn up-down-animation" @click="SIGN">
         <div class="icon"></div>
         <span class="text">签到</span>
       </div>
@@ -18,7 +18,7 @@
         <span class="text">分享即领数学币</span>
       </div>
     </div>
-    <div class="werun" v-if="!werun">
+    <div class="werun" v-if="werun === false">
       <div class="title">
         <div class="alarm">!</div>
         打开微信运动，步数换数学币
@@ -72,13 +72,16 @@
   </div>
 </template>
 <script>
-import { mapActions, mapMutations, mapState } from 'vuex'
-import auths from '@/utils/auths'
-import { formatTime } from '@/utils'
+import { mapActions, mapState } from 'vuex'
 import runBtn from '@/components/run-btn'
 import authPop from '@/components/auth-pop'
-import { sign } from '@/http/api'
+// import { sign } from '@/http/api'
 export default {
+  components: {
+    runBtn,
+    authPop
+    // accreditPop
+  },
   data () {
     return {
       authPopShow: false,
@@ -93,37 +96,20 @@ export default {
     }
   },
   computed: {
-    ...mapState(['werun', 'isLogin', 'openId'])
+    ...mapState(['werun', 'isLogin', 'openId', 'stepsOfTodayCanExchanged'])
   },
-  components: {
-    runBtn,
-    authPop
-    // accreditPop
-  },
-  created () {
-    this.login()
-    this.createFakeRankList()
-    this.createFakeGiftList()
-  },
-  async onShow () {
-    console.log('onShow页面')
-    const isAuthOfWerun = await auths.werun()
-    this.SET_WE_RUN(isAuthOfWerun)
-    console.log('isLogin', this.isLogin)
-    console.log('openId', this.openId)
-  },
-  async mounted () {
-    console.log('mounted')
+  watch: {
   },
   methods: {
-    ...mapActions(['SET_SYSTEM_INFO', 'login']),
-    ...mapMutations(['SET_WE_RUN']),
-    _sign () { // 签到
-      sign({
-        openId: this.openId,
-        signTime: formatTime(new Date())
-      })
-    },
+    ...mapActions(['SET_SYSTEM_INFO', 'LOGIN', 'AUTH_OF_WERUN', 'SET_STEP_EXCHANGE', 'SIGN']),
+    // ...mapMutations(['SET_WE_RUN']),
+    // async _sign () { // 签到
+    //   const result = await sign({
+    //     openId: this.openId,
+    //     signTime: formatTime(new Date())
+    //   })
+    //   console.log('签到结果', result)
+    // },
     _coinChargeClick () { // 一键兑换数学币
       if (!this.werun) {
         this.authPopShow = true
@@ -153,6 +139,25 @@ export default {
       }
       this.giftList = result
     }
+  },
+  async onLoad () {
+    console.log('onLoad页面')
+    this.createFakeRankList()
+    this.createFakeGiftList()
+  },
+  async onShow () {
+    console.log('onShow页面')
+    await this.LOGIN()
+    console.log('isLogin', this.isLogin)
+    console.log('openId', this.openId)
+    await this.AUTH_OF_WERUN()
+    if (this.isLogin && this.werun) { // 如果已经登录且有运动权限，就获取运动步数信息
+      console.log('【可以获取步数了哦哦哦哦】')
+      this.SET_STEP_EXCHANGE()
+    }
+  },
+  async mounted () {
+    console.log('mounted')
   },
   onShareAppMessage: function (res) {
     if (res.from === 'button') {

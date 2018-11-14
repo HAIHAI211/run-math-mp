@@ -49,6 +49,14 @@ export const sign = params => {
   })
 }
 
+// 解密
+export const decrypt = params => {
+  return post({
+    url: '/user/decrypt',
+    data: params
+  })
+}
+
 // 礼物列表
 export const getGiftList = params => {
   return get({
