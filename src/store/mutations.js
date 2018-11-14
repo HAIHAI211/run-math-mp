@@ -1,11 +1,11 @@
 import * as types from './mutation-types'
 
-function setStorage (key, data) {
-  wx.setStorage({
-    key: key,
-    data: data
-  })
-}
+// function setStorage (key, data) {
+//   wx.setStorage({
+//     key: key,
+//     data: data
+//   })
+// }
 
 const mutations = {
   /*
@@ -14,19 +14,15 @@ const mutations = {
   * */
   [types.SET_OPEN_ID] (state, v) {
     state.openId = v
-    setStorage('openId', v)
   },
   [types.SET_IS_LOGIN] (state, v) {
     state.isLogin = v
-    setStorage('isLogin', v)
   },
   [types.SET_SYSTEM_INFO] (state, v) {
     state.systemInfo = v
-    setStorage('systemInfo', v)
   },
   [types.SET_WE_RUN] (state, v) {
     state.werun = v
-    setStorage('werun', v)
     console.log('isWerunAuth', v)
   }
 }

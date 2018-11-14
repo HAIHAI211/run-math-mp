@@ -152,45 +152,8 @@ export default {
         })
       }
       this.giftList = result
-    },
-    officialLoad (e) {
-      console.log('e', e.mp.detail)
-    },
-    officialError (e) {
-    },
-    bindViewTap () {
-      const url = '../logs/main'
-      wx.navigateTo({ url })
-    },
-    getUserInfo () {
-      // 调用登录接口
-      wx.login({
-        success: () => {
-          wx.getUserInfo({
-            success: (res) => {
-              this.userInfo = res.userInfo
-            }
-          })
-        }
-      })
-    },
-    getuserinfo (e) {
-      console.log(e.mp.detail)
     }
   },
-  // created () {
-  //   // wx.checkSession({ // 判断是否登录
-  //   //   success () {
-  //   //     console.log('已登录')
-  //   //     // session_key 未过期，并且在本生命周期一直有效
-  //   //   },
-  //   //   fail () {
-  //   //     console.log('未登录')
-  //   //     // session_key 已经失效，需要重新执行登录流程
-  //   //     wx.login() // 重新登录
-  //   //   }
-  //   // })
-  // },
   onShareAppMessage: function (res) {
     if (res.from === 'button') {
       // 来自页面内转发按钮
