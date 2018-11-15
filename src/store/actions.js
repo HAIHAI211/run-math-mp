@@ -11,7 +11,7 @@ const actions = {
     })
   },
   async LOGIN ({commit}) {
-    console.log('开始登录')
+    console.log('---开始登录---')
     try {
       const checkSessionResult = await pf('checkSession')
       console.log('session没过期', checkSessionResult)
@@ -39,32 +39,36 @@ const actions = {
         commit(types.SET_IS_LOGIN, false)
       }
     }
+    console.log('---登录结束---')
   },
   async AUTH_OF_WERUN ({commit}) {
     const isAuthOfWerun = await auths.werun()
     commit(types.SET_WE_RUN, isAuthOfWerun)
   },
   async SET_STEP_EXCHANGE ({commit, state}) {
-    const {encryptedData, iv} = await pf('getWeRunData')
-    console.log('从微信获取运动iv+ed信息', encryptedData, iv)
-    try {
-      const decryptResult = await api.decrypt({
-        encryptedData,
-        iv,
-        openId: state.openId,
-        type: 'step'
-      })
-      console.log('发往后台获取步数的参数', {
-        encryptedData,
-        iv,
-        openId: state.openId,
-        type: 'step'
-      })
-      commit(types.SET_STEPS_EXCHANGED, decryptResult.data.canBeExchangedToday)
-      console.log('获取剩余步数信息', decryptResult)
-    } catch (e) {
-      // commit(types.SET_STEPS_EXCHANGED, 0)
-      console.log('获取剩余步数信息失败')
+    if (state.isLogin && state.werun) {
+      console.log('【可以获取步数了哦哦哦哦】')
+      const {encryptedData, iv} = await pf('getWeRunData')
+      console.log('从微信获取运动iv+ed信息', encryptedData, iv)
+      try {
+        const decryptResult = await api.decrypt({
+          encryptedData,
+          iv,
+          openId: state.openId,
+          type: 'step'
+        })
+        console.log('发往后台获取步数的参数', {
+          encryptedData,
+          iv,
+          openId: state.openId,
+          type: 'step'
+        })
+        commit(types.SET_STEPS_EXCHANGED, decryptResult.data.canBeExchangedToday)
+        console.log('获取剩余步数信息', decryptResult)
+      } catch (e) {
+        // commit(types.SET_STEPS_EXCHANGED, 0)
+        console.log('获取剩余步数信息失败')
+      }
     }
   },
   async SIGN ({commit, state}) {

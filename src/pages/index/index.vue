@@ -76,6 +76,7 @@ import { mapActions, mapState } from 'vuex'
 import runBtn from '@/components/run-btn'
 import authPop from '@/components/auth-pop'
 import * as api from '@/http/api'
+// import * as utils from '@/utils'
 export default {
   components: {
     runBtn,
@@ -99,6 +100,10 @@ export default {
     ...mapState(['werun', 'isLogin', 'openId', 'stepsOfTodayCanExchanged'])
   },
   watch: {
+    werun (v) {
+      console.log('授权变了, 现在是', v)
+      this.SET_STEP_EXCHANGE()
+    }
   },
   methods: {
     ...mapActions(['SET_SYSTEM_INFO', 'LOGIN', 'AUTH_OF_WERUN', 'SET_STEP_EXCHANGE', 'SIGN']),
@@ -114,6 +119,13 @@ export default {
         this.rankList = rankResult.data
       }
       console.log('排行榜数据', rankResult)
+    },
+    async _getGifts () {},
+    async _loginStuff () {
+      await this.LOGIN()
+      console.log('isLogin', this.isLogin)
+      console.log('openId', this.openId)
+      await this.AUTH_OF_WERUN()
     },
     _coinChargeClick () { // 一键兑换数学币
       if (!this.werun) {
@@ -148,19 +160,12 @@ export default {
   async onLoad () {
     console.log('onLoad页面')
     this._getRank()
+    this._loginStuff()
     // this.createFakeRankList()
     // this.createFakeGiftList()
   },
   async onShow () {
     console.log('onShow页面')
-    await this.LOGIN()
-    console.log('isLogin', this.isLogin)
-    console.log('openId', this.openId)
-    await this.AUTH_OF_WERUN()
-    if (this.isLogin && this.werun) { // 如果已经登录且有运动权限，就获取运动步数信息
-      console.log('【可以获取步数了哦哦哦哦】')
-      this.SET_STEP_EXCHANGE()
-    }
   },
   async mounted () {
     console.log('mounted')
