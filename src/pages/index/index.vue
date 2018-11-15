@@ -131,31 +131,32 @@ export default {
       if (!this.werun) {
         this.authPopShow = true
       }
-    },
-    createFakeRankList () {
-      let result = []
-      for (let i = 1; i <= 10; i++) {
-        result.push({
-          avatar: `https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/por_0${i % 3 + 1}%402x.png`,
-          name: '跟着感觉走' + (i - 1) * 10,
-          stepNum: parseInt(56000 / i)
-        })
-      }
-      this.rankList = result
-    },
-    createFakeGiftList () {
-      let result = []
-      for (let i = 0; i < 4; i++) {
-        result.push({
-          img: `https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/img_0${i % 4 + 1}%402x.png`,
-          title: '极客数学帮专属定制笔记本， 超值优惠大放送',
-          oldPrice: 5,
-          postage: true,
-          price: 99
-        })
-      }
-      this.giftList = result
+      // todo
     }
+    // createFakeRankList () {
+    //   let result = []
+    //   for (let i = 1; i <= 10; i++) {
+    //     result.push({
+    //       avatar: `https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/por_0${i % 3 + 1}%402x.png`,
+    //       name: '跟着感觉走' + (i - 1) * 10,
+    //       stepNum: parseInt(56000 / i)
+    //     })
+    //   }
+    //   this.rankList = result
+    // },
+    // createFakeGiftList () {
+    //   let result = []
+    //   for (let i = 0; i < 4; i++) {
+    //     result.push({
+    //       img: `https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/img_0${i % 4 + 1}%402x.png`,
+    //       title: '极客数学帮专属定制笔记本， 超值优惠大放送',
+    //       oldPrice: 5,
+    //       postage: true,
+    //       price: 99
+    //     })
+    //   }
+    //   this.giftList = result
+    // }
   },
   async onLoad () {
     console.log('onLoad页面')

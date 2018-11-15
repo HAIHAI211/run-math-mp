@@ -10,12 +10,13 @@ const actions = {
       }
     })
   },
-  async LOGIN ({commit}) {
+  async LOGIN ({commit, state}) {
     console.log('---开始登录---')
     try {
       const checkSessionResult = await pf('checkSession')
       console.log('session没过期', checkSessionResult)
-      commit(types.SET_IS_LOGIN, true)
+      console.log('是否存在openId', !!state.openId)
+      commit(types.SET_IS_LOGIN, !!state.openId)
     } catch (e) {
       console.log('session过期', e)
       try {
