@@ -8,7 +8,7 @@
       </div>
       <div class="coin-charge-btn" @click="_coinChargeClick">一键兑换数学币</div>
       <div class="check-day">连续签到{{signDayCount}}天</div>
-      <div class="check-in-btn up-down-animation" @click="SIGN">
+      <div class="check-in-btn up-down-animation" @click="_sign">
         <div class="icon"></div>
         <span class="text">签到</span>
       </div>
@@ -49,20 +49,21 @@
     </div>
     <div class="exchange" v-if="giftList.length">
       <div class="title">礼品兑换</div>
-      <div class="gift-item" v-for="(gift,giftIndex) in giftList" :key="giftIndex">
-        <image class="left-img" :src="gift.img" />
-        <div class="right">
-          <div class="title">{{ gift.title }}</div>
-          <div class="info">
-            <div class="old-price">原价￥{{ gift.oldPrice }}</div>
-            <div class="postage" v-if="gift.postage">包邮</div>
-          </div>
-          <div class="price">
-            <span class="num">{{ gift.price }}</span>
-            <span class="suffix">数学币</span>
-          </div>
-        </div>
-      </div>
+      <run-gift v-for="gift in giftList" :key="gift.id" :gift="gift"/>
+      <!--<div class="gift-item" v-for="(gift,giftIndex) in giftList" :key="giftIndex">-->
+        <!--<image class="left-img" :src="gift.img" />-->
+        <!--<div class="right">-->
+          <!--<div class="title">{{ gift.title }}</div>-->
+          <!--<div class="info">-->
+            <!--<div class="old-price">原价￥{{ gift.oldPrice }}</div>-->
+            <!--<div class="postage" v-if="gift.postage">包邮</div>-->
+          <!--</div>-->
+          <!--<div class="price">-->
+            <!--<span class="num">{{ gift.price }}</span>-->
+            <!--<span class="suffix">数学币</span>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
       <div class="ad-wrap">
         <div class="ad" :style="{backgroundImage: 'url(' + ad +')'}" v-if="ad.length">
         </div>
@@ -74,13 +75,16 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import runBtn from '@/components/run-btn'
+import runGift from '@/components/run-gift'
 import authPop from '@/components/auth-pop'
 import * as api from '@/http/api'
+import {pf, formatTime} from '@/utils'
 // import * as utils from '@/utils'
 export default {
   components: {
     runBtn,
-    authPop
+    authPop,
+    runGift
     // accreditPop
   },
   data () {
@@ -104,12 +108,29 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['SET_SYSTEM_INFO', 'LOGIN', 'AUTH_OF_WERUN', 'REPORT_OF_WERUN', 'SIGN', 'USER_INFO']),
+    ...mapActions(['SET_SYSTEM_INFO', 'LOGIN', 'AUTH_OF_WERUN', 'REPORT_OF_WERUN', 'USER_INFO']),
     // ...mapMutations(['SET_WE_RUN']),
     _toStealCoin () {
       wx.switchTab({
         url: '/pages/step/main'
       })
+    },
+    async _sign () {
+      console.log('签名')
+      const result = await api.sign({
+        openId: this.openId,
+        signTime: formatTime(new Date())
+      })
+      console.log('签到结果天数+兑换得到的数学币', result)
+      if (result.code === 0) {
+        // commit(types.SET_CONTINUES, result.data.continuous)
+        this.USER_INFO()
+      } else {
+        pf('showToast', {
+          icon: 'none',
+          title: result.data.detailMessage
+        })
+      }
     },
     async _getRank () { // 获取排行榜
       const rankResult = await api.getRank()
@@ -118,7 +139,11 @@ export default {
       }
       console.log('排行榜数据', rankResult)
     },
-    async _getGifts () {},
+    async _getGifts () {
+      const result = await api.getIndexPresent()
+      this.giftList = result.data
+      console.log('首页礼品', result)
+    },
     async _getSteps () {
       console.log('【【【【获取步数开始】】】】')
       await this.AUTH_OF_WERUN()
@@ -134,34 +159,11 @@ export default {
       }
       // todo
     }
-    // createFakeRankList () {
-    //   let result = []
-    //   for (let i = 1; i <= 10; i++) {
-    //     result.push({
-    //       avatar: `https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/por_0${i % 3 + 1}%402x.png`,
-    //       name: '跟着感觉走' + (i - 1) * 10,
-    //       stepNum: parseInt(56000 / i)
-    //     })
-    //   }
-    //   this.rankList = result
-    // },
-    // createFakeGiftList () {
-    //   let result = []
-    //   for (let i = 0; i < 4; i++) {
-    //     result.push({
-    //       img: `https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/img_0${i % 4 + 1}%402x.png`,
-    //       title: '极客数学帮专属定制笔记本， 超值优惠大放送',
-    //       oldPrice: 5,
-    //       postage: true,
-    //       price: 99
-    //     })
-    //   }
-    //   this.giftList = result
-    // }
   },
   async onLoad () {
     console.log('onLoad页面')
     this._getRank()
+    this._getGifts()
     await this.LOGIN()
     this.USER_INFO(false) // true: 设置vuex的用户的可兑步数 false:不设置
     this._getSteps()
@@ -420,60 +422,6 @@ export default {
         color #666
         font-size 26rpx
         margin-bottom 16rpx
-      }
-      .gift-item{
-        height 257rpx
-        margin-bottom 18rpx
-        box-sizing border-box
-        padding 24rpx
-        display flex
-        background #fff
-        border-radius 5rpx
-        .left-img{
-          flex 0 0 auto
-          width 207rpx
-          height 207rpx
-        }
-        .right{
-          flex 1 0 0
-          margin-left 30rpx
-          display flex
-          flex-direction column
-          justify-content space-between
-          .title{
-
-            font-size 30rpx
-            color #333
-            wrap(2)
-          }
-          .info{
-            display flex
-            align-items center
-            .old-price{
-              color #999
-              font-size 26rpx
-              text-decoration line-through
-            }
-            .postage{
-              padding 5rpx 10rpx
-              margin-left 22rpx
-              background #ffedd4
-              color #F69307
-              font-size 24rpx
-              border-radius 16rpx
-            }
-          }
-          .price{
-            .num{
-              color #43D17F
-              font-size 36rpx
-            }
-            .suffix{
-              color #333
-              font-size 26rpx
-            }
-          }
-        }
       }
       .ad-wrap{
         padding-bottom 46rpx

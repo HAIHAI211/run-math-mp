@@ -1,5 +1,5 @@
 import * as types from './mutation-types'
-import {pf, formatTime} from '@/utils'
+import {pf} from '@/utils'
 import * as api from '@/http/api'
 import auths from '@/utils/auths'
 
@@ -83,32 +83,34 @@ const actions = {
     console.log('未达到步数上报条件')
     return false // 上传失败
   },
-  async SIGN ({commit, state}) {
-    const result = await api.sign({
-      openId: state.openId,
-      signTime: formatTime(new Date())
-    })
-    console.log('签到结果天数+兑换得到的数学币', result)
-    if (result.code === 0) {
-      commit(types.SET_CONTINUES, result.data.continuous)
-    } else {
-      pf('showToast', {
-        icon: 'none',
-        title: result.data.detailMessage
-      })
-    }
-  },
+  // async SIGN ({commit, state}) {
+  //   const result = await api.sign({
+  //     openId: state.openId,
+  //     signTime: formatTime(new Date())
+  //   })
+  //   console.log('签到结果天数+兑换得到的数学币', result)
+  //   if (result.code === 0) {
+  //     // commit(types.SET_CONTINUES, result.data.continuous)
+  //   } else {
+  //     pf('showToast', {
+  //       icon: 'none',
+  //       title: result.data.detailMessage
+  //     })
+  //   }
+  // },
   async USER_INFO ({commit, state}, shouldSetStep = true) {
-    console.log(`【【【获取用户信息开始${shouldSetStep}】】】`)
-    const result = await api.getUserInfo({
-      openId: state.openId
-    })
-    console.log('用户信息', result)
-    if (result.code === 0) {
-      result.data.shouldSetStep = shouldSetStep
-      commit(types.SET_USER_INFO, result.data)
+    if (state.isLogin && state.openId) {
+      console.log(`【【【获取用户信息开始${shouldSetStep}】】】`)
+      const result = await api.getUserInfo({
+        openId: state.openId
+      })
+      console.log('用户信息', result)
+      if (result.code === 0) {
+        result.data.shouldSetStep = shouldSetStep
+        commit(types.SET_USER_INFO, result.data)
+      }
+      console.log(`【【【获取用户信息结束${shouldSetStep}】】】`)
     }
-    console.log(`【【【获取用户信息结束${shouldSetStep}】】】`)
   }
 }
 export default actions

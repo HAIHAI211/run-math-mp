@@ -73,6 +73,14 @@ export const getUserInfo = params => {
   })
 }
 
+// 获取首页礼品
+export const getIndexPresent = params => {
+  return get({
+    url: '/common/indexPresent',
+    data: params
+  })
+}
+
 // 礼物列表
 export const getGiftList = params => {
   return get({
