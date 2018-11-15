@@ -3,11 +3,11 @@
     <div class="top-bg">
       <div class="coin-center">
         <span class="coin-hint">我的数学币</span>
-        <span class="coin-num">{{ coinNum }}</span>
-        <span class="step-hint">可兑换步数{{ stepsOfTodayCanExchanged }}</span>
+        <span class="coin-num">{{ mathCoin }}</span>
+        <span class="step-hint">可兑换步数{{ todayStep }}</span>
       </div>
       <div class="coin-charge-btn" @click="_coinChargeClick">一键兑换数学币</div>
-      <div class="check-day">连续签到{{checkDays}}天</div>
+      <div class="check-day">连续签到{{signDayCount}}天</div>
       <div class="check-in-btn up-down-animation" @click="SIGN">
         <div class="icon"></div>
         <span class="text">签到</span>
@@ -86,27 +86,25 @@ export default {
   data () {
     return {
       authPopShow: false,
-      userInfo: {},
       show: false,
-      coinNum: 0,
-      stepNum: 0,
-      checkDays: 0,
       rankList: [],
       giftList: [],
       ad: 'https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/index_banner%402x.png' // 广告地址
     }
   },
   computed: {
-    ...mapState(['werun', 'isLogin', 'openId', 'stepsOfTodayCanExchanged'])
+    ...mapState(['werun', 'isLogin', 'openId', 'todayStep', 'signDayCount', 'mathCoin'])
   },
   watch: {
-    werun (v) {
-      console.log('授权变了, 现在是', v)
-      this.SET_STEP_EXCHANGE()
+    werun (newV, oldV) {
+      if (oldV === false && newV) { // 授权必须是被拒绝，然后现在同意了才能进入这儿
+        console.log('微信运动授权之前被拒绝了，现在又同意了')
+        this._getSteps()
+      }
     }
   },
   methods: {
-    ...mapActions(['SET_SYSTEM_INFO', 'LOGIN', 'AUTH_OF_WERUN', 'SET_STEP_EXCHANGE', 'SIGN']),
+    ...mapActions(['SET_SYSTEM_INFO', 'LOGIN', 'AUTH_OF_WERUN', 'REPORT_OF_WERUN', 'SIGN', 'USER_INFO']),
     // ...mapMutations(['SET_WE_RUN']),
     _toStealCoin () {
       wx.switchTab({
@@ -121,11 +119,14 @@ export default {
       console.log('排行榜数据', rankResult)
     },
     async _getGifts () {},
-    async _loginStuff () {
-      await this.LOGIN()
-      console.log('isLogin', this.isLogin)
-      console.log('openId', this.openId)
+    async _getSteps () {
+      console.log('【【【【获取步数开始】】】】')
       await this.AUTH_OF_WERUN()
+      let isReportSuccess = await this.REPORT_OF_WERUN() // 上报微信运动数据给后台，返回是否成功的标志
+      if (isReportSuccess) {
+        this.USER_INFO()
+      }
+      console.log('【【【【获取步数结束】】】】')
     },
     _coinChargeClick () { // 一键兑换数学币
       if (!this.werun) {
@@ -161,9 +162,9 @@ export default {
   async onLoad () {
     console.log('onLoad页面')
     this._getRank()
-    this._loginStuff()
-    // this.createFakeRankList()
-    // this.createFakeGiftList()
+    await this.LOGIN()
+    this.USER_INFO(false) // true: 设置vuex的用户的可兑步数 false:不设置
+    this._getSteps()
   },
   async onShow () {
     console.log('onShow页面')

@@ -23,13 +23,21 @@ const mutations = {
   },
   [types.SET_WE_RUN] (state, v) {
     state.werun = v
-    console.log('isWerunAuth', v)
   },
   [types.SET_STEPS_EXCHANGED] (state, v) {
-    state.stepsOfTodayCanExchanged = v
+    state.todayStep = v
   },
   [types.SET_CONTINUES] (state, v) {
-    state.continues = v
+    state.signDayCount = v
+  },
+  [types.SET_USER_INFO] (state, v) {
+    state.todayChangedStep = v.todayChangedStep
+    state.mathCoin = v.mathCoin
+    state.todayStealStep = v.todayStealStep
+    state.signDayCount = v.signDayCount
+    if (v.shouldSetStep) {
+      state.todayStep = v.todayStep
+    }
   }
 }
 

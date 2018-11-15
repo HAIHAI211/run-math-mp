@@ -25,7 +25,7 @@ const host = config.host
 
 // 通用的get请求
 export const get = (params) => {
-  console.log('params', qs.stringify(params.data, {indices: false}))
+  // console.log('params', qs.stringify(params.data, {indices: false}))
   return fly.get(`${host}${params.url}`, qs.stringify(params.data, {indices: false}))
 }
 
@@ -61,6 +61,14 @@ export const decrypt = params => {
 export const getRank = params => {
   return get({
     url: '/user/rank',
+    data: params
+  })
+}
+
+// 用户信息
+export const getUserInfo = params => {
+  return get({
+    url: '/user/get',
     data: params
   })
 }
