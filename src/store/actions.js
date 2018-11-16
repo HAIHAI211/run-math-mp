@@ -13,16 +13,19 @@ async function reLogin (commit) {
         commit(types.SET_IS_LOGIN, true)
         commit(types.SET_OPEN_ID, result.data.openId)
       } else {
-        console.log('登录失败')
+        // console.log('登录失败')
         commit(types.SET_IS_LOGIN, false)
+        throw new Error('登录失败')
       }
     } catch (e) {
-      console.log('获取openid失败', e)
+      // console.log('获取openid失败', e)
       commit(types.SET_IS_LOGIN, false)
+      throw new Error('登录失败【获取openid失败】')
     }
   } catch (e) {
-    console.log('登录失败')
+    // console.log('登录失败')
     commit(types.SET_IS_LOGIN, false)
+    throw new Error('登录失败')
   }
 }
 const actions = {
@@ -34,19 +37,14 @@ const actions = {
     })
   },
   async LOGIN ({commit, state}) {
-    console.log('【【【开始登录】】】')
     try {
-      const checkSessionResult = await pf('checkSession')
-      console.log('session没过期', checkSessionResult)
-      console.log('是否存在openId', !!state.openId)
-      if (!state.openId) {
+      await pf('checkSession')
+      if (!state.openId) { // 本地openid缓存被清
         await reLogin(commit)
       }
-    } catch (e) {
-      console.log('session过期', e)
+    } catch (e) { // session过期
       await reLogin(commit)
     }
-    console.log('【【【登录结束】】】')
   },
   async AUTH_OF_WERUN ({commit}) {
     const isAuthOfWerun = await auths.werun()
@@ -90,6 +88,11 @@ const actions = {
       }
       console.log(`【【【获取用户信息结束${shouldSetStep}】】】`)
     }
+  },
+  async FETCH_ADVS ({commit}) {
+    const result = await api.getAdvs()
+    commit(types.SET_ADVS, result.data)
+    return result.data
   }
 }
 export default actions

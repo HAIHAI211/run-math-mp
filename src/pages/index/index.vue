@@ -51,8 +51,8 @@
       <div class="title">礼品兑换</div>
       <run-gift v-for="gift in giftList" :key="gift.id" :gift="gift"/>
       <div class="ad-wrap">
-        <div class="ad" :style="{backgroundImage: 'url(' + ad +')'}" v-if="ad.length">
-        </div>
+        <!--<div class="ad" :style="{backgroundImage: 'url(' + advs[0].picUrl +')'}" v-if="advs[0]"></div>-->
+        <image class="ad-img" :src="advs[0].picUrl" v-if="advs[0]"/>
       </div>
     </div>
     <auth-pop :show.sync="authPopShow"/>
@@ -64,7 +64,7 @@ import runBtn from '@/components/run-btn'
 import runGift from '@/components/run-gift'
 import authPop from '@/components/auth-pop'
 import * as api from '@/http/api'
-import {pf, formatTime} from '@/utils'
+import {formatTime} from '@/utils'
 // import * as utils from '@/utils'
 export default {
   components: {
@@ -78,12 +78,11 @@ export default {
       authPopShow: false,
       show: false,
       rankList: [],
-      giftList: [],
-      ad: 'https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/index_banner%402x.png' // 广告地址
+      giftList: []
     }
   },
   computed: {
-    ...mapState(['werun', 'isLogin', 'openId', 'todayStep', 'signDayCount', 'mathCoin'])
+    ...mapState(['werun', 'isLogin', 'openId', 'todayStep', 'signDayCount', 'mathCoin', 'advs'])
   },
   watch: {
     werun (newV, oldV) {
@@ -94,7 +93,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['SET_SYSTEM_INFO', 'LOGIN', 'AUTH_OF_WERUN', 'REPORT_OF_WERUN', 'USER_INFO']),
+    ...mapActions(['SET_SYSTEM_INFO', 'LOGIN', 'AUTH_OF_WERUN', 'REPORT_OF_WERUN', 'USER_INFO', 'FETCH_ADVS']),
     // ...mapMutations(['SET_WE_RUN']),
     _toStealCoin () {
       wx.switchTab({
@@ -102,41 +101,26 @@ export default {
       })
     },
     async _sign () {
-      console.log('签名')
       const result = await api.sign({
         openId: this.openId,
         signTime: formatTime(new Date())
       })
       console.log('签到结果天数+兑换得到的数学币', result)
-      if (result.code === 0) {
-        // commit(types.SET_CONTINUES, result.data.continuous)
-        this.USER_INFO()
-      } else {
-        pf('showToast', {
-          icon: 'none',
-          title: result.data.detailMessage
-        })
-      }
+      this.USER_INFO()
     },
     async _getRank () { // 获取排行榜
       const rankResult = await api.getRank()
-      if (rankResult.code === 0) {
-        this.rankList = rankResult.data
-      }
-      console.log('排行榜数据', rankResult)
+      this.rankList = rankResult.data
+      return this.rankList
     },
-    async _getGifts () {
+    async _getGifts () { // 获取首页礼物
       const result = await api.getIndexPresent()
       this.giftList = result.data
-      console.log('首页礼品', result)
+      return this.giftList
     },
     async _getSteps () {
       console.log('【【【【获取步数开始】】】】')
-      try {
-        await this.AUTH_OF_WERUN()
-      } catch (e) {
-        console.log('微信运动授权')
-      }
+      await this.AUTH_OF_WERUN()
       let isReportSuccess = await this.REPORT_OF_WERUN() // 上报微信运动数据给后台，返回是否成功的标志
       if (isReportSuccess) {
         this.USER_INFO()
@@ -152,11 +136,18 @@ export default {
   },
   async onLoad () {
     console.log('onLoad页面')
-    this._getRank()
-    this._getGifts()
-    await this.LOGIN()
-    this.USER_INFO(false) // true: 设置vuex的用户的可兑步数 false:不设置
-    this._getSteps()
+    // await this.LOGIN()
+    // this.USER_INFO(false) // true: 设置vuex的用户的可兑步数 false:不设置
+    // this._getSteps()
+    // const [result1, result2] = api.all([this._getRank(), this._getGifts()])
+    // console.log('result', result1, result2)
+    api.all([this._getRank(), this._getGifts(), this.FETCH_ADVS()])
+      .then(api.spread((ranks, gifts, advs) => {
+        console.log('ranks、gifts、advs', ranks, gifts, advs)
+      }))
+      .catch((error) => {
+        console.log(error)
+      })
   },
   async onShow () {
     console.log('onShow页面')
@@ -176,7 +167,9 @@ export default {
   }
 }
 </script>
-
+<!--
+广告位建议： 340px * 120px
+-->
 <style scoped lang="stylus">
   @import "~@/common/style/mixin.styl"
   @import "~@/common/style/color.styl"
@@ -407,7 +400,7 @@ export default {
       }
     }
     .exchange{
-      margin 0 33rpx 0 33rpx
+      padding 0 33rpx
       .title{
         color #666
         font-size 26rpx
@@ -417,6 +410,10 @@ export default {
         padding-bottom 46rpx
         .ad{
           bg-size(684rpx, 257rpx)
+        }
+        .ad-img{
+          width 684rpx
+          height 260rpx
         }
       }
     }

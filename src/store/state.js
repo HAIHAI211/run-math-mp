@@ -7,6 +7,7 @@ const state = {
   signDayCount: 0, // 连续签到天数
   todayChangedStep: 0, // 今日已兑步数
   todayStealStep: 0, // 今日已偷步数
-  todayStep: 0 // 今日可兑步数
+  todayStep: 0, // 今日可兑步数
+  advs: [] // 全部广告位
 }
 export default state

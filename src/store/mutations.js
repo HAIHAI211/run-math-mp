@@ -38,6 +38,9 @@ const mutations = {
     if (v.shouldSetStep) {
       state.todayStep = v.todayStep
     }
+  },
+  [types.SET_ADVS] (state, v) {
+    state.advs = v
   }
 }
 

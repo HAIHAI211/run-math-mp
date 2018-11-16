@@ -23,6 +23,10 @@ const host = config.host
  * test(params).then(res=>{ console.log(res) })
  */
 
+// 通用的all请求
+export const all = fly.all
+export const spread = fly.spread
+
 // 通用的get请求
 export const get = (params) => {
   // console.log('params', qs.stringify(params.data, {indices: false}))
@@ -81,10 +85,9 @@ export const getIndexPresent = params => {
   })
 }
 
-// 礼物列表
-export const getGiftList = params => {
+// 全部广告位
+export const getAdvs = () => {
   return get({
-    data: params,
-    url: '/getGiftList'
+    url: '/common/adv'
   })
 }
