@@ -12,18 +12,18 @@ export default {
       if (!getSettingRes.authSetting[scopeName]) {
         try {
           await pf('authorize', {scope: scopeName})
-          console.log('申请授权werun，然后用户同意')
+          // console.log('申请授权werun，然后用户同意')
           return true
         } catch (e) {
-          console.log('申请授权werun，但是用户拒绝了')
+          // console.log('申请授权werun，但是用户拒绝了')
           return false
         }
       }
-      console.log('已经授权werun')
+      // console.log('已经授权werun')
       return true
     } catch (e) {
-      console.log('获取setting失败', e)
-      return false
+      // console.log('获取setting失败', e)
+      return Promise.reject(new Error('【wx.server】getSetting失败'))
     }
   }
 }

@@ -110,6 +110,7 @@ export default {
           console.log('ranks、gifts、advs', ranks, gifts, advs)
         }))
         .catch((e) => {
+          console.log('错误原因', e)
           this.netError = true
           wx.hideLoading()
           wx.stopPullDownRefresh()
@@ -126,12 +127,19 @@ export default {
       })
     },
     async _sign () {
-      const result = await api.sign({
-        openId: this.openId,
-        signTime: formatTime(new Date())
-      })
-      console.log('签到结果天数+兑换得到的数学币', result)
-      this.USER_INFO()
+      try {
+        const result = await api.sign({
+          openId: this.openId,
+          signTime: formatTime(new Date())
+        })
+        console.log('签到结果天数+兑换得到的数学币', result)
+        this.FETCH_USER_INFO()
+      } catch (e) {
+        wx.showToast({
+          title: e.message,
+          icon: 'none'
+        })
+      }
     },
     async _getRank () { // 获取排行榜
       const rankResult = await api.getRank()

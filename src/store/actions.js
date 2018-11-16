@@ -5,27 +5,21 @@ import auths from '@/utils/auths'
 
 async function reLogin (commit) {
   try {
-    console.log('重新登录')
+    // console.log('重新登录')
     const loginResult = await pf('login') // 重新登录
     try {
       const result = await api.login({ code: loginResult.code }) // 将code发送给后台获取openid
-      if (result.data.status === 0) {
-        commit(types.SET_IS_LOGIN, true)
-        commit(types.SET_OPEN_ID, result.data.openId)
-      } else {
-        // console.log('登录失败')
-        commit(types.SET_IS_LOGIN, false)
-        // throw new Error('登录失败')
-      }
+      commit(types.SET_IS_LOGIN, true)
+      commit(types.SET_OPEN_ID, result.data.openId)
     } catch (e) {
       // console.log('获取openid失败', e)
       commit(types.SET_IS_LOGIN, false)
-      // throw new Error('登录失败【获取openid失败】')
+      return Promise.reject(new Error('【self.server】登录失败'))
     }
   } catch (e) {
     // console.log('登录失败')
     commit(types.SET_IS_LOGIN, false)
-    // throw new Error('登录失败')
+    return Promise.reject(new Error('【wx.server】登录失败'))
   }
 }
 const actions = {
@@ -53,39 +47,23 @@ const actions = {
   async REPORT_OF_WERUN ({commit, state}) {
     if (state.isLogin && state.openId && state.werun) {
       console.log('【可以获取步数了哦哦哦哦】')
-      try {
-        const {encryptedData, iv} = await pf('getWeRunData')
-        try {
-          await api.decrypt({
-            encryptedData,
-            iv,
-            openId: state.openId,
-            type: 'step'
-          })
-          console.log('步数上报成功')
-          return true
-        } catch (e) {
-          console.log('步数上报失败', e)
-          return false
-        }
-      } catch (e) {
-        console.log('ddd')
-        console.log('步数上报失败', e)
-      }
+      const {encryptedData, iv} = await pf('getWeRunData')
+      await api.decrypt({
+        encryptedData,
+        iv,
+        openId: state.openId,
+        type: 'step'
+      })
+      return true
     }
-    console.log('未达到步数上报条件')
+    // console.log('未达到步数上报条件')
     return false // 上传失败
   },
   async FETCH_USER_INFO ({commit, state}, shouldSetStep = true) {
     if (state.isLogin && state.openId) {
-      const result = await api.getUserInfo({
-        openId: state.openId
-      })
-      console.log('用户信息', result)
-      if (result.code === 0) {
-        result.data.shouldSetStep = shouldSetStep
-        commit(types.SET_USER_INFO, result.data)
-      }
+      const result = await api.getUserInfo({ openId: state.openId })
+      result.data.shouldSetStep = shouldSetStep
+      commit(types.SET_USER_INFO, result.data)
     }
   },
   async FETCH_ADVS ({commit}) {
