@@ -73,7 +73,7 @@ import runLoading from '@/components/run-loading'
 import runGift from '@/components/run-gift'
 import focusIcon from '@/components/focus-icon'
 import { sleep } from '@/utils'
-import { getGiftList } from '@/http/api'
+// import { getGiftList } from '@/http/api'
 
 export default {
   components: {
@@ -302,19 +302,19 @@ export default {
       }
       console.log('请求礼物列表的参数', params)
       this.loadingState = 1
-      try {
-        const result = await getGiftList(params)
-        this.loadingState = 0
-        console.log('gifts', result)
-        if (isRefresh) {
-          this.activeTab.gifts = result.data
-        } else {
-          this.activeTab.gifts = [...this.activeTab.gifts, ...result.data]
-        }
-        this.activeTab.pageCount = result.pageCount
-      } catch (e) {
-        this.loadingState = 3
-      }
+      // try {
+      //   const result = await getGiftList(params)
+      //   this.loadingState = 0
+      //   console.log('gifts', result)
+      //   if (isRefresh) {
+      //     this.activeTab.gifts = result.data
+      //   } else {
+      //     this.activeTab.gifts = [...this.activeTab.gifts, ...result.data]
+      //   }
+      //   this.activeTab.pageCount = result.pageCount
+      // } catch (e) {
+      //   this.loadingState = 3
+      // }
     }
   },
   async onPullDownRefresh () { // 下拉刷新

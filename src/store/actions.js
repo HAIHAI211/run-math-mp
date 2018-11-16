@@ -69,6 +69,7 @@ const actions = {
           return false
         }
       } catch (e) {
+        console.log('ddd')
         console.log('步数上报失败', e)
       }
     }
@@ -77,7 +78,6 @@ const actions = {
   },
   async FETCH_USER_INFO ({commit, state}, shouldSetStep = true) {
     if (state.isLogin && state.openId) {
-      console.log(`【【【获取用户信息开始${shouldSetStep}】】】`)
       const result = await api.getUserInfo({
         openId: state.openId
       })
@@ -86,7 +86,6 @@ const actions = {
         result.data.shouldSetStep = shouldSetStep
         commit(types.SET_USER_INFO, result.data)
       }
-      console.log(`【【【获取用户信息结束${shouldSetStep}】】】`)
     }
   },
   async FETCH_ADVS ({commit}) {

@@ -3,7 +3,7 @@
     <image class="bg-img" src="https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/bg%403x.png"/>
     <div class="step-info">
       <open-data type="userAvatarUrl" class="avatar"></open-data>
-      <div class="step-num">{{ todayStep }}</div>
+      <div class="step-num">{{ todayStep }}00</div>
     </div>
   </div>
 </template>

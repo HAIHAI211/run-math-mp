@@ -41,11 +41,11 @@ fly.interceptors.response.use(
     if (response.data && response.data.code === 0) {
       return response.data
     } else {
-      let errMsg = '网络错误'
+      let errMsg = '网络异常，请重试'
       if (response.data.data && response.data.data.detailMessage) {
         errMsg = response.data.data.detailMessage
       }
-      wx.showToast({title: errMsg, icon: 'none'})
+      // wx.showToast({title: errMsg, icon: 'none'})
       return Promise.reject(new Error(errMsg))
     }
   },
