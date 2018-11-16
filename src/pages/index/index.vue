@@ -3,17 +3,17 @@
     <div class="top-bg">
       <div class="coin-center">
         <span class="coin-hint">我的数学币</span>
-        <span class="coin-num">{{ mathCoin }}</span>
-        <span class="step-hint">可兑换步数{{ todayStep }}</span>
+        <span class="coin-num">{{ netError ? '--' : mathCoin }}</span>
+        <span class="step-hint">可兑换步数{{ netError ? '--' : todayStep }}</span>
       </div>
-      <div class="coin-charge-btn" @click="_coinChargeClick">一键兑换数学币</div>
+      <div class="coin-charge-btn" @click="_coinChargeClick"  v-if="!netError">一键兑换数学币</div>
       <div class="check-day">连续签到{{signDayCount}}天</div>
-      <div class="check-in-btn up-down-animation" @click="_sign">
+      <div class="check-in-btn up-down-animation" @click="_sign"  v-if="!netError">
         <div class="icon"></div>
         <span class="text">签到</span>
       </div>
       <div class="rule">活动规则></div>
-      <div class="share-btn up-down-animation">
+      <div class="share-btn up-down-animation"  v-if="!netError">
         <div class="icon"></div>
         <span class="text">分享即领数学币</span>
       </div>
@@ -27,7 +27,7 @@
         <run-btn openType="openSetting" title="去打开"/>
       </div>
     </div>
-    <div class="rank" v-if="rankList.length">
+    <div class="rank" v-if="!netError && rankList.length">
       <div class="rank-head">
         <div class="icon"></div>
         <div class="title" @click="_toStealCoin">偷步数赚数学币<div class="arrow"></div></div>
@@ -47,7 +47,7 @@
         </div>
       </scroll-view>
     </div>
-    <div class="exchange" v-if="giftList.length">
+    <div class="exchange" v-if="!netError && giftList.length">
       <div class="title">礼品兑换</div>
       <run-gift v-for="gift in giftList" :key="gift.id" :gift="gift"/>
       <div class="ad-wrap">
@@ -77,6 +77,7 @@ export default {
     return {
       authPopShow: false,
       show: false,
+      netError: true,
       rankList: [],
       giftList: []
     }
@@ -93,8 +94,32 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['SET_SYSTEM_INFO', 'LOGIN', 'AUTH_OF_WERUN', 'REPORT_OF_WERUN', 'USER_INFO', 'FETCH_ADVS']),
+    ...mapActions(['SET_SYSTEM_INFO', 'LOGIN', 'AUTH_OF_WERUN', 'REPORT_OF_WERUN', 'FETCH_USER_INFO', 'FETCH_ADVS']),
     // ...mapMutations(['SET_WE_RUN']),
+    _load () {
+      this.netError = true
+      wx.showLoading({
+        title: '加载中',
+        mask: true
+      })
+      api.all([this._getRank(), this._getGifts(), this.FETCH_ADVS(), this._loginStuff()])
+        .then(api.spread((ranks, gifts, advs) => {
+          this.netError = false
+          wx.hideLoading()
+          wx.stopPullDownRefresh()
+          console.log('ranks、gifts、advs', ranks, gifts, advs)
+        }))
+        .catch((e) => {
+          this.netError = true
+          wx.hideLoading()
+          wx.stopPullDownRefresh()
+          wx.showToast({
+            title: '网络异常，请重试',
+            icon: 'none'
+          })
+          // console.log(error)
+        })
+    },
     _toStealCoin () {
       wx.switchTab({
         url: '/pages/step/main'
@@ -118,14 +143,14 @@ export default {
       this.giftList = result.data
       return this.giftList
     },
+    async _loginStuff () { // 登录相关
+      await this.LOGIN()
+      await this._getSteps()
+    },
     async _getSteps () {
-      console.log('【【【【获取步数开始】】】】')
-      await this.AUTH_OF_WERUN()
-      let isReportSuccess = await this.REPORT_OF_WERUN() // 上报微信运动数据给后台，返回是否成功的标志
-      if (isReportSuccess) {
-        this.USER_INFO()
-      }
-      console.log('【【【【获取步数结束】】】】')
+      await this.AUTH_OF_WERUN() // 申请授权
+      await this.REPORT_OF_WERUN() // 上报微信运动数据给后台，返回是否成功的标志
+      await this.FETCH_USER_INFO() // 获取用户信息
     },
     _coinChargeClick () { // 一键兑换数学币
       if (!this.werun) {
@@ -136,24 +161,11 @@ export default {
   },
   async onLoad () {
     console.log('onLoad页面')
-    // await this.LOGIN()
-    // this.USER_INFO(false) // true: 设置vuex的用户的可兑步数 false:不设置
-    // this._getSteps()
-    // const [result1, result2] = api.all([this._getRank(), this._getGifts()])
-    // console.log('result', result1, result2)
-    api.all([this._getRank(), this._getGifts(), this.FETCH_ADVS()])
-      .then(api.spread((ranks, gifts, advs) => {
-        console.log('ranks、gifts、advs', ranks, gifts, advs)
-      }))
-      .catch((error) => {
-        console.log(error)
-      })
+    this._load()
   },
-  async onShow () {
-    console.log('onShow页面')
-  },
-  async mounted () {
-    console.log('mounted')
+  async onPullDownRefresh () { // 下拉刷新
+    console.log('下拉刷新')
+    this._load()
   },
   onShareAppMessage: function (res) {
     if (res.from === 'button') {

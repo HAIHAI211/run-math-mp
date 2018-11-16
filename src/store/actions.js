@@ -15,17 +15,17 @@ async function reLogin (commit) {
       } else {
         // console.log('登录失败')
         commit(types.SET_IS_LOGIN, false)
-        throw new Error('登录失败')
+        // throw new Error('登录失败')
       }
     } catch (e) {
       // console.log('获取openid失败', e)
       commit(types.SET_IS_LOGIN, false)
-      throw new Error('登录失败【获取openid失败】')
+      // throw new Error('登录失败【获取openid失败】')
     }
   } catch (e) {
     // console.log('登录失败')
     commit(types.SET_IS_LOGIN, false)
-    throw new Error('登录失败')
+    // throw new Error('登录失败')
   }
 }
 const actions = {
@@ -51,7 +51,7 @@ const actions = {
     commit(types.SET_WE_RUN, isAuthOfWerun)
   },
   async REPORT_OF_WERUN ({commit, state}) {
-    if (state.isLogin && state.werun) {
+    if (state.isLogin && state.openId && state.werun) {
       console.log('【可以获取步数了哦哦哦哦】')
       try {
         const {encryptedData, iv} = await pf('getWeRunData')
@@ -75,7 +75,7 @@ const actions = {
     console.log('未达到步数上报条件')
     return false // 上传失败
   },
-  async USER_INFO ({commit, state}, shouldSetStep = true) {
+  async FETCH_USER_INFO ({commit, state}, shouldSetStep = true) {
     if (state.isLogin && state.openId) {
       console.log(`【【【获取用户信息开始${shouldSetStep}】】】`)
       const result = await api.getUserInfo({
