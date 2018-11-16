@@ -55,49 +55,28 @@ const actions = {
   async REPORT_OF_WERUN ({commit, state}) {
     if (state.isLogin && state.werun) {
       console.log('【可以获取步数了哦哦哦哦】')
-      const {encryptedData, iv} = await pf('getWeRunData')
-      // console.log('从微信获取运动iv+ed信息', encryptedData, iv)
       try {
-        await api.decrypt({
-          encryptedData,
-          iv,
-          openId: state.openId,
-          type: 'step'
-        })
-        // console.log('发往后台获取步数的参数', {
-        //   encryptedData,
-        //   iv,
-        //   openId: state.openId,
-        //   type: 'step'
-        // })
-        // commit(types.SET_STEPS_EXCHANGED, decryptResult.data.canBeExchangedToday)
-        // console.log('获取剩余步数信息', decryptResult)
-        console.log('步数上报成功')
-        return true
+        const {encryptedData, iv} = await pf('getWeRunData')
+        try {
+          await api.decrypt({
+            encryptedData,
+            iv,
+            openId: state.openId,
+            type: 'step'
+          })
+          console.log('步数上报成功')
+          return true
+        } catch (e) {
+          console.log('步数上报失败', e)
+          return false
+        }
       } catch (e) {
-        // commit(types.SET_STEPS_EXCHANGED, 0)
-        console.log('步数上报失败')
-        return false
+        console.log('步数上报失败', e)
       }
     }
     console.log('未达到步数上报条件')
     return false // 上传失败
   },
-  // async SIGN ({commit, state}) {
-  //   const result = await api.sign({
-  //     openId: state.openId,
-  //     signTime: formatTime(new Date())
-  //   })
-  //   console.log('签到结果天数+兑换得到的数学币', result)
-  //   if (result.code === 0) {
-  //     // commit(types.SET_CONTINUES, result.data.continuous)
-  //   } else {
-  //     pf('showToast', {
-  //       icon: 'none',
-  //       title: result.data.detailMessage
-  //     })
-  //   }
-  // },
   async USER_INFO ({commit, state}, shouldSetStep = true) {
     if (state.isLogin && state.openId) {
       console.log(`【【【获取用户信息开始${shouldSetStep}】】】`)

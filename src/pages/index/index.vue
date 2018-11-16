@@ -50,20 +50,6 @@
     <div class="exchange" v-if="giftList.length">
       <div class="title">礼品兑换</div>
       <run-gift v-for="gift in giftList" :key="gift.id" :gift="gift"/>
-      <!--<div class="gift-item" v-for="(gift,giftIndex) in giftList" :key="giftIndex">-->
-        <!--<image class="left-img" :src="gift.img" />-->
-        <!--<div class="right">-->
-          <!--<div class="title">{{ gift.title }}</div>-->
-          <!--<div class="info">-->
-            <!--<div class="old-price">原价￥{{ gift.oldPrice }}</div>-->
-            <!--<div class="postage" v-if="gift.postage">包邮</div>-->
-          <!--</div>-->
-          <!--<div class="price">-->
-            <!--<span class="num">{{ gift.price }}</span>-->
-            <!--<span class="suffix">数学币</span>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
       <div class="ad-wrap">
         <div class="ad" :style="{backgroundImage: 'url(' + ad +')'}" v-if="ad.length">
         </div>
@@ -146,7 +132,11 @@ export default {
     },
     async _getSteps () {
       console.log('【【【【获取步数开始】】】】')
-      await this.AUTH_OF_WERUN()
+      try {
+        await this.AUTH_OF_WERUN()
+      } catch (e) {
+        console.log('微信运动授权')
+      }
       let isReportSuccess = await this.REPORT_OF_WERUN() // 上报微信运动数据给后台，返回是否成功的标志
       if (isReportSuccess) {
         this.USER_INFO()

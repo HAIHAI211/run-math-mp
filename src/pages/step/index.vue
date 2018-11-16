@@ -3,7 +3,7 @@
     <image class="bg-img" src="https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/bg%403x.png"/>
     <div class="step-info">
       <open-data type="userAvatarUrl" class="avatar"></open-data>
-      <div class="step-num">{{ stepsOfTodayCanExchanged }}</div>
+      <div class="step-num">{{ todayStep }}</div>
     </div>
   </div>
 </template>
@@ -18,7 +18,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['stepsOfTodayCanExchanged'])
+    ...mapState(['todayStep'])
   },
   methods: {
   }
@@ -56,7 +56,7 @@ export default {
       }
       .step-num{
         flex 1
-        text-align center   
+        text-align center
         font-size 42rpx
         color main-color
         font-weight bold

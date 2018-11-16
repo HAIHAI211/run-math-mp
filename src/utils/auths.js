@@ -7,19 +7,24 @@ import {pf} from '@/utils'
 export default {
   async werun () {
     const scopeName = 'scope.werun'
-    const getSettingRes = await pf('getSetting')
-    if (!getSettingRes.authSetting[scopeName]) {
-      try {
-        await pf('authorize', {scope: scopeName})
-        console.log('申请授权werun，然后用户同意')
-        return true
-      } catch (e) {
-        console.log('申请授权werun，但是用户拒绝了')
-        return false
+    try {
+      const getSettingRes = await pf('getSetting')
+      if (!getSettingRes.authSetting[scopeName]) {
+        try {
+          await pf('authorize', {scope: scopeName})
+          console.log('申请授权werun，然后用户同意')
+          return true
+        } catch (e) {
+          console.log('申请授权werun，但是用户拒绝了')
+          return false
+        }
       }
+      console.log('已经授权werun')
+      return true
+    } catch (e) {
+      console.log('获取setting失败', e)
+      return false
     }
-    console.log('已经授权werun')
-    return true
   }
 }
 
