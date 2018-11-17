@@ -41,7 +41,9 @@ const actions = {
     }
   },
   async AUTH_OF_WERUN ({commit}) {
+    console.log('0')
     const isAuthOfWerun = await auths.werun()
+    console.log('1', isAuthOfWerun)
     commit(types.SET_WE_RUN, isAuthOfWerun)
   },
   async REPORT_OF_WERUN ({commit, state}) {

@@ -64,8 +64,7 @@ import runBtn from '@/components/run-btn'
 import runGift from '@/components/run-gift'
 import authPop from '@/components/auth-pop'
 import * as api from '@/http/api'
-import {formatTime} from '@/utils'
-// import * as utils from '@/utils'
+import * as utils from '@/utils'
 export default {
   components: {
     runBtn,
@@ -89,19 +88,15 @@ export default {
     werun (newV, oldV) {
       if (oldV === false && newV) { // 授权必须是被拒绝，然后现在同意了才能进入这儿
         console.log('微信运动授权之前被拒绝了，现在又同意了')
-        this._getSteps()
+        this._loginStuff() // 因为用户可能在页面长时间停留后再同意授权，此时session可能失效，故调用_loginStuff()而非只调用_getStep()
       }
     }
   },
   methods: {
     ...mapActions(['SET_SYSTEM_INFO', 'LOGIN', 'AUTH_OF_WERUN', 'REPORT_OF_WERUN', 'FETCH_USER_INFO', 'FETCH_ADVS']),
-    // ...mapMutations(['SET_WE_RUN']),
     _load () {
       this.netError = true
-      wx.showLoading({
-        title: '加载中',
-        mask: true
-      })
+      utils.showLoading()
       api.all([this._getRank(), this._getGifts(), this.FETCH_ADVS(), this._loginStuff()])
         .then(api.spread((ranks, gifts, advs) => {
           this.netError = false
@@ -114,11 +109,7 @@ export default {
           this.netError = true
           wx.hideLoading()
           wx.stopPullDownRefresh()
-          wx.showToast({
-            title: '网络异常，请重试',
-            icon: 'none'
-          })
-          // console.log(error)
+          utils.showError()
         })
     },
     _toStealCoin () {
@@ -130,15 +121,12 @@ export default {
       try {
         const result = await api.sign({
           openId: this.openId,
-          signTime: formatTime(new Date())
+          signTime: utils.formatTime(new Date())
         })
         console.log('签到结果天数+兑换得到的数学币', result)
         this.FETCH_USER_INFO()
       } catch (e) {
-        wx.showToast({
-          title: e.message,
-          icon: 'none'
-        })
+        utils.showError(e.message)
       }
     },
     async _getRank () { // 获取排行榜
