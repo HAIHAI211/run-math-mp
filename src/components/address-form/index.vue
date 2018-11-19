@@ -14,7 +14,7 @@
       <div class="wrap">
         <div class="label">手机号码</div>
         <input class="input"
-               placeholder="请输入联系人姓名"
+               placeholder="请输入联系人手机号"
                maxlength="11"
                type="number"
                v-model.lazy="user.telNo" :focus="focus && !areaPickerShow"/>
@@ -25,13 +25,13 @@
         <div class="label">选择地区</div>
         <input @click="chooseAddress"
                disabled
-               class="input" placeholder="点击选择所在地区" type="number" v-model="areaStr"/>
+               class="input" placeholder="点击选择所在地区" v-model="areaStr"/>
       </div>
     </div>
     <div class="field-item">
       <div class="wrap">
         <div class="label">详细地址</div>
-        <input class="input" placeholder="如小区几栋几单元门牌号" type="number" v-model.lazy="user.address"/>
+        <input class="input" placeholder="如小区几栋几单元门牌号" v-model.lazy="user.address"/>
       </div>
     </div>
     <van-popup
