@@ -40,6 +40,15 @@ export const showLoading = () => {
     mask: true
   })
 }
+
+// 显示toat
+export const showToast = (msg) => {
+  wx.showToast({
+    title: msg,
+    icon: 'none'
+  })
+}
+
 // 显示异常
 export const showError = (msg) => {
   wx.showToast({

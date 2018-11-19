@@ -61,10 +61,9 @@ const actions = {
     // console.log('未达到步数上报条件')
     return false // 上传失败
   },
-  async FETCH_USER_INFO ({commit, state}, shouldSetStep = true) {
+  async FETCH_USER_INFO ({commit, state}) {
     if (state.isLogin && state.openId) {
       const result = await api.getUserInfo({ openId: state.openId })
-      result.data.shouldSetStep = shouldSetStep
       commit(types.SET_USER_INFO, result.data)
     }
   },

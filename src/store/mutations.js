@@ -31,13 +31,22 @@ const mutations = {
     state.signDayCount = v
   },
   [types.SET_USER_INFO] (state, v) {
-    state.todayChangedStep = v.todayChangedStep
-    state.mathCoin = v.mathCoin
-    state.todayStealStep = v.todayStealStep
-    state.signDayCount = v.signDayCount
-    if (v.shouldSetStep) {
-      state.todayStep = v.todayStep
-    }
+    state.todayChangedStep = v.todayChangedStep || state.todayChangedStep
+    state.mathCoin = v.mathCoin || state.mathCoin
+    state.todayStealStep = v.todayStealStep || state.todayStealStep
+    state.signDayCount = v.signDayCount || state.signDayCount
+    state.todayStep = v.todayStep || state.todayStep
+    state.openId = v.openId || state.openId
+    state.nickName = v.nickName || state.nickName
+    state.gender = v.gender || state.gender
+    state.city = v.city || state.city
+    state.province = v.province || state.province
+    state.country = v.country || state.country
+    state.avatarUrl = v.avatarUrl || state.avatarUrl
+    state.contactsName = v.contactsName || state.contactsName
+    state.telNo = v.telNo || state.telNo
+    state.addressArea = v.addressArea || state.addressArea
+    state.address = v.address || state.address
   },
   [types.SET_ADVS] (state, v) {
     state.advs = v

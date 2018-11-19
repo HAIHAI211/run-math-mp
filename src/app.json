@@ -1,9 +1,9 @@
 {
   "pages": [
+    "pages/me/main",
     "pages/index/main",
     "pages/gift/main",
     "pages/step/main",
-    "pages/me/main",
     "pages/gift-detail/main",
     "pages/change-success/main",
     "pages/address/main",
@@ -26,6 +26,11 @@
     "backgroundColor": "#fff",
     "borderStyle": "black",
     "list": [{
+      "pagePath": "pages/me/main",
+      "text": "我的",
+      "iconPath": "/static/img/mine_gray.png",
+      "selectedIconPath": "/static/img/mine_green.png"
+    },{
       "pagePath": "pages/index/main",
       "text": "首页",
       "iconPath": "/static/img/index_gray.png",
@@ -40,11 +45,6 @@
       "text": "偷步数",
       "iconPath": "/static/img/foot_gray.png",
       "selectedIconPath": "/static/img/foot_green.png"
-    }, {
-      "pagePath": "pages/me/main",
-      "text": "我的",
-      "iconPath": "/static/img/mine_gray.png",
-      "selectedIconPath": "/static/img/mine_green.png"
     }]
   },
   "plugins": {

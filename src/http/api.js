@@ -69,10 +69,18 @@ export const getRank = params => {
   })
 }
 
-// 用户信息
+// 获取用户信息
 export const getUserInfo = params => {
   return get({
     url: '/user/get',
+    data: params
+  })
+}
+
+// 更新用户信息
+export const updateUserInfo = params => {
+  return post({
+    url: '/user/update',
     data: params
   })
 }
