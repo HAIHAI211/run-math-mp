@@ -34,9 +34,13 @@ const actions = {
     try {
       await pf('checkSession')
       if (!state.openId) { // 本地openid缓存被清
+        console.log('本地openid缓存被清')
         await reLogin(commit)
+      } else {
+        console.log('session有效且openId存在')
       }
     } catch (e) { // session过期
+      console.log('session过期')
       await reLogin(commit)
     }
   },
@@ -50,6 +54,8 @@ const actions = {
     if (state.isLogin && state.openId && state.werun) {
       console.log('【可以获取步数了哦哦哦哦】')
       const {encryptedData, iv} = await pf('getWeRunData')
+      console.log('ed', encryptedData)
+      console.log('iv', iv)
       await api.decrypt({
         encryptedData,
         iv,
