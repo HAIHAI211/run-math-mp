@@ -1,84 +1,81 @@
 <template>
-  <div class="pic-pop"  v-if="selfPopShow" @click.stop="" @touchmove.stop="" >
+  <div class="pic-pop"  v-if="selfShow" @click.stop="" @touchmove.stop="" >
     <div class="overlay"></div>
-    <div class="content" v-if="selfPopShow">
+    <div class="content" v-if="selfShow">
       <div class="pic-wrap">
         <image :src="selfUrl" class="pic" mode="widthFixed"/>
-        <image src="/static/img/delete@2x.png" class="close-btn" @click="selfPopShow=false"/>
-        <div class="detail" v-if="popType !==2">
+        <image src="/static/img/delete@2x.png" class="close-btn" @click="selfShow=false"/>
+        <div class="detail" v-if="type !==2">
           <div class="title">关注<span class="bold">回复“{{ boldTitle }}”</span>，{{ suffixTitle }}</div>
-          <!--<div :class="['btn','btn-'+popType]">{{ detailBtnText }}</div>-->
-          <button open-type="contact":class="['btn','btn-'+popType]">{{ detailBtnText }}</button>
+          <!--<div :class="['btn','btn-'+type]">{{ detailBtnText }}</div>-->
+          <button open-type="contact":class="['btn','btn-'+type]">{{ detailBtnText }}</button>
+        </div>
+        <div class="detail-type-sign" v-if="type === 2">
+          <div class="title">今日签到成功，获得<span class="coin">{{ coin }}</span>数学币</div>
+          <div class="sub-title">坚持签到可获得更多数学币哦~</div>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { mixinShow } from '@/mixin'
 export default {
+  mixins: [mixinShow],
   props: {
-    popShow: {
-      type: Boolean,
-      default: false
-    },
     url: {
       type: String,
       default: ''
     },
-    popType: {
+    type: {
       type: Number,
-      default: 0 // 0:关注公众号 1:去客服 2：自定义
+      default: 0 // 0:关注公众号 1:去客服 2：签到
+    },
+    coin: {
+      type: Number, // 签到时获得的奖励币
+      default: 3
     }
   },
   data () {
     return {
-      selfPopShow: this.popShow
     }
   },
   computed: {
     selfUrl () {
-      if (this.popType === 0) {
+      if (this.type === 0) {
         return '/static/img/Popup_window@2x.png'
-      } else if (this.popType === 1) {
+      } else if (this.type === 1) {
         return '/static/img/Dialog_q@2x.png'
       } else {
         return this.url
       }
     },
     boldTitle () {
-      if (this.popType === 0) {
+      if (this.type === 0) {
         return '6'
-      } else if (this.popType === 1) {
+      } else if (this.type === 1) {
         return 'Q'
       } else {
         return ''
       }
     },
     suffixTitle () {
-      if (this.popType === 0) {
+      if (this.type === 0) {
         return '领精美礼品!'
-      } else if (this.popType === 1) {
+      } else if (this.type === 1) {
         return '客服小姐姐为您解答'
       } else {
         return ''
       }
     },
     detailBtnText () {
-      if (this.popType === 0) {
+      if (this.type === 0) {
         return '关注公众号'
-      } else if (this.popType === 1) {
+      } else if (this.type === 1) {
         return '联系客服'
       } else {
         return ''
       }
-    }
-  },
-  watch: {
-    popShow (v) {
-      this.selfPopShow = v
-    },
-    selfPopShow (v) {
-      this.$emit('update:popShow', v)
     }
   },
   methods: {
@@ -154,6 +151,30 @@ export default {
             &.btn-1{
               background #3acf7b
             }
+          }
+        }
+        .detail-type-sign{
+          width 100%
+          position absolute
+          bottom 70rpx
+          left 0
+          height 180rpx
+          display flex
+          flex-direction column
+          justify-content space-between
+          align-items center
+          .title{
+            color #fff
+            font-size 33rpx
+            .coin{
+              font-weight bolder
+              font-size 38rpx
+            }
+          }
+          .sub-title{
+            color #000
+            font-weight 400
+            font-size 28rpx
           }
         }
       }
