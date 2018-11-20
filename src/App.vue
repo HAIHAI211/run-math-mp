@@ -6,6 +6,7 @@ export default {
 <style lang="stylus">
   page{
     background:#F5F5F5;
+    height: 100%;
     // animation: name duration timing-function delay iteration-count direction;
     .up-down-animation{
       animation: up-down-animation .5s ease-in 0s infinite alternate;
