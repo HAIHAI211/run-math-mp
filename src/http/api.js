@@ -99,3 +99,11 @@ export const getAdvs = () => {
     url: '/common/adv'
   })
 }
+
+// 礼品详情
+export const getGiftDetail = params => {
+  return get({
+    url: '/common/getPresentDetail',
+    data: params
+  })
+}

@@ -2,19 +2,19 @@
   <div class="gift-detail-page">
     <div class="swiper-wrap">
       <swiper class="swiper" :current="current" @change="swiperChange" :interval="2000" autoplay>
-        <swiper-item v-for="(imgUrl,imgUrlIndex) in imgUrls" :key="imgUrlIndex">
+        <swiper-item v-for="(imgUrl,imgUrlIndex) in infoPicUrlListFormat" :key="imgUrlIndex">
           <image :src="imgUrl" class="slide-image"/>
         </swiper-item>
       </swiper>
       <div class="my-indicator">
-        <span class="current">{{ current + 1 }}</span> /<span>{{ imgUrls.length }}</span>
+        <span class="current">{{ current + 1 }}</span> /<span>{{ infoPicUrlListFormat.length }}</span>
       </div>
     </div>
     <div class="gift-info">
       <div class="name">{{ name }}</div>
       <div class="middle">
-        <div class="postage" v-if="giftType===2">包邮</div>
-        <div class="shengyu">今日剩余：{{ leftCount }}份</div>
+        <div class="postage" v-if="type===2 && postage === 1">包邮</div>
+        <div class="shengyu">今日剩余：{{ totalAmount }}份</div>
       </div>
       <div class="bottom">
         <div class="price">
@@ -22,7 +22,7 @@
             <span class="num">{{ price }}</span>
             <span class="suffix">数学币</span>
           </div>
-          <div class="old" v-if="giftType===2">原价￥{{ oldPrice }}</div>
+          <div class="old" v-if="type===2">原价￥{{ originalPrice }}</div>
         </div>
         <div class="share">
           分享好友
@@ -33,19 +33,19 @@
     <van-tabs :active="activeTabIndex" @change="tabChange" color="#3ACF7A">
       <van-tab title="兑换记录">
         <div class="exchange-record-wrap">
-          <div class="exchange-record" v-for="(record,recordIndex) in exchangeRecords" :key="recordIndex">
+          <div class="exchange-record" v-for="(record,recordIndex) in recordList" :key="recordIndex" v-if="recordList.length">
             <div class="user">
-              <image :src="record.avatar" class="avatar"/>
-              <div class="name">{{ record.name }}</div>
+              <image :src="record.avatar_url" class="avatar"/>
+              <div class="name">{{ record.pojoNickName }}</div>
             </div>
-            <div class="info">兑换了{{ record.info }}</div>
+            <div class="info">兑换了{{ record.name }}</div>
             <div class="time">
-              {{ record.time }}前
+              {{ record.pojoTime }}
             </div>
           </div>
         </div>
       </van-tab>
-      <van-tab title="商品介绍">内容 2</van-tab>
+      <van-tab title="商品介绍">{{ info }}</van-tab>
     </van-tabs>
     <div class="confirm-btn-wrap">
       <navigator class="confirm-btn" url="/pages/order-confirm/main">立即兑换</navigator>
@@ -53,17 +53,19 @@
   </div>
 </template>
 <script>
+import { getGiftDetail } from '@/http/api'
+import * as utils from '@/utils'
 export default {
   data () {
     return {
       id: 0,
-      totalAmount: 10,
       price: 0,
-      postage: 0,
-      originalPrice: 0,
-      infoPicUrlList: '',
-      recordList: '',
-      giftType: 0,
+      postage: 0, // 2
+      originalPrice: 0, // 2
+      infoPicUrlListFormat: '',
+      recordList: [], // 兑换记录
+      type: 0,
+      info: '',
       activeTabIndex: 0,
       imgUrls: [
         'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
@@ -72,8 +74,7 @@ export default {
       ],
       current: 0,
       name: '极客数学帮专属定制笔记本，超值优惠大放送',
-      leftCount: 2, // 今日剩余数量
-      oldPrice: 5,
+      totalAmount: 2, // 今日剩余数量
       exchangeRecords: [
         {
           name: '沈佳宜',
@@ -104,17 +105,51 @@ export default {
   },
   methods: {
     swiperChange (res) {
-      console.log(res.mp.detail.current)
+      // console.log(res.mp.detail.current)
       this.current = res.mp.detail.current
     },
     tabChange (event) {
       this.activeTabIndex = event.mp.detail.index
+    },
+    _pojo (data) {
+      console.log('礼品详情', data)
+      this.name = data.name
+      this.totalAmount = data.totalAmount // 剩余总数
+      this.price = data.price
+      this.info = data.info // 介绍
+      this.infoPicUrlListFormat = data.infoPicUrlListFormat // 待定
+      if (this.type === 2) {
+        this.originalPrice = data.originalPrice
+        this.postage = data.postage
+      }
+      for (let i = 0; i < data.recordList.length; i++) {
+        let record = data.recordList[i]
+        record.pojoNickName = record.nick_name.slice(0, 1) + '**'
+        let date = new Date(record.change_time)
+        // let date = new Date('2018/11/20 07:00')
+        let now = new Date()
+        record.pojoTime = utils.timeGapFromNow(date, now)
+        this.recordList.push(record)
+      }
+      // this.recordList = data.recordList
     }
   },
-  onLoad (options) {
+  async onLoad (options) {
     console.log(options)
-    this.giftId = options.giftId
-    this.giftType = parseInt(options.giftType)
+    this.id = parseInt(options.giftId)
+    this.type = parseInt(options.giftType)
+    utils.showLoading()
+    try {
+      const { data } = await getGiftDetail({
+        id: this.id,
+        type: this.type
+      })
+      this._pojo(data)
+      wx.hideLoading()
+    } catch (e) {
+      wx.hideLoading()
+      utils.showError()
+    }
   }
 }
 </script>
@@ -220,8 +255,8 @@ export default {
     }
     .exchange-record-wrap{
       padding-bottom 130rpx
-      background #fff
       .exchange-record{
+        background #fff
         display flex
         align-items center
         justify-content space-between

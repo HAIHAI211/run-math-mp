@@ -8,7 +8,7 @@ export async function sleep (time = 1000) {
     setTimeout(resolve, time)
   })
 }
-export function formatTime (date) {
+export function formatTime (date, showHour = true) {
   const year = date.getFullYear()
   const month = date.getMonth() + 1
   const day = date.getDate()
@@ -20,8 +20,31 @@ export function formatTime (date) {
   const t1 = [year, month, day].map(formatNumber).join('-')
   const t2 = [hour, minute, second].map(formatNumber).join(':')
 
-  return `${t1} ${t2}`
+  return showHour ? `${t1} ${t2}` : t1
 }
+
+export function timeGapFromNow (date1, date2 = new Date()) {
+  let timeGap = date2.getTime() - date1.getTime()
+  let m1 = timeGap % (24 * 3600 * 1000)
+  let m2 = m1 % (3600 * 1000)
+  let days = Math.floor(timeGap / (24 * 3600 * 1000))
+  let hours = Math.floor(m1 / (3600 * 1000))
+  let minutes = Math.floor(m2 / (60 * 1000))
+  if (days === 0) {
+    return hours === 0 ? `${minutes}分钟前` : `${hours}小时前`
+  } else if (days === 1) {
+    return '昨天'
+  } else if (days === 2) {
+    return '前天'
+  } else if (days < 30) {
+    return `${days}天前`
+  } else if (days < 60) {
+    return '一个月前'
+  } else {
+    return formatTime(date1)
+  }
+}
+
 // 微信接口promisefy化
 export function pf (method, options = {}) {
   return new Promise((resolve, reject) => {
