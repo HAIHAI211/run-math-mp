@@ -56,6 +56,7 @@
       </div>
     </div>
     <auth-pop :show.sync="authPopShow"/>
+    <pic-pop/>
   </div>
 </template>
 <script>
@@ -63,14 +64,15 @@ import { mapActions, mapState } from 'vuex'
 import runBtn from '@/components/run-btn'
 import runGift from '@/components/run-gift'
 import authPop from '@/components/auth-pop'
-// import picPop from '@/components/pic-pop'
+import picPop from '@/components/pic-pop'
 import * as api from '@/http/api'
 import * as utils from '@/utils'
 export default {
   components: {
     runBtn,
     authPop,
-    runGift
+    runGift,
+    picPop
     // accreditPop
   },
   data () {

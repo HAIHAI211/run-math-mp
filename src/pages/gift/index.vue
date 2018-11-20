@@ -74,7 +74,7 @@ import runGift from '@/components/run-gift'
 import focusIcon from '@/components/focus-icon'
 import { sleep } from '@/utils'
 import * as api from '@/http/api'
-
+import { mapState } from 'vuex'
 export default {
   components: {
     tab,
@@ -157,6 +157,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['openId']),
     activeTab () {
       return this.tabItems[this.activeTabIndex]
     },
@@ -291,6 +292,7 @@ export default {
         }
       }
       let params = {
+        openId: this.openId,
         pageNum: this.activeTab.pageNum,
         pageSize: this.activeTab.pageSize,
         presentType: this.presentType,
@@ -304,12 +306,13 @@ export default {
       console.log('请求礼物列表的参数', params)
       this.loadingState = 1
       try {
-        const result = await api.getDocList(params)
-        console.log('docList', result)
+        const result = await api[this.presentType === 2 ? 'getRealList' : 'getDocList'](params)
+        console.log(this.presentType === 2 ? 'getRealList' : 'getDocList', result)
         this.activeTab.gifts = isRefresh ? result.data : [...this.activeTab.gifts, ...result.data]
         this.activeTab.pageCount = result.pageCount
         this.loadingState = 0
       } catch (e) {
+        console.log(e)
         this.loadingState = 3
       }
 
