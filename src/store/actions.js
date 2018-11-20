@@ -16,12 +16,12 @@ async function reLogin (commit) {
     } catch (e) {
       console.log('获取openid失败', e)
       commit(types.SET_IS_LOGIN, false)
-      // return Promise.reject(new Error('【self.server】登录失败'))
+      return Promise.reject(new Error('【self.server】登录失败'))
     }
   } catch (e) {
     console.log('登录失败', e)
     commit(types.SET_IS_LOGIN, false)
-    // return Promise.reject(new Error('【wx.server】登录失败'))
+    return Promise.reject(new Error('【wx.server】登录失败'))
   }
 }
 const actions = {
@@ -33,18 +33,23 @@ const actions = {
     })
   },
   async LOGIN ({commit, state}) {
+    console.log('LOGIN')
     try {
       const checkSessionResult = await pf('checkSession')
       console.log('checkSessionResult', checkSessionResult)
       if (!state.openId) { // 本地openid缓存被清
         console.log('本地openid缓存被清')
-        await reLogin(commit)
+        try {
+          await reLogin(commit) // 不让reLogin抛出异常，否则会执行下面的【2次登陆】
+        } catch (e) {
+          return Promise.reject(e)
+        }
       } else {
         console.log('session有效且openId存在')
       }
     } catch (e) { // session过期
       console.log('session过期', e)
-      await reLogin(commit)
+      await reLogin(commit) // 【2次登录】
     }
   },
   async AUTH_OF_WERUN ({commit}) {

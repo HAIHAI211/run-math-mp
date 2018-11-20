@@ -87,7 +87,7 @@ export default {
   methods: {
   },
   mounted () {
-    console.log(this.advs)
+    // console.log(this.advs)
   }
 }
 </script>

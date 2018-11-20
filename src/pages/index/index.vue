@@ -144,7 +144,7 @@ export default {
     },
     async _loginStuff () { // 登录相关
       await this.LOGIN()
-      await this._getSteps()
+      // await this._getSteps()
     },
     async _getSteps () {
       await this.AUTH_OF_WERUN() // 申请授权
