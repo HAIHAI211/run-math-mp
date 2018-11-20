@@ -17,7 +17,6 @@
 </template>
 <script>
 import { mapActions } from 'vuex'
-import auths from '@/utils/auths'
 export default {
   props: {
     show: {
@@ -45,9 +44,8 @@ export default {
   methods: {
     ...mapActions(['SET_SYSTEM_INFO']),
     bindGetUserInfo (e) {
-      console.log(e.mp.detail)
-      auths.werun()
-      // this.selfShow = false
+      this.$emit('getuserinfo', e.mp.detail)
+      this.selfShow = false
     }
   }
 }

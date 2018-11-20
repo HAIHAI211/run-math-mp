@@ -21,8 +21,11 @@ const mutations = {
   [types.SET_SYSTEM_INFO] (state, v) {
     state.systemInfo = v
   },
-  [types.SET_WE_RUN] (state, v) {
-    state.werun = v
+  [types.SET_AUTH_WE_RUN] (state, v) {
+    state.authWerun = v
+  },
+  [types.SET_AUTH_USER_INFO] (state, v) {
+    state.authUserInfo = v
   },
   [types.SET_STEPS_EXCHANGED] (state, v) {
     state.todayStep = v

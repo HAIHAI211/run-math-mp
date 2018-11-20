@@ -3,7 +3,8 @@ const state = {
   isLogin: false,
   systemInfo: null,
   advs: [], // 全部广告位
-  werun: undefined, // 微信运动权限 undefined true false
+  authWerun: undefined, // 微信运动权限 undefined true false
+  authUserInfo: undefined, // 用户信息权限
   mathCoin: 0, // 我的数学币
   signDayCount: 0, // 连续签到天数
   todayChangedStep: 0, // 今日已兑步数

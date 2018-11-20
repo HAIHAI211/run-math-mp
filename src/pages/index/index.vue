@@ -63,6 +63,7 @@ import { mapActions, mapState } from 'vuex'
 import runBtn from '@/components/run-btn'
 import runGift from '@/components/run-gift'
 import authPop from '@/components/auth-pop'
+// import picPop from '@/components/pic-pop'
 import * as api from '@/http/api'
 import * as utils from '@/utils'
 export default {
@@ -147,6 +148,7 @@ export default {
       await this.AUTH_OF_WERUN() // 申请授权
       await this.REPORT_OF_WERUN() // 上报微信运动数据给后台，返回是否成功的标志
       await this.FETCH_USER_INFO() // 获取用户信息
+      console.log('getSteps成功')
     },
     _coinChargeClick () { // 一键兑换数学币
       if (!this.werun) {

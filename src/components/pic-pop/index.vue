@@ -3,7 +3,7 @@
     <div class="overlay"></div>
     <div class="content" v-if="selfPopShow">
       <div class="pic-wrap">
-        <image :src="selfUrl" class="pic"/>
+        <image :src="selfUrl" class="pic" mode="widthFixed"/>
         <image src="/static/img/delete@2x.png" class="close-btn" @click="selfPopShow=false"/>
         <div class="detail" v-if="popType !==2">
           <div class="title">关注<span class="bold">回复“{{ boldTitle }}”</span>，{{ suffixTitle }}</div>
@@ -109,11 +109,10 @@ export default {
       center()
       .pic-wrap{
         position relative
-        $pw = 476 * 1.2rpx
-        $ph = 648 * 1.2rpx
+        // $pw = 476 * 1.2rpx
+        // $ph = 648 * 1.2rpx
         .pic{
-          width $pw
-          height $ph
+          width 500rpx
         }
         .close-btn{
           position absolute

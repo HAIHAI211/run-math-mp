@@ -85,6 +85,13 @@ export const updateUserInfo = params => {
   })
 }
 
+// 全部广告位
+export const getAdvs = () => {
+  return get({
+    url: '/common/adv'
+  })
+}
+
 // 获取首页礼品
 export const getIndexPresent = params => {
   return get({
@@ -93,10 +100,19 @@ export const getIndexPresent = params => {
   })
 }
 
-// 全部广告位
-export const getAdvs = () => {
+// 获取文档类礼品列表
+export const getDocList = params => {
   return get({
-    url: '/common/adv'
+    url: '/common/getDocList',
+    data: params
+  })
+}
+
+// 获取实物礼品列表
+export const getRealList = params => {
+  return get({
+    url: '/common/getRealList',
+    data: params
   })
 }
 

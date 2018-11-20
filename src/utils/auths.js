@@ -5,8 +5,8 @@ import {pf} from '@/utils'
  * @return {[type]}             [description]
  */
 export default {
-  async werun () {
-    const scopeName = 'scope.werun'
+  async auth (scope) {
+    const scopeName = scope
     const getSettingRes = await pf('getSetting')
     if (!getSettingRes.authSetting[scopeName]) {
       try {

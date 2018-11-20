@@ -20,7 +20,7 @@
       </div>
     </div>
     <runLoading :state="loadingState"/>
-    <div class="overlay" v-if="activeBarIndex !== -1" @click="activeBarIndex=-1">
+    <div class="overlay" v-if="activeBarIndex !== -1" @click="activeBarIndex=-1" @touchmove.stop="">
       <div class="wrap-0" v-if="activeBarIndex === 0" @click.stop="">
         <div
           :class="['wrap-item',
@@ -73,7 +73,7 @@ import runLoading from '@/components/run-loading'
 import runGift from '@/components/run-gift'
 import focusIcon from '@/components/focus-icon'
 import { sleep } from '@/utils'
-// import { getGiftList } from '@/http/api'
+import * as api from '@/http/api'
 
 export default {
   components: {
@@ -297,11 +297,22 @@ export default {
         sort: this.activeSortIndex
       }
       if (this.presentType !== 2) {
-        params.hasChanged = this.switchCellchecked
+        params.hasChanged = this.switchCellchecked ? 1 : 0
         params.fitGrade = this.fitGrade
       }
+      // 开始请求
       console.log('请求礼物列表的参数', params)
       this.loadingState = 1
+      try {
+        const result = await api.getDocList(params)
+        console.log('docList', result)
+        this.activeTab.gifts = isRefresh ? result.data : [...this.activeTab.gifts, ...result.data]
+        this.activeTab.pageCount = result.pageCount
+        this.loadingState = 0
+      } catch (e) {
+        this.loadingState = 3
+      }
+
       // try {
       //   const result = await getGiftList(params)
       //   this.loadingState = 0

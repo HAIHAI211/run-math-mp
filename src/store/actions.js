@@ -5,21 +5,23 @@ import auths from '@/utils/auths'
 
 async function reLogin (commit) {
   try {
-    // console.log('重新登录')
+    console.log('登录')
     const loginResult = await pf('login') // 重新登录
+    console.log('loginResult', loginResult)
     try {
       const result = await api.login({ code: loginResult.code }) // 将code发送给后台获取openid
       commit(types.SET_IS_LOGIN, true)
       commit(types.SET_OPEN_ID, result.data.openId)
+      console.log('登录成功')
     } catch (e) {
-      // console.log('获取openid失败', e)
+      console.log('获取openid失败', e)
       commit(types.SET_IS_LOGIN, false)
-      return Promise.reject(new Error('【self.server】登录失败'))
+      // return Promise.reject(new Error('【self.server】登录失败'))
     }
   } catch (e) {
-    // console.log('登录失败')
+    console.log('登录失败', e)
     commit(types.SET_IS_LOGIN, false)
-    return Promise.reject(new Error('【wx.server】登录失败'))
+    // return Promise.reject(new Error('【wx.server】登录失败'))
   }
 }
 const actions = {
@@ -32,7 +34,8 @@ const actions = {
   },
   async LOGIN ({commit, state}) {
     try {
-      await pf('checkSession')
+      const checkSessionResult = await pf('checkSession')
+      console.log('checkSessionResult', checkSessionResult)
       if (!state.openId) { // 本地openid缓存被清
         console.log('本地openid缓存被清')
         await reLogin(commit)
@@ -40,15 +43,17 @@ const actions = {
         console.log('session有效且openId存在')
       }
     } catch (e) { // session过期
-      console.log('session过期')
+      console.log('session过期', e)
       await reLogin(commit)
     }
   },
   async AUTH_OF_WERUN ({commit}) {
-    console.log('0')
-    const isAuthOfWerun = await auths.werun()
-    console.log('1', isAuthOfWerun)
-    commit(types.SET_WE_RUN, isAuthOfWerun)
+    const isAuthOfWerun = await auths.auth('scope.werun')
+    commit(types.SET_AUTH_WE_RUN, isAuthOfWerun)
+  },
+  async AUTH_OF_USER_INFO ({commit}) {
+    const isAuthOfUI = await auths.auth('scope.userInfo')
+    commit(types.SET_AUTH_USER_INFO, isAuthOfUI)
   },
   async REPORT_OF_WERUN ({commit, state}) {
     if (state.isLogin && state.openId && state.werun) {

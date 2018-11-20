@@ -57,7 +57,7 @@
       </div>
     </div>
     <div class="ad-wrap">
-      <div class="ad" :style="{backgroundImage: 'url(' + ad +')'}" v-if="ad.length">
+      <div class="ad" :style="{backgroundImage: 'url(' + advs[0].picUrl +')'}" v-if="advs.length">
       </div>
     </div>
     <pic-pop :popType="1" :popShow.sync="picPopShow"/>
@@ -82,9 +82,12 @@ export default {
     }
   },
   computed: {
-    ...mapState(['signDayCount', 'todayStealStep', 'todayStep', 'todayChangedStep'])
+    ...mapState(['signDayCount', 'todayStealStep', 'todayStep', 'todayChangedStep', 'advs'])
   },
   methods: {
+  },
+  mounted () {
+    console.log(this.advs)
   }
 }
 </script>
