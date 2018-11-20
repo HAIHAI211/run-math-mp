@@ -2,12 +2,10 @@
   <div class="me-page">
     <div class="top">
       <div class="user">
-        <!--<image class="avatar" :src="avatar"/>-->
         <open-data type="userAvatarUrl" class="avatar"></open-data>
         <div class="text">
-          <!--<div class="name">{{ name }}</div>-->
           <open-data type="userNickName" class="name"></open-data>
-          <div class="run-days">已经连续运动了{{ runDays }}天</div>
+          <div class="run-days">已经连续运动了{{ signDayCount }}天</div>
         </div>
       </div>
       <div class="run-info">
@@ -16,11 +14,11 @@
           <div class="text">邀请好友数</div>
         </div>
         <div class="run-item">
-          <div class="num">{{ todayStolenSteps }}</div>
+          <div class="num">{{ todayStealStep }}</div>
           <div class="text">今日已偷步数</div>
         </div>
         <div class="run-item" style="border-right:none;">
-          <div class="num">{{ todayTotalSteps }}</div>
+          <div class="num">{{ todayStep + todayChangedStep }}</div>
           <div class="text">今日总步数</div>
         </div>
       </div>
@@ -68,23 +66,24 @@
 
 <script>
 import picPop from '@/components/pic-pop'
+import {mapState} from 'vuex'
 export default {
   components: {
     picPop
   },
   data () {
     return {
-      avatar: 'https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/mine_photo%402x.png',
+      avatar: '',
       runDays: 1,
-      name: '走着走着就散了',
+      name: '',
       friendNums: 60,
-      todayStolenSteps: 2800,
-      todayTotalSteps: 30020,
       ad: 'https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/index_banner%402x.png', // 广告地址
       picPopShow: false
     }
   },
-
+  computed: {
+    ...mapState(['signDayCount', 'todayStealStep', 'todayStep', 'todayChangedStep'])
+  },
   methods: {
   }
 }
