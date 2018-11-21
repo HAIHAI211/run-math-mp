@@ -33,7 +33,7 @@ export default {
     },
     coin: {
       type: Number, // 签到时获得的奖励币
-      default: 3
+      default: 0
     }
   },
   data () {

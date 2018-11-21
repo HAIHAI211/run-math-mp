@@ -30,7 +30,7 @@
     <div class="rank" v-if="!netError && rankList.length">
       <div class="rank-head">
         <div class="icon"></div>
-        <div class="title" @click="_toStealCoin">偷步数赚数学币<div class="arrow"></div></div>
+        <div class="title" @click="_toStealCoinPage">偷步数赚数学币<div class="arrow"></div></div>
       </div>
       <scroll-view class="rank-scroll-view" scroll-x>
         <div class="scroll-view-item-wrap">
@@ -56,7 +56,7 @@
       </div>
     </div>
     <auth-pop :show.sync="authPopShow"/>
-    <pic-pop :show.sync="signPopShow" :type="2" url="/static/img/sign.png"/>
+    <pic-pop :show.sync="signPopShow" :type="2" url="/static/img/sign.png" :coin="signCoin"/>
   </div>
 </template>
 <script>
@@ -78,8 +78,8 @@ export default {
   data () {
     return {
       authPopShow: false,
-      signPopShow: true,
-      // show: false,
+      signPopShow: false,
+      signCoin: 0, // 签到成功后获得的奖励币数
       netError: true,
       rankList: [],
       giftList: []
@@ -116,20 +116,25 @@ export default {
           utils.showError()
         })
     },
-    _toStealCoin () {
+    _toStealCoinPage () {
       wx.switchTab({
         url: '/pages/step/main'
       })
     },
     async _sign () {
+      utils.showLoading()
       try {
         const result = await api.sign({
           openId: this.openId,
           signTime: utils.formatTime(new Date())
         })
+        wx.hideLoading()
+        this.signCoin = result.data.getMathCoin
+        this.signPopShow = true
         console.log('签到结果天数+兑换得到的数学币', result)
         this.FETCH_USER_INFO()
       } catch (e) {
+        wx.hideLoading()
         utils.showError(e.message)
       }
     },
