@@ -1,5 +1,5 @@
 <template>
-  <div class="index-page">
+  <div class="index-page" @click="test">
     <div class="top-bg">
       <div class="coin-center">
         <span class="coin-hint">我的数学币</span>
@@ -98,6 +98,9 @@ export default {
   },
   methods: {
     ...mapActions(['SET_SYSTEM_INFO', 'LOGIN', 'AUTH_OF_WERUN', 'REPORT_OF_WERUN', 'FETCH_USER_INFO', 'FETCH_ADVS']),
+    test () {
+      api.changeStep()
+    },
     _load () {
       this.netError = true
       utils.showLoading()

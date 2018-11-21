@@ -1,5 +1,6 @@
 import fly from './config'
 import qs from 'qs'
+import store from '../store'
 
 import config from '@/config'
 const host = config.host
@@ -43,6 +44,17 @@ export const login = params => {
     url: '/user/login',
     data: params
   })
+}
+
+// 封装请求参数Params
+const paramFactory = (url, params) => {
+  return {
+    url,
+    data: {
+      openId: store.state.openId,
+      ...params
+    }
+  }
 }
 
 // 签到
@@ -122,4 +134,16 @@ export const getGiftDetail = params => {
     url: '/common/getPresentDetail',
     data: params
   })
+}
+
+// 步数兑换
+export const changeStep = () => {
+  console.log('vuex.state.gender = ' + store.state.gender)
+  // return post({
+  //   url: '/change/step',
+  //   data: {
+  //     openId: store.state.openId
+  //   }
+  // })
+  return post(paramFactory('/change/step'))
 }
