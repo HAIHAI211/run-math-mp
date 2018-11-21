@@ -161,11 +161,21 @@ export default {
       await this.FETCH_USER_INFO() // 获取用户信息
       console.log('getSteps成功')
     },
-    _coinChargeClick () { // 一键兑换数学币
+    async _coinChargeClick () { // 一键兑换数学币
       if (!this.werun) {
         this.authPopShow = true
+        return
       }
       // todo
+      utils.showLoading()
+      try {
+        await api.changeStep()
+        await this.FETCH_USER_INFO()
+        wx.hideLoading()
+      } catch (e) {
+        wx.hideLoading()
+        utils.showError()
+      }
     }
   },
   async onLoad () {
