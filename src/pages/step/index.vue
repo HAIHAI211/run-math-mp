@@ -94,7 +94,7 @@ export default {
       border-top-left-radius 30rpx
       border-top-right-radius 30rpx
       overflow hidden
-      top 80%
+      top 75%
       left 0
       .news-title{
         background #fff

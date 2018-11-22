@@ -138,12 +138,11 @@ export const getGiftDetail = params => {
 
 // 步数兑换
 export const changeStep = () => {
-  console.log('vuex.state.gender = ' + store.state.gender)
   // return post({
   //   url: '/change/step',
   //   data: {
   //     openId: store.state.openId
   //   }
   // })
-  return post(paramFactory('/change/step'))
+  return post(paramFactory('/user/change/step'))
 }

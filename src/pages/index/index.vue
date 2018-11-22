@@ -1,5 +1,5 @@
 <template>
-  <div class="index-page" @click="test">
+  <div class="index-page">
     <div class="top-bg">
       <div class="coin-center">
         <span class="coin-hint">我的数学币</span>
@@ -7,7 +7,7 @@
         <span class="step-hint">可兑换步数{{ netError ? '--' : todayStep }}</span>
       </div>
       <div class="coin-charge-btn" @click="_coinChargeClick"  v-if="!netError">一键兑换数学币</div>
-      <div class="check-day">连续签到{{signDayCount}}天</div>
+      <div class="check-day">连续签到{{netError ? '--' : signDayCount}}天</div>
       <div class="check-in-btn up-down-animation" @click="_sign"  v-if="!netError">
         <div class="icon"></div>
         <span class="text">签到</span>
@@ -18,7 +18,7 @@
         <span class="text">分享即领数学币</span>
       </div>
     </div>
-    <div class="werun" v-if="werun === false">
+    <div class="werun" v-if="authWerun === false">
       <div class="title">
         <div class="alarm">!</div>
         打开微信运动，步数换数学币
@@ -86,10 +86,10 @@ export default {
     }
   },
   computed: {
-    ...mapState(['werun', 'isLogin', 'openId', 'todayStep', 'signDayCount', 'mathCoin', 'advs'])
+    ...mapState(['authWerun', 'isLogin', 'openId', 'todayStep', 'signDayCount', 'mathCoin', 'advs'])
   },
   watch: {
-    werun (newV, oldV) {
+    authWerun (newV, oldV) {
       if (oldV === false && newV) { // 授权必须是被拒绝，然后现在同意了才能进入这儿
         console.log('微信运动授权之前被拒绝了，现在又同意了')
         this._loginStuff() // 因为用户可能在页面长时间停留后再同意授权，此时session可能失效，故调用_loginStuff()而非只调用_getStep()
@@ -98,9 +98,6 @@ export default {
   },
   methods: {
     ...mapActions(['SET_SYSTEM_INFO', 'LOGIN', 'AUTH_OF_WERUN', 'REPORT_OF_WERUN', 'FETCH_USER_INFO', 'FETCH_ADVS']),
-    test () {
-      api.changeStep()
-    },
     _load () {
       this.netError = true
       utils.showLoading()
@@ -153,7 +150,7 @@ export default {
     },
     async _loginStuff () { // 登录相关
       await this.LOGIN()
-      // await this._getSteps()
+      await this._getSteps()
     },
     async _getSteps () {
       await this.AUTH_OF_WERUN() // 申请授权
@@ -162,7 +159,7 @@ export default {
       console.log('getSteps成功')
     },
     async _coinChargeClick () { // 一键兑换数学币
-      if (!this.werun) {
+      if (!this.authWerun) {
         this.authPopShow = true
         return
       }
@@ -174,7 +171,7 @@ export default {
         wx.hideLoading()
       } catch (e) {
         wx.hideLoading()
-        utils.showError()
+        utils.showError(e.message)
       }
     }
   },

@@ -61,7 +61,7 @@ const actions = {
     commit(types.SET_AUTH_USER_INFO, isAuthOfUI)
   },
   async REPORT_OF_WERUN ({commit, state}) {
-    if (state.isLogin && state.openId && state.werun) {
+    if (state.isLogin && state.openId && state.authWerun) {
       console.log('【可以获取步数了哦哦哦哦】')
       const {encryptedData, iv} = await pf('getWeRunData')
       console.log('ed', encryptedData)
