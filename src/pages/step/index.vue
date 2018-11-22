@@ -18,13 +18,17 @@
         </div>
       </div>
     </div>
+    <div class="bubble-wrap">
+      <run-btn/>
+    </div>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
+import {runBtn} from '@/components/run-btn'
 export default {
   components: {
-    // tabBar
+    runBtn
   },
   data () {
     return {
@@ -140,6 +144,13 @@ export default {
           }
         }
       }
+    }
+    .bubble-wrap{
+      position absolute
+      top 100rpx
+      left 100rpx
+      bg-size(100rpx, 100rpx)
+      bg-image('bul')
     }
   }
 </style>
