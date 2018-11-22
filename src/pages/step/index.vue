@@ -18,14 +18,16 @@
         </div>
       </div>
     </div>
-    <div class="bubble-wrap">
-      <run-btn/>
+    <div :class="['bubble-wrap', 'bubble-wrap-' + bubbleIndex]"
+         v-for="(bubble,bubbleIndex) in 6"
+         :key="bubbleIndex">
+      <run-btn openType="getUserInfo"/>
     </div>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
-import {runBtn} from '@/components/run-btn'
+import runBtn from '@/components/run-btn'
 export default {
   components: {
     runBtn
@@ -44,7 +46,8 @@ export default {
             }
           ]
         }
-      ]
+      ],
+      bubbles: []
     }
   },
   computed: {
@@ -147,10 +150,41 @@ export default {
     }
     .bubble-wrap{
       position absolute
-      top 100rpx
-      left 100rpx
+      border-radius 50%
+      overflow hidden
       bg-size(100rpx, 100rpx)
       bg-image('bul')
+      animation up-down-animation .5s ease-in 0s infinite alternate
+      &.bubble-wrap-0{
+        top 200rpx
+        left 50rpx
+        animation-delay 0s
+      }
+      &.bubble-wrap-1{
+        top 200rpx
+        left 100rpx
+        animation-delay .5s
+      }
+      &.bubble-wrap-2{
+        top 300rpx
+        left 200rpx
+        animation-delay .7s
+      }
+      &.bubble-wrap-3{
+        top 50rpx
+        left 400rpx
+        animation-delay .8s
+      }
+      &.bubble-wrap-4{
+        top 400rpx
+        left 500rpx
+        animation-delay .6s
+      }
+      &.bubble-wrap-5{
+        top 500rpx
+        left 350rpx
+        animation-delay .9s
+      }
     }
   }
 </style>
