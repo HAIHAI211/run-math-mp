@@ -6,6 +6,12 @@ import * as types from './mutation-types'
 //     data: data
 //   })
 // }
+function getValue (state, obj, keyName) {
+  if (obj[keyName] === undefined) {
+    return state[keyName]
+  }
+  return obj[keyName]
+}
 
 const mutations = {
   /*
@@ -34,22 +40,22 @@ const mutations = {
     state.signDayCount = v
   },
   [types.SET_USER_INFO] (state, v) {
-    state.todayChangedStep = v.todayChangedStep || state.todayChangedStep
-    state.mathCoin = v.mathCoin || state.mathCoin
-    state.todayStealStep = v.todayStealStep || state.todayStealStep
-    state.signDayCount = v.signDayCount || state.signDayCount
-    state.todayStep = v.todayStep || state.todayStep
-    state.openId = v.openId || state.openId
-    state.nickName = v.nickName || state.nickName
-    state.gender = v.gender || state.gender
-    state.city = v.city || state.city
-    state.province = v.province || state.province
-    state.country = v.country || state.country
-    state.avatarUrl = v.avatarUrl || state.avatarUrl
-    state.contactsName = v.contactsName || state.contactsName
-    state.telNo = v.telNo || state.telNo
-    state.addressArea = v.addressArea || state.addressArea
-    state.address = v.address || state.address
+    state.todayChangedStep = getValue(state, v, 'todayChangedStep')
+    state.mathCoin = getValue(state, v, 'mathCoin')
+    state.todayStealStep = getValue(state, v, 'todayStealStep')
+    state.signDayCount = getValue(state, v, 'signDayCount')
+    state.todayStep = getValue(state, v, 'todayStep')
+    state.openId = getValue(state, v, 'openId')
+    state.nickName = getValue(state, v, 'nickName')
+    state.gender = getValue(state, v, 'gender')
+    state.city = getValue(state, v, 'city')
+    state.province = getValue(state, v, 'province')
+    state.country = getValue(state, v, 'country')
+    state.avatarUrl = getValue(state, v, 'avatarUrl')
+    state.contactsName = getValue(state, v, 'contactsName')
+    state.telNo = getValue(state, v, 'telNo')
+    state.addressArea = getValue(state, v, 'addressArea')
+    state.address = getValue(state, v, 'address')
   },
   [types.SET_ADVS] (state, v) {
     state.advs = v

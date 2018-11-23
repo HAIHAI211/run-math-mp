@@ -91,10 +91,11 @@ export const getUserInfo = params => {
 
 // 更新用户信息
 export const updateUserInfo = params => {
-  return post({
-    url: '/user/update',
-    data: params
-  })
+  // return post({
+  //   url: '/user/update',
+  //   data: params
+  // })
+  return post(paramFactory('/user/update', params))
 }
 
 // 全部广告位

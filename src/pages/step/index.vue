@@ -1,6 +1,9 @@
 <template>
   <div class="step-page">
-    <image class="bg-img" mode="widthFix" src="https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/bg%403x.png"/>
+    <image class="bg-img"
+           mode="widthFix"
+           src="https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/bg%403x.png"
+           @load="bgImgLoad" @error="bgImgError"/>
     <div class="step-info">
       <open-data type="userAvatarUrl" class="avatar"></open-data>
       <div class="step-num">{{ todayStep }}</div>
@@ -21,13 +24,15 @@
     <div :class="['bubble-wrap', 'bubble-wrap-' + bubbleIndex]"
          v-for="(bubble,bubbleIndex) in 6"
          :key="bubbleIndex">
-      <run-btn openType="getUserInfo"/>
+      <run-btn openType="getUserInfo" @getuserinfo="getuserinfo($event, bubbleIndex)"/>
     </div>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
 import runBtn from '@/components/run-btn'
+import {showLoading} from '@/utils'
+import {updateUserInfo} from '@/http/api'
 export default {
   components: {
     runBtn
@@ -47,13 +52,37 @@ export default {
           ]
         }
       ],
-      bubbles: []
+      bubbles: [],
+      hasUpdateUserInfo: false
     }
   },
   computed: {
     ...mapState(['todayStep'])
   },
   methods: {
+    bgImgLoad (e) {
+      console.log(e)
+      wx.hideLoading()
+    },
+    bgImgError (e) {
+      console.log(e)
+      wx.hideLoading()
+    },
+    async getuserinfo (detail, index) {
+      if (detail.userInfo && !this.hasUpdateUserInfo) {
+        await updateUserInfo({
+          nickName: detail.userInfo.nickName,
+          avatar: detail.userInfo.avatarUrl,
+          gender: detail.userInfo.gender
+        })
+        console.log('detail' + index, detail.userInfo)
+        this.hasUpdateUserInfo = true
+      }
+    }
+  },
+  onLoad () {
+    showLoading()
+    this.hasUpdateUserInfo = false
   }
 }
 </script>

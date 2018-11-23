@@ -1,7 +1,7 @@
 <template>
   <div class="run-btn">
     <span>{{ title }}</span>
-    <button class="wx-btn" :open-type="openType" @opensetting="opensetting"></button>
+    <button class="wx-btn" :open-type="openType" @opensetting="opensetting" @getuserinfo="getuserinfo"></button>
   </div>
 </template>
 <script>
@@ -23,6 +23,9 @@ export default {
       const authSetting = e.mp.detail.authSetting
       this.SET_WE_RUN(!!authSetting['scope.werun'])
       this.$emit('opensetting', e)
+    },
+    getuserinfo (e) {
+      this.$emit('getuserinfo', e.mp.detail)
     }
   }
 }
