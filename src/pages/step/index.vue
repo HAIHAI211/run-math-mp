@@ -21,8 +21,9 @@
         </div>
       </div>
     </div>
-    <div :class="['bubble-wrap', 'bubble-wrap-' + bubbleIndex]"
-         v-for="(bubble,bubbleIndex) in 6"
+    <div :class="['bubble-wrap', 'bubble-wrap-' + bubbleIndex, {'active': bubble}]"
+         v-for="(bubble,bubbleIndex) in bubbles"
+         v-if="bubble"
          :key="bubbleIndex">
       <run-btn openType="getUserInfo" @getuserinfo="getuserinfo($event, bubbleIndex)"/>
     </div>
@@ -32,7 +33,7 @@
 import { mapState } from 'vuex'
 import runBtn from '@/components/run-btn'
 import {showLoading} from '@/utils'
-import {updateUserInfo} from '@/http/api'
+import {updateUserInfo, randomSteal} from '@/http/api'
 export default {
   components: {
     runBtn
@@ -52,7 +53,15 @@ export default {
           ]
         }
       ],
-      bubbles: [],
+      bubbles: [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      values: [],
       hasUpdateUserInfo: false
     }
   },
@@ -69,7 +78,11 @@ export default {
       wx.hideLoading()
     },
     async getuserinfo (detail, index) {
-      if (detail.userInfo && !this.hasUpdateUserInfo) {
+      console.log(detail)
+      if (!detail.userInfo) {
+        return
+      }
+      if (!this.hasUpdateUserInfo) { // 上报用户信息
         try {
           await updateUserInfo({
             nickName: detail.userInfo.nickName,
@@ -82,11 +95,19 @@ export default {
           this.hasUpdateUserInfo = true
         }
       }
+      this.bubbles[index] = true
     }
   },
-  onLoad () {
+  async onLoad () {
     showLoading()
     this.hasUpdateUserInfo = false
+    try {
+      const result = await randomSteal()
+      this.values = result.data
+      console.log(result)
+    } catch (e) {
+      console.log(e)
+    }
   }
 }
 </script>
@@ -188,6 +209,8 @@ export default {
       bg-size(100rpx, 100rpx)
       bg-image('bul')
       animation up-down-animation .5s ease-in 0s infinite alternate
+      &.active{
+      }
       &.bubble-wrap-0{
         top 200rpx
         left 50rpx
@@ -195,12 +218,12 @@ export default {
       }
       &.bubble-wrap-1{
         top 200rpx
-        left 100rpx
+        left 537rpx
         animation-delay .5s
       }
       &.bubble-wrap-2{
         top 300rpx
-        left 200rpx
+        left 378rpx
         animation-delay .7s
       }
       &.bubble-wrap-3{

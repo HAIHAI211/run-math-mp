@@ -51,12 +51,12 @@
       <van-tab title="商品介绍">{{ info }}</van-tab>
     </van-tabs>
     <div class="confirm-btn-wrap">
-      <navigator class="confirm-btn" url="/pages/order-confirm/main">立即兑换</navigator>
+      <div class="confirm-btn" @click="_change">立即兑换</div>
     </div>
   </div>
 </template>
 <script>
-import { getGiftDetail } from '@/http/api'
+import { getGiftDetail, placeOrder } from '@/http/api'
 import runBtn from '@/components/run-btn'
 import * as utils from '@/utils'
 export default {
@@ -108,6 +108,31 @@ export default {
         this.recordList.push(record)
       }
       // this.recordList = data.recordList
+    },
+    async _change () {
+      utils.showLoading()
+      let params = {
+        type: this.type,
+        presentId: this.id
+      }
+      if (this.type === 2) { // 实物礼品
+        wx.navigateTo({
+          url: '/pages/order-confirm/main'
+        })
+      } else { // 虚拟礼品
+        try {
+          const result = await placeOrder(params)
+          console.log('兑换虚拟礼品', result)
+          wx.hideLoading()
+          wx.redirectTo({
+            url: `/pages/change-success/main?type=${this.type}`
+          })
+        } catch (e) {
+          console.log('err', e)
+          wx.hideLoading()
+          utils.showError(e.message)
+        }
+      }
     }
   },
   async onLoad (options) {

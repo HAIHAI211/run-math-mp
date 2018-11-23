@@ -8,11 +8,14 @@ import config from '@/config'
 const Fly = require('flyio/dist/npm/wx')
 const fly = new Fly()
 
+class ServiceError extends Error {
+}
+
 // 配置请求基地址
 // //定义公共headers
 // fly.config.headers={xx:5,bb:6,dd:7}
 // //设置超时
-fly.config.timeout = 8000
+fly.config.timeout = 12000
 // //设置请求基地址
 fly.config.baseURL = config.host
 
@@ -46,7 +49,7 @@ fly.interceptors.response.use(
         errMsg = response.data.data.detailMessage
       }
       // wx.showToast({title: errMsg, icon: 'none'})
-      return Promise.reject(new Error(errMsg))
+      return Promise.reject(new ServiceError(errMsg))
     }
   },
   (er) => {

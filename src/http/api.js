@@ -147,3 +147,13 @@ export const changeStep = () => {
   // })
   return post(paramFactory('/user/change/step'))
 }
+
+// 兑换礼品
+export const placeOrder = (params) => {
+  return post(paramFactory('/common/placeOrder', params))
+}
+
+// 随机获取6个被偷的靓仔
+export const randomSteal = (params) => {
+  return get(paramFactory('/user/get/randomSteal', params))
+}

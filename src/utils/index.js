@@ -3,6 +3,7 @@ function formatNumber (n) {
   const str = n.toString()
   return str[1] ? str : `0${str}`
 }
+
 export async function sleep (time = 1000) {
   return new Promise((resolve, reject) => {
     setTimeout(resolve, time)

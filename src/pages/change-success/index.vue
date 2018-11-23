@@ -2,8 +2,8 @@
   <div class="change-success-page">
     <image class="icon" src="/static/img/success@2x.png"/>
     <div class="success-info">{{ orderTypeStr }}兑换成功</div>
-    <div class="btn btn-continue">继续兑换</div>
-    <div class="btn btn-order">查看订单</div>
+    <div class="btn btn-continue" @click="_continueChange">继续兑换</div>
+    <div class="btn btn-order" @click="_toOrderPage">查看订单</div>
   </div>
 </template>
 <script>
@@ -27,10 +27,22 @@ export default {
       }
     }
   },
+  methods: {
+    _continueChange () {
+      wx.switchTab({
+        url: '/pages/gift/main'
+      })
+    },
+    _toOrderPage () {
+      let tag = this.orderType === 2 ? 1 : 0
+      wx.redirectTo({
+        url: `/pages/order/main?tag=${tag}`
+      })
+    }
+  },
   onLoad (e) {
-    console.log(e.mp.detail)
-    this.orderId = e.mp.detail.orderId
-    this.orderType = e.mp.detail.orderType
+    console.log(e)
+    this.orderType = e.type
   }
 }
 </script>
