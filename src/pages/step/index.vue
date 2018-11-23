@@ -70,13 +70,17 @@ export default {
     },
     async getuserinfo (detail, index) {
       if (detail.userInfo && !this.hasUpdateUserInfo) {
-        await updateUserInfo({
-          nickName: detail.userInfo.nickName,
-          avatar: detail.userInfo.avatarUrl,
-          gender: detail.userInfo.gender
-        })
-        console.log('detail' + index, detail.userInfo)
-        this.hasUpdateUserInfo = true
+        try {
+          await updateUserInfo({
+            nickName: detail.userInfo.nickName,
+            avatarUrl: detail.userInfo.avatarUrl,
+            gender: detail.userInfo.gender
+          })
+          console.log('detail' + index, detail.userInfo)
+          this.hasUpdateUserInfo = true
+        } catch (e) {
+          this.hasUpdateUserInfo = true
+        }
       }
     }
   },

@@ -18,10 +18,10 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['SET_WE_RUN']),
+    ...mapMutations(['SET_AUTH_WE_RUN']),
     opensetting (e) {
       const authSetting = e.mp.detail.authSetting
-      this.SET_WE_RUN(!!authSetting['scope.werun'])
+      this.SET_AUTH_WE_RUN(!!authSetting['scope.werun'])
       this.$emit('opensetting', e)
     },
     getuserinfo (e) {
@@ -40,10 +40,10 @@ export default {
     center()
     .wx-btn{
       position absolute
-      width 100%
-      height 100%
       top 0
       left 0
+      width 100%
+      height 100%
       opacity 0
     }
   }

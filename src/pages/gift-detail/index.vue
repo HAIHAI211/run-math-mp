@@ -25,7 +25,10 @@
           <div class="old" v-if="type===2">原价￥{{ originalPrice }}</div>
         </div>
         <div class="share">
-          分享好友
+          <div class="btn-wrap">
+            <run-btn openType="share"/>
+          </div>
+          <span class="share-title">分享好友</span>
           <span class="iconfont icon-fenxiang"/>
         </div>
       </div>
@@ -54,53 +57,26 @@
 </template>
 <script>
 import { getGiftDetail } from '@/http/api'
+import runBtn from '@/components/run-btn'
 import * as utils from '@/utils'
 export default {
+  components: {
+    runBtn
+  },
   data () {
     return {
       id: 0,
       price: 0,
       postage: 0, // 2
       originalPrice: 0, // 2
-      infoPicUrlListFormat: '',
+      infoPicUrlListFormat: [],
       recordList: [], // 兑换记录
       type: 0,
       info: '',
       activeTabIndex: 0,
-      imgUrls: [
-        'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
-        'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg',
-        'http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg'
-      ],
       current: 0,
-      name: '极客数学帮专属定制笔记本，超值优惠大放送',
-      totalAmount: 2, // 今日剩余数量
-      exchangeRecords: [
-        {
-          name: '沈佳宜',
-          avatar: 'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
-          info: '日式竹炭牙刷 软毛刷子',
-          time: '一天'
-        },
-        {
-          name: '沈佳宜',
-          avatar: 'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
-          info: '日式竹炭牙刷 软毛刷子',
-          time: '一天'
-        },
-        {
-          name: '沈佳宜',
-          avatar: 'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
-          info: '日式竹炭牙刷 软毛刷子',
-          time: '一天'
-        },
-        {
-          name: '沈佳宜',
-          avatar: 'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
-          info: '日式竹炭牙刷 软毛刷子',
-          time: '一天'
-        }
-      ]
+      name: '',
+      totalAmount: 1 // 今日剩余数量
     }
   },
   methods: {
@@ -149,6 +125,16 @@ export default {
     } catch (e) {
       wx.hideLoading()
       utils.showError()
+    }
+  },
+  onShareAppMessage: function (res) {
+    if (res.from === 'button') {
+      // 来自页面内转发按钮
+      console.log(res.target)
+    }
+    return {
+      title: '极客数学帮',
+      path: 'pages/gift-detail/main'
     }
   }
 }
@@ -248,8 +234,20 @@ export default {
           }
         }
         .share{
+          display flex
+          align-items center
           color main-color
-          font-size 30rpx
+          .btn-wrap{
+            position absolute
+            top 0
+            left 0
+            width 100%
+            height 100%
+          }
+          .share-title{
+            font-size 30rpx
+            padding-right 6rpx
+          }
         }
       }
     }

@@ -16,6 +16,9 @@
       <div class="share-btn up-down-animation"  v-if="!netError">
         <div class="icon"></div>
         <span class="text">分享即领数学币</span>
+        <div class="btn-wrap">
+          <run-btn openType="share"/>
+        </div>
       </div>
     </div>
     <div class="werun" v-if="authWerun === false">
@@ -177,6 +180,10 @@ export default {
   },
   async onLoad () {
     console.log('onLoad页面')
+    wx.showShareMenu({
+      // 是否使用带 shareTicket 的转发
+      withShareTicket: true
+    })
     this._load()
   },
   async onPullDownRefresh () { // 下拉刷新
@@ -189,8 +196,8 @@ export default {
       console.log(res.target)
     }
     return {
-      title: '自定义转发标题',
-      path: '/page/user?id=123'
+      title: '极客数学帮',
+      path: 'pages/index/main'
     }
   }
 }
@@ -283,6 +290,13 @@ export default {
         display flex
         flex-direction column
         align-items center
+        .btn-wrap{
+          position absolute
+          top 0
+          left 0
+          width 100%
+          height 100%
+        }
         .icon{
           bg-size(73rpx,70rpx)
           bg-image('index_coin')
