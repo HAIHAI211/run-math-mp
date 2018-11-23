@@ -157,3 +157,8 @@ export const placeOrder = (params) => {
 export const randomSteal = (params) => {
   return get(paramFactory('/user/get/randomSteal', params))
 }
+
+// 获取偷我步数的人列表
+export const stealMeList = () => {
+  return post(paramFactory('/user/get/stealMeList'))
+}

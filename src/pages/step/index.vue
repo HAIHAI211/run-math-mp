@@ -24,7 +24,7 @@
     </div>
     <div :class="['bubble-wrap', 'bubble-wrap-' + bubbleIndex, {'active': bubble}]"
          v-for="(bubble,bubbleIndex) in bubbles"
-         v-if="bubble"
+         v-if="!bubble"
          :key="bubbleIndex">
       <run-btn openType="getUserInfo" @getuserinfo="getuserinfo($event, bubbleIndex)"/>
     </div>
@@ -34,7 +34,7 @@
 import { mapState } from 'vuex'
 import runBtn from '@/components/run-btn'
 import {showLoading} from '@/utils'
-import {updateUserInfo, randomSteal} from '@/http/api'
+import {updateUserInfo, randomSteal, stealMeList} from '@/http/api'
 export default {
   components: {
     runBtn
@@ -67,7 +67,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['todayStep'])
+    ...mapState(['todayStep', 'authWerun'])
   },
   methods: {
     bgImgLoad (e) {
@@ -106,6 +106,10 @@ export default {
       const result = await randomSteal()
       this.values = result.data
       console.log(result)
+      if (this.authWerun) {
+        const stealMeResult = await stealMeList()
+        console.log('stealMeResult', stealMeResult)
+      }
     } catch (e) {
       console.log(e)
     }

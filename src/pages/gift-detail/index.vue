@@ -148,6 +148,7 @@ export default {
       this._pojo(data)
       wx.hideLoading()
     } catch (e) {
+      console.log('yichang', e)
       wx.hideLoading()
       utils.showError()
     }
