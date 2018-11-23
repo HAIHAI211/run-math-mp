@@ -17,6 +17,7 @@
             <div class="item-title">{{ item.name }}</div>
             <div class="item-step">{{ item.step }}步</div>
             <div class="item-time">{{ item.time }}</div>
+            <div class="item-steal"></div>
           </div>
         </div>
       </div>
@@ -179,12 +180,13 @@ export default {
             padding-bottom 15rpx
           }
           .day-info-item{
+            position relative
             height 80rpx
             background #fff
             display flex
             justify-content space-between
             align-items center
-            padding 0 12rpx
+            padding 0 45rpx 0 12rpx
             .item-title{
               color #000
               font-weight bold
@@ -197,6 +199,13 @@ export default {
             .item-time{
               color #999999
               font-size 26rpx
+            }
+            .item-steal{
+              bg-image('hand-up-copy')
+              bg-size(45rpx, 45rpx)
+              position absolute
+              top 0
+              right 0
             }
           }
         }
