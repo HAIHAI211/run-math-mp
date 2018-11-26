@@ -81,7 +81,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['giftId', 'giftType'])
+    ...mapState(['gift'])
   },
   methods: {
     ...mapActions(['FETCH_USER_INFO']),
@@ -142,9 +142,8 @@ export default {
     }
   },
   async onLoad (options) {
-    console.log(options)
-    this.id = this.giftId
-    this.type = this.giftType
+    this.id = this.gift.id
+    this.type = this.gift.type
     console.log('id type', this.id, this.type)
     utils.showLoading()
     try {

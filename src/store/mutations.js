@@ -61,8 +61,7 @@ const mutations = {
     state.advs = v
   },
   [types.SET_GIFT] (state, v) {
-    state.giftId = getValue(state, v, 'giftId')
-    state.giftType = getValue(state, v, 'giftType')
+    state.gift = v
   }
 }
 

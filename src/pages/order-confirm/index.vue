@@ -1,18 +1,61 @@
 <template>
   <div class="order-confirm-page">
-    <run-gift/>
+    <run-gift :gift="gift"/>
     <div class="confirm-address-title">确认收货地址</div>
-    <address-form/>
-    <div class="submit-btn">提交</div>
+    <address-form @update="_updateForm"/>
+    <div class="submit-btn" @click="_submitOrder">提交</div>
   </div>
 </template>
 <script>
   import runGift from '@/components/run-gift'
   import addressForm from '@/components/address-form'
+  import {mapState} from 'vuex'
+  import * as utils from '@/utils'
+  import {placeOrder} from '@/http/api'
+
   export default {
     components: {
       runGift,
       addressForm
+    },
+    data () {
+      return {
+        user: null,
+        err: ''
+      }
+    },
+    computed: {
+      ...mapState(['gift'])
+    },
+    methods: {
+      _updateForm (res) {
+        console.log(res)
+        this.user = res.user
+        this.err = res.err
+      },
+      async _submitOrder () {
+        await utils.sleep(50)
+        if (this.err) {
+          utils.showError(this.err)
+          return
+        }
+        utils.showLoading()
+        let params = {
+          type: this.gift.type,
+          presentId: this.gift.id,
+          ...this.user
+        }
+        console.log('params', params)
+        try {
+          const result = await placeOrder(params)
+          console.log(result)
+          wx.hideLoading()
+        } catch (e) {
+          console.log(e)
+          wx.hideLoading()
+          utils.showError()
+        }
+      }
     }
   }
 </script>

@@ -20,7 +20,6 @@ const state = {
   province: '', // 省
   contactsName: '', // 联系人姓名
   telNo: '', // 电话
-  giftId: 0,
-  giftType: 0 // 0:文档 1:视频 2:实物礼品
+  gift: null
 }
 export default state

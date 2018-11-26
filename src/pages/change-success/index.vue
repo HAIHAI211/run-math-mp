@@ -10,9 +10,9 @@
 import {mapState} from 'vuex'
 export default {
   computed: {
-    ...mapState(['giftId', 'giftType']),
+    ...mapState(['gift']),
     orderTypeStr () {
-      if (this.giftType === 2) {
+      if (this.gift.type === 2) {
         return '礼品'
       } else {
         return '资料'

@@ -55,10 +55,7 @@ export default {
     ...mapMutations(['SET_GIFT']),
     _giftClick () {
       console.log('gift click')
-      this.SET_GIFT({
-        giftId: this.gift.id,
-        giftType: this.gift.type
-      })
+      this.SET_GIFT(this.gift)
       wx.navigateTo({
         url: '/pages/gift-detail/main'
       })
