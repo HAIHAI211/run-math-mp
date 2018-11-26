@@ -11,12 +11,12 @@
         </div>
       </div>
       <div class="gift-list" v-if="activeBarIndex!==1">
-        <run-gift v-for="(gift, giftIndex) in activePage.gifts" :key="giftIndex" :gift="gift"/>
+        <run-gift v-for="(gift, giftIndex) in activePage.list" :key="giftIndex" :gift="gift"/>
       </div>
     </div>
     <div class="content physical" v-if="pageIndex === 1">
       <div class="gift-list">
-        <run-gift v-for="(gift, giftIndex) in activePage.gifts" :key="giftIndex" :gift="gift"/>
+        <run-gift v-for="(gift, giftIndex) in activePage.list" :key="giftIndex" :gift="gift"/>
       </div>
     </div>
     <run-loading :state="loadingState"/>
@@ -71,20 +71,23 @@
 import tab from '@/components/tab'
 import runGift from '@/components/run-gift'
 import focusIcon from '@/components/focus-icon'
-import * as api from '@/http/api'
 import {mixinPullToRefresh} from '@/mixin'
+import runLoading from '@/components/run-loading'
 
 export default {
   mixins: [mixinPullToRefresh],
   components: {
     tab,
     runGift,
+    runLoading,
     focusIcon
   },
   data () {
     return {
-      tabItems: ['数学资料', '实物礼品'],
+      loadingState: 0, // 0:不可见 1:正在加载 2:全部加载完毕 3:异常
       pageSum: 2, // 本页共有两个列表需要加载
+      apis: ['getDocList', 'getRealList'],
+      tabItems: ['数学资料', '实物礼品'],
       types: [
         {
           id: 0,
@@ -140,6 +143,17 @@ export default {
     }
   },
   computed: {
+    params () {
+      let result = {
+        presentType: this.presentType,
+        sort: this.activeSortIndex
+      }
+      if (this.presentType !== 2) {
+        result.hasChanged = this.switchCellchecked ? 1 : 0
+        result.fitGrade = this.fitGrade
+      }
+      return result
+    },
     fitGrade () {
       let result = []
       for (let i = 0; i < this.classes.length; i++) {
@@ -168,6 +182,9 @@ export default {
     }
   },
   watch: {
+    loadingState (v) {
+      console.log('loadingState', v)
+    },
     pageIndex (v) {
       this.activeBarIndex = -1
       this.loadingState = 0
@@ -253,43 +270,6 @@ export default {
     onSwitchCellChange (e) {
       console.log(e.mp)
       this.ShowSwitchCellchecked = e.mp.detail
-    },
-    async fetchList (isRefresh = true) {
-      if (isRefresh) {
-        this.activePage.pageNum = 1
-        this.activePage.pageCount = 0
-      } else {
-        this.activePage.pageNum += 1
-        if (this.activePage.pageNum > this.activePage.pageCount) {
-          // todo 数据已经请求到了最后一页
-          this.loadingState = 2
-          this.activePage.pageNum -= 1
-          return
-        }
-      }
-      let params = {
-        pageNum: this.activePage.pageNum,
-        pageSize: this.activePage.pageSize,
-        presentType: this.presentType,
-        sort: this.activeSortIndex
-      }
-      if (this.presentType !== 2) {
-        params.hasChanged = this.switchCellchecked ? 1 : 0
-        params.fitGrade = this.fitGrade
-      }
-      // 开始请求
-      console.log('请求礼物列表的参数', params)
-      this.loadingState = 1
-      try {
-        const result = await api[this.presentType === 2 ? 'getRealList' : 'getDocList'](params)
-        console.log(this.presentType === 2 ? 'getRealList' : 'getDocList', result)
-        this.activePage.gifts = isRefresh ? result.data : [...this.activePage.gifts, ...result.data]
-        this.activePage.pageCount = result.pageCount
-        this.loadingState = 0
-      } catch (e) {
-        console.log(e)
-        this.loadingState = 3
-      }
     }
   }
 }
