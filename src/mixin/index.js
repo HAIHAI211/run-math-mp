@@ -83,7 +83,7 @@ export const mixinPullToRefresh = {
         ...this.params
       }
       // 开始请求
-      console.log('请求礼物列表的参数', params)
+      console.log('请求列表的参数', params)
       this.loadingState = 1
       try {
         const result = await api[this.activeApi](params)

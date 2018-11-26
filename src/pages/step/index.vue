@@ -1,33 +1,43 @@
 <template>
   <div class="step-page">
-    <image class="bg-img"
-           mode="widthFix"
-           src="https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/bg%403x.png"
-           @load="bgImgLoad" @error="bgImgError"/>
-    <div class="step-info">
-      <open-data type="userAvatarUrl" class="avatar"></open-data>
-      <div class="step-num">{{ todayStep }}</div>
-    </div>
-    <div class="news">
-      <div class="news-title">最新动态</div>
-      <div class="content">
-        <div class="day-info" v-for="(dayInfo,dayInfoIndex) in dayInfos" :key="dayInfoIndex">
-          <div class="day-info-title">{{ dayInfo.title }}</div>
-          <div class="day-info-item" v-for="(item, itemIndex) in dayInfo.items" :key="itemIndex">
-            <div class="item-title">{{ item.name }}</div>
-            <div class="item-step">{{ item.step }}步</div>
-            <div class="item-time">{{ item.time }}</div>
-            <div class="item-steal"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div :class="['bubble-wrap', 'bubble-wrap-' + bubbleIndex, {'active': bubble}]"
-         v-for="(bubble,bubbleIndex) in bubbles"
-         v-if="!bubble"
-         :key="bubbleIndex">
-      <run-btn openType="getUserInfo" @getuserinfo="getuserinfo($event, bubbleIndex)"/>
-    </div>
+    <canvas
+      style="width: 750rpx; height: 800rpx;border:1rpx solid black;position:absolute;top:0;left:0;"
+      canvas-id="first"
+      disable-scroll=true
+      @touchstart="touchstart"
+      @touchmove="touchmove"
+      @touchend="touchend"
+      @tap="tap"
+      @longpress="longpress"
+    ></canvas>
+    <!--<image class="bg-img"-->
+           <!--mode="widthFix"-->
+           <!--src="https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/bg%403x.png"-->
+           <!--@load="bgImgLoad" @error="bgImgError"/>-->
+    <!--<div class="step-info">-->
+      <!--<open-data type="userAvatarUrl" class="avatar"></open-data>-->
+      <!--<div class="step-num">{{ todayStep }}</div>-->
+    <!--</div>-->
+    <!--<div class="news">-->
+      <!--<div class="news-title">最新动态</div>-->
+      <!--<div class="content">-->
+        <!--<div class="day-info" v-for="(dayInfo,dayInfoIndex) in dayInfos" :key="dayInfoIndex">-->
+          <!--<div class="day-info-title">{{ dayInfo.title }}</div>-->
+          <!--<div class="day-info-item" v-for="(item, itemIndex) in dayInfo.items" :key="itemIndex">-->
+            <!--<div class="item-title">{{ item.name }}</div>-->
+            <!--<div class="item-step">{{ item.step }}步</div>-->
+            <!--<div class="item-time">{{ item.time }}</div>-->
+            <!--<div class="item-steal"></div>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<div :class="['bubble-wrap', 'bubble-wrap-' + bubbleIndex, {'active': bubble}]"-->
+         <!--v-for="(bubble,bubbleIndex) in bubbles"-->
+         <!--v-if="!bubble"-->
+         <!--:key="bubbleIndex">-->
+      <!--<run-btn openType="getUserInfo" @getuserinfo="getuserinfo($event, bubbleIndex)"/>-->
+    <!--</div>-->
   </div>
 </template>
 <script>
@@ -35,12 +45,17 @@ import { mapState } from 'vuex'
 import runBtn from '@/components/run-btn'
 import {showLoading} from '@/utils'
 import {updateUserInfo, randomSteal, stealMeList} from '@/http/api'
+const WxDraw = require('../../../static/wxdraw.min.js').wxDraw
+const Shape = require('../../../static/wxdraw.min.js').Shape
 export default {
   components: {
     runBtn
   },
   data () {
     return {
+      // WxDraw: WxDraw,
+      // Shape: Shape,
+      wxCanvas: null,
       dayInfos: [
         {
           title: '今天',
@@ -70,6 +85,21 @@ export default {
     ...mapState(['todayStep', 'authWerun'])
   },
   methods: {
+    touchstart (e) {
+      this.wxCanvas.touchstartDetect(e)
+    },
+    touchmove (e) {
+      this.wxCanvas.touchmoveDetect(e)
+    },
+    touchend () {
+      this.wxCanvas.touchendDetect()
+    },
+    tap (e) {
+      this.wxCanvas.tapDetect(e)
+    },
+    longpress (e) {
+      this.wxCanvas.longpressDetect(e)
+    },
     bgImgLoad (e) {
       console.log(e)
       wx.hideLoading()
@@ -101,6 +131,13 @@ export default {
   },
   async onLoad () {
     showLoading()
+    // canvas 动画
+    const context = wx.createCanvasContext('first') // 还记得 在wxml里面canvas的id叫first吗
+    this.wxCanvas = new WxDraw(context, 0, 0, 400, 500) // 初始化wxDraw对象 注意这里除了context的四个参数 就是canvas的位置以及长宽，😏还记得吗？
+    const rect = new Shape('rect', { x: 60, y: 60, w: 40, h: 40, fillStyle: '#2FB8AC', rotate: Math.PI / 2 }, 'mix', true)
+    this.wxCanvas.add(rect)
+    rect.animate({'x': '+=100', 'y': '+=100'}, {duration: 1000}).animate('rotate', Math.PI * 5, {duration: 1000}).start(3)
+    // 请求
     this.hasUpdateUserInfo = false
     try {
       const result = await randomSteal()

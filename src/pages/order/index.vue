@@ -60,36 +60,7 @@ export default {
   data () {
     return {
       pageSum: 2,
-      apis: ['getDocOrder', 'getRealOrder'],
-      mathOrders: [
-        {
-          name: '【三年级英语】期末考试试题解析.doc',
-          price: 66
-        },
-        {
-          name: '【三年级英语】期末考试试题解析.doc',
-          price: 66
-        },
-        {
-          name: '【三年级英语】期末考试试题解析.doc',
-          price: 66
-        }
-      ],
-      physicalOrders: [
-        {
-          name: '极客数学帮专属定制笔记本， 超值优惠大放送',
-          coverPicUrl: 'https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/img_04%403x.png',
-          price: 78,
-          state: 0
-        },
-        {
-          postId: '3428756285',
-          name: '极客数学帮专属定制笔记本， 超值优惠大放送',
-          coverPicUrl: 'https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/img_04%403x.png',
-          price: 99,
-          state: 1
-        }
-      ]
+      apis: ['getDocOrder', 'getRealOrder']
     }
   },
   computed: {
