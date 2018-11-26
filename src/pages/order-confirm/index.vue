@@ -50,6 +50,9 @@
           const result = await placeOrder(params)
           console.log(result)
           wx.hideLoading()
+          wx.navigateTo({
+            url: '/pages/change-success/main'
+          })
         } catch (e) {
           console.log(e)
           wx.hideLoading()

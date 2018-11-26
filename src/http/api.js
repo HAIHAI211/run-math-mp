@@ -146,3 +146,13 @@ export const randomSteal = (params) => {
 export const stealMeList = () => {
   return post(paramFactory('/user/get/stealMeList'))
 }
+
+// 获取我的文档类订单
+export const getDocOrder = (params) => {
+  return get(paramFactory('/common/getDocOrder', params))
+}
+
+// 获取我的实物类订单
+export const getRealOrder = (params) => {
+  return get(paramFactory('/common/getRealOrder', params))
+}

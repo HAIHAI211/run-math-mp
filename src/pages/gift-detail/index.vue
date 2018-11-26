@@ -115,7 +115,6 @@ export default {
       // this.recordList = data.recordList
     },
     async _change () {
-      utils.showLoading()
       let params = {
         type: this.type,
         presentId: this.id
@@ -125,6 +124,7 @@ export default {
           url: '/pages/order-confirm/main'
         })
       } else { // 虚拟礼品
+        utils.showLoading()
         try {
           const result = await placeOrder(params)
           console.log('兑换虚拟礼品', result)
