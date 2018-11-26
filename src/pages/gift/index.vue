@@ -84,7 +84,6 @@ export default {
   },
   data () {
     return {
-      loadingState: 0, // 0:不可见 1:正在加载 2:全部加载完毕 3:异常
       pageSum: 2, // 本页共有两个列表需要加载
       apis: ['getDocList', 'getRealList'],
       tabItems: ['数学资料', '实物礼品'],
@@ -182,9 +181,6 @@ export default {
     }
   },
   watch: {
-    loadingState (v) {
-      console.log('loadingState', v)
-    },
     pageIndex (v) {
       this.activeBarIndex = -1
       this.loadingState = 0

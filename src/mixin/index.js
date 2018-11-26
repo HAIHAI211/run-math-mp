@@ -22,14 +22,24 @@ export const mixinShow = {
     }
   }
 }
-
+/**
+ ** 引入mixinPullToRefresh的页面
+ * 需要自定义如下data或computed
+ * data
+ *   pageSum 本页面有多少个列表需要请求
+ *   apis 列表请求所对应的api名称数组
+ * computed
+ *   params 自定义的请求参数
+*  components
+ *   run-loading 加载组件（mpvue存在bug）
+* */
 export const mixinPullToRefresh = {
   components: {
     // runLoading
   },
   data () {
     return {
-      // loadingState: 0, // 0:不可见 1:正在加载 2:全部加载完毕 3:异常
+      loadingState: 0, // 0:不可见 1:正在加载 2:全部加载完毕 3:异常
       pageIndex: 0
     }
   },

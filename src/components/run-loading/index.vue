@@ -28,7 +28,6 @@
 </script>
 <style scoped lang="stylus">
   .run-loading{
-    background orange
     width 750rpx
     font-size 26rpx
     color #666
