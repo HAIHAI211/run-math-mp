@@ -59,6 +59,7 @@
 import { getGiftDetail, placeOrder } from '@/http/api'
 import runBtn from '@/components/run-btn'
 import * as utils from '@/utils'
+import {mapActions, mapState} from 'vuex'
 export default {
   components: {
     runBtn
@@ -79,7 +80,11 @@ export default {
       totalAmount: 1 // 今日剩余数量
     }
   },
+  computed: {
+    ...mapState(['giftId', 'giftType'])
+  },
   methods: {
+    ...mapActions(['FETCH_USER_INFO']),
     swiperChange (res) {
       // console.log(res.mp.detail.current)
       this.current = res.mp.detail.current
@@ -123,9 +128,10 @@ export default {
         try {
           const result = await placeOrder(params)
           console.log('兑换虚拟礼品', result)
+          this.FETCH_USER_INFO()
           wx.hideLoading()
-          wx.redirectTo({
-            url: `/pages/change-success/main?type=${this.type}`
+          wx.navigateTo({
+            url: `/pages/change-success/main`
           })
         } catch (e) {
           console.log('err', e)
@@ -137,8 +143,9 @@ export default {
   },
   async onLoad (options) {
     console.log(options)
-    this.id = parseInt(options.giftId)
-    this.type = parseInt(options.giftType)
+    this.id = this.giftId
+    this.type = this.giftType
+    console.log('id type', this.id, this.type)
     utils.showLoading()
     try {
       const { data } = await getGiftDetail({

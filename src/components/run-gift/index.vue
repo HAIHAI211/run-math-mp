@@ -1,5 +1,5 @@
 <template>
-  <navigator class="run-gift" :url="url" >
+  <div class="run-gift" @click="_giftClick">
     <div class="math-gift" v-if="gift.type === 0 || gift.type === 1">
       <div :class="['left', 'type-' + gift.presentType, {'type-player': gift.type === 1}]"></div>
       <div class="right">
@@ -29,9 +29,10 @@
         </div>
       </div>
     </div>
-  </navigator>
+  </div>
 </template>
 <script>
+import {mapMutations} from 'vuex'
 export default {
   props: {
     gift: {
@@ -50,9 +51,17 @@ export default {
       }
     }
   },
-  computed: {
-    url () {
-      return `/pages/gift-detail/main?giftId=${this.gift.id}&giftType=${this.gift.type}`
+  methods: {
+    ...mapMutations(['SET_GIFT']),
+    _giftClick () {
+      console.log('gift click')
+      this.SET_GIFT({
+        giftId: this.gift.id,
+        giftType: this.gift.type
+      })
+      wx.navigateTo({
+        url: '/pages/gift-detail/main'
+      })
     }
   }
 }

@@ -19,6 +19,8 @@ const state = {
   country: '', // 国家
   province: '', // 省
   contactsName: '', // 联系人姓名
-  telNo: '' // 电话
+  telNo: '', // 电话
+  giftId: 0,
+  giftType: 0 // 0:文档 1:视频 2:实物礼品
 }
 export default state

@@ -7,20 +7,12 @@
   </div>
 </template>
 <script>
+import {mapState} from 'vuex'
 export default {
-  props: {
-    orderId: {
-      type: Number,
-      default: 0
-    },
-    orderType: {
-      type: Number,
-      default: 0 // 0 文档 1视频 2实物礼品
-    }
-  },
   computed: {
+    ...mapState(['giftId', 'giftType']),
     orderTypeStr () {
-      if (this.orderType === 2) {
+      if (this.giftType === 2) {
         return '礼品'
       } else {
         return '资料'
@@ -34,15 +26,10 @@ export default {
       })
     },
     _toOrderPage () {
-      let tag = this.orderType === 2 ? 1 : 0
       wx.redirectTo({
-        url: `/pages/order/main?tag=${tag}`
+        url: `/pages/order/main`
       })
     }
-  },
-  onLoad (e) {
-    console.log(e)
-    this.orderType = e.type
   }
 }
 </script>

@@ -50,6 +50,7 @@
 </template>
 <script>
 // import { sleep } from '@/utils'
+import {mapState} from 'vuex'
 export default {
   components: {
   },
@@ -87,13 +88,16 @@ export default {
       ]
     }
   },
+  computed: {
+    ...mapState(['giftId', 'giftType'])
+  },
   methods: {
   },
   mounted () {
   },
   onLoad (options) {
     console.log(options)
-    this.tag = options.tag
+    this.tag = this.giftType === 2 ? 1 : 0
   }
 }
 </script>
