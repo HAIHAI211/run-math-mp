@@ -24,8 +24,8 @@
       <van-tab title="实物礼品">
         <div class="order-list physical">
           <div class="physical-order" v-for="(porder,porderIndex) in activePage.list" :key="porderIndex">
-            <div class="top" v-if="porder.state === 1">
-              <span>运单号：{{ porder.postId }}</span>
+            <div class="top" v-if="porder.status === 1">
+              <span>运单号：{{ porder.waybillNo }}</span>
               <div class="copy">复制运单号</div>
             </div>
             <div class="main">
@@ -37,7 +37,7 @@
                     <div class="num">{{ porder.price }}</div>
                     <div class="suffix">数学币</div>
                   </div>
-                  <div :class="['state', 'state-' + porder.state]">{{ porder.state === 0 ? '待发货' : '已发货' }}</div>
+                  <div :class="['state', 'state-' + porder.status]">{{ porder.status === 0 ? '待发货' : '已发货' }}</div>
                 </div>
               </div>
             </div>
@@ -94,6 +94,17 @@ export default {
   },
   computed: {
     ...mapState(['gift'])
+  },
+  watch: {
+    pageIndex (v) {
+      wx.startPullDownRefresh()
+    }
+  },
+  methods: {
+    tabChange (v) {
+      console.log(v)
+      this.pageIndex = v.mp.detail.index
+    }
   },
   onLoad (options) {
     console.log(options)
