@@ -1,8 +1,8 @@
 {
   "pages": [
+    "pages/step/main",
     "pages/index/main",
     "pages/gift/main",
-    "pages/step/main",
     "pages/me/main",
     "pages/gift-detail/main",
     "pages/change-success/main",
