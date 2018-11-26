@@ -91,10 +91,6 @@ export const getUserInfo = params => {
 
 // 更新用户信息
 export const updateUserInfo = params => {
-  // return post({
-  //   url: '/user/update',
-  //   data: params
-  // })
   return post(paramFactory('/user/update', params))
 }
 
@@ -115,18 +111,12 @@ export const getIndexPresent = params => {
 
 // 获取文档类礼品列表
 export const getDocList = params => {
-  return get({
-    url: '/common/getDocList',
-    data: params
-  })
+  return get(paramFactory('/common/getDocList', params))
 }
 
 // 获取实物礼品列表
 export const getRealList = params => {
-  return get({
-    url: '/common/getRealList',
-    data: params
-  })
+  return get(paramFactory('/common/getRealList', params))
 }
 
 // 礼品详情
@@ -139,12 +129,6 @@ export const getGiftDetail = params => {
 
 // 步数兑换
 export const changeStep = () => {
-  // return post({
-  //   url: '/change/step',
-  //   data: {
-  //     openId: store.state.openId
-  //   }
-  // })
   return post(paramFactory('/user/change/step'))
 }
 

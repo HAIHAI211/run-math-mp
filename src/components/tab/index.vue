@@ -1,27 +1,27 @@
 <template>
   <div class="tab-wrap">
     <div class="tab">
-      <div :class="['tab-item', {'active': tabIndex === selfActiveTabIndex}]"
-           v-for="(item,tabIndex) in items" :key="tabIndex" @click="selfActiveTabIndex = tabIndex">
-        {{ item.name }}
+      <div :class="['tab-item', {'active': tabIndex === selfActiveIndex}]"
+           v-for="(item,tabIndex) in items" :key="tabIndex" @click="selfActiveIndex = tabIndex">
+        {{ item }}
       </div>
     </div>
   </div>
 </template>
 <script>
 export default {
-  props: ['items', 'activeTabIndex'], // 数组 长度为2
+  props: ['items', 'activeIndex'], // 数组 长度为2
   data () {
     return {
-      selfActiveTabIndex: this.activeTabIndex
+      selfActiveIndex: this.activeIndex
     }
   },
   watch: {
-    activeTabIndex (v) {
-      this.selfActiveTabIndex = v
+    activeIndex (v) {
+      this.selfActiveIndex = v
     },
-    selfActiveTabIndex (v) {
-      this.$emit('update:activeTabIndex', v)
+    selfActiveIndex (v) {
+      this.$emit('update:activeIndex', v)
     }
   }
 }

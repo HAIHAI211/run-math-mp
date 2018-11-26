@@ -49,14 +49,27 @@
   </div>
 </template>
 <script>
-// import { sleep } from '@/utils'
 import {mapState} from 'vuex'
+import {mixinPullToRefresh} from '@/mixin'
 export default {
+  mixins: [mixinPullToRefresh],
   components: {
   },
   data () {
     return {
       tag: 0, // 判断是从实物礼品item进来还是从数学资料item进来,0为数学资料
+      pages: [
+        {
+          pageNum: 1, // 当前页
+          pageSize: 10, // 一页多少条数据
+          pageCount: 10 // 一共多少页
+        },
+        {
+          pageNum: 1, // 当前页
+          pageSize: 10, // 一页多少条数据
+          pageCount: 10 // 一共多少页
+        }
+      ],
       mathOrders: [
         {
           name: '【三年级英语】期末考试试题解析.doc',
@@ -89,15 +102,54 @@ export default {
     }
   },
   computed: {
-    ...mapState(['giftId', 'giftType'])
+    ...mapState(['gift']),
+    activePage () {
+      return this.pages[this.tag]
+    }
   },
   methods: {
-  },
-  mounted () {
+    // async fetchOrderList (isRefresh = true) {
+    //   if (isRefresh) {
+    //     this.activePage.pageNum = 1
+    //     this.activePage.pageCount = 0
+    //   } else {
+    //     this.activePage.pageNum += 1
+    //     if (this.activePage.pageNum > this.activePage.pageCount) {
+    //       // todo 数据已经请求到了最后一页
+    //       this.loadingState = 2
+    //       this.activePage.pageNum -= 1
+    //       return
+    //     }
+    //   }
+    //   let params = {
+    //     openId: this.openId,
+    //     pageNum: this.activePage.pageNum,
+    //     pageSize: this.activePage.pageSize,
+    //     presentType: this.presentType,
+    //     sort: this.activeSortIndex
+    //   }
+    //   if (this.presentType !== 2) {
+    //     params.hasChanged = this.switchCellchecked ? 1 : 0
+    //     params.fitGrade = this.fitGrade
+    //   }
+    //   // 开始请求
+    //   console.log('请求订单列表的参数', params)
+    //   this.loadingState = 1
+    //   try {
+    //     const result = await api[this.presentType === 2 ? 'getRealList' : 'getDocList'](params)
+    //     console.log(this.presentType === 2 ? 'getRealList' : 'getDocList', result)
+    //     this.activeTab.gifts = isRefresh ? result.data : [...this.activeTab.gifts, ...result.data]
+    //     this.activeTab.pageCount = result.pageCount
+    //     this.loadingState = 0
+    //   } catch (e) {
+    //     console.log(e)
+    //     this.loadingState = 3
+    //   }
+    // }
   },
   onLoad (options) {
     console.log(options)
-    this.tag = this.giftType === 2 ? 1 : 0
+    this.tag = this.gift.type === 2 ? 1 : 0
   }
 }
 </script>

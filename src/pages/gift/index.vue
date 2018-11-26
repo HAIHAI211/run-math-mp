@@ -1,7 +1,7 @@
 <template>
   <div class="gift-page">
-    <tab :items="tabItems" :activeTabIndex.sync="activeTabIndex"/>
-    <div class="content math" v-if="activeTabIndex === 0">
+    <tab :items="tabItems" :activeIndex.sync="pageIndex"/>
+    <div class="content math" v-if="pageIndex === 0">
       <div class="bar">
         <div :class="['bar-item', {'active': barIndex===activeBarIndex}]"
              @click="pickActiveItem(item,barIndex)"
@@ -11,15 +11,15 @@
         </div>
       </div>
       <div class="gift-list" v-if="activeBarIndex!==1">
-        <run-gift v-for="(gift, giftIndex) in activeTab.gifts" :key="giftIndex" :gift="gift"/>
+        <run-gift v-for="(gift, giftIndex) in activePage.gifts" :key="giftIndex" :gift="gift"/>
       </div>
     </div>
-    <div class="content physical" v-if="activeTabIndex === 1">
+    <div class="content physical" v-if="pageIndex === 1">
       <div class="gift-list">
-        <run-gift v-for="(gift, giftIndex) in activeTab.gifts" :key="giftIndex" :gift="gift"/>
+        <run-gift v-for="(gift, giftIndex) in activePage.gifts" :key="giftIndex" :gift="gift"/>
       </div>
     </div>
-    <runLoading :state="loadingState"/>
+    <run-loading :state="loadingState"/>
     <div class="overlay" v-if="activeBarIndex !== -1" @click="activeBarIndex=-1" @touchmove.stop="">
       <div class="wrap-0" v-if="activeBarIndex === 0" @click.stop="">
         <div
@@ -69,39 +69,22 @@
 </template>
 <script>
 import tab from '@/components/tab'
-import runLoading from '@/components/run-loading'
 import runGift from '@/components/run-gift'
 import focusIcon from '@/components/focus-icon'
-import { sleep } from '@/utils'
 import * as api from '@/http/api'
-import { mapState } from 'vuex'
+import {mixinPullToRefresh} from '@/mixin'
+
 export default {
+  mixins: [mixinPullToRefresh],
   components: {
     tab,
-    runLoading,
     runGift,
     focusIcon
   },
   data () {
     return {
-      loadingState: 0, // 0:不可见 1:正在加载 2:全部加载完毕 3:异常
-      activeTabIndex: 0, // 0：数学资料 1：实物礼品
-      tabItems: [
-        {
-          name: '数学资料',
-          pageNum: 1, // 当前页
-          pageSize: 10, // 一页多少条数据
-          pageCount: 10, // 一共多少页
-          gifts: [] // 礼物
-        },
-        {
-          name: '实物礼品',
-          pageNum: 1, // 当前页
-          pageSize: 10, // 一页多少条数据
-          pageCount: 10, // 一共多少页
-          gifts: [] // 礼物
-        }
-      ],
+      tabItems: ['数学资料', '实物礼品'],
+      pageSum: 2, // 本页共有两个列表需要加载
       types: [
         {
           id: 0,
@@ -157,10 +140,6 @@ export default {
     }
   },
   computed: {
-    ...mapState(['openId']),
-    activeTab () {
-      return this.tabItems[this.activeTabIndex]
-    },
     fitGrade () {
       let result = []
       for (let i = 0; i < this.classes.length; i++) {
@@ -174,7 +153,7 @@ export default {
       return result
     },
     presentType () {
-      if (this.activeTabIndex === 1) { // 实物礼品
+      if (this.pageIndex === 1) { // 实物礼品
         return 2
       } else { // 数学资料中的
         if (this.activeTypeIndex === 0) { // 文档
@@ -189,7 +168,7 @@ export default {
     }
   },
   watch: {
-    activeTabIndex (v) {
+    pageIndex (v) {
       this.activeBarIndex = -1
       this.loadingState = 0
       wx.showTabBar()
@@ -206,9 +185,6 @@ export default {
     }
   },
   methods: {
-    test () {
-      console.log('test')
-    },
     clearAllTempSelects () {
       for (let i = 0; i < this.classes.length; i++) {
         let cla = this.classes[i]
@@ -278,23 +254,22 @@ export default {
       console.log(e.mp)
       this.ShowSwitchCellchecked = e.mp.detail
     },
-    async fetchGiftList (isRefresh = true) {
+    async fetchList (isRefresh = true) {
       if (isRefresh) {
-        this.activeTab.pageNum = 1
-        this.activeTab.pageCount = 0
+        this.activePage.pageNum = 1
+        this.activePage.pageCount = 0
       } else {
-        this.activeTab.pageNum += 1
-        if (this.activeTab.pageNum > this.activeTab.pageCount) {
+        this.activePage.pageNum += 1
+        if (this.activePage.pageNum > this.activePage.pageCount) {
           // todo 数据已经请求到了最后一页
           this.loadingState = 2
-          this.activeTab.pageNum -= 1
+          this.activePage.pageNum -= 1
           return
         }
       }
       let params = {
-        openId: this.openId,
-        pageNum: this.activeTab.pageNum,
-        pageSize: this.activeTab.pageSize,
+        pageNum: this.activePage.pageNum,
+        pageSize: this.activePage.pageSize,
         presentType: this.presentType,
         sort: this.activeSortIndex
       }
@@ -308,42 +283,14 @@ export default {
       try {
         const result = await api[this.presentType === 2 ? 'getRealList' : 'getDocList'](params)
         console.log(this.presentType === 2 ? 'getRealList' : 'getDocList', result)
-        this.activeTab.gifts = isRefresh ? result.data : [...this.activeTab.gifts, ...result.data]
-        this.activeTab.pageCount = result.pageCount
+        this.activePage.gifts = isRefresh ? result.data : [...this.activePage.gifts, ...result.data]
+        this.activePage.pageCount = result.pageCount
         this.loadingState = 0
       } catch (e) {
         console.log(e)
         this.loadingState = 3
       }
-
-      // try {
-      //   const result = await getGiftList(params)
-      //   this.loadingState = 0
-      //   console.log('gifts', result)
-      //   if (isRefresh) {
-      //     this.activeTab.gifts = result.data
-      //   } else {
-      //     this.activeTab.gifts = [...this.activeTab.gifts, ...result.data]
-      //   }
-      //   this.activeTab.pageCount = result.pageCount
-      // } catch (e) {
-      //   this.loadingState = 3
-      // }
     }
-  },
-  async onPullDownRefresh () { // 下拉刷新
-    console.log('下拉刷新')
-    this.fetchGiftList()
-    wx.stopPullDownRefresh()
-  },
-  async onReachBottom () { // 上拉加载
-    console.log('上拉加载')
-    this.fetchGiftList(false)
-  },
-  async mounted () {
-    console.log('mounted')
-    await sleep(50)
-    wx.startPullDownRefresh()
   }
 }
 </script>
