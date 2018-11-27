@@ -60,7 +60,7 @@
       <div class="ad" :style="{backgroundImage: 'url(' + advs[0].picUrl +')'}" v-if="advs.length">
       </div>
     </div>
-    <pic-pop :popType="1" :popShow.sync="picPopShow"/>
+    <pic-pop :type="1" :show.sync="picPopShow"/>
   </div>
 </template>
 

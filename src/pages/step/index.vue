@@ -139,8 +139,7 @@ export default {
       wx.hideLoading()
     },
     drawStar () {
-
-    },
+    }
     // async getuserinfo (detail, index) {
     //   console.log(detail)
     //   if (!detail.userInfo) {
@@ -163,7 +162,7 @@ export default {
     // }
   },
   async onLoad () {
-    wx.hideTabBar()
+    // wx.hideTabBar()
     // showLoading()
     // canvas 动画
     const context = wx.createCanvasContext('first') // 还记得 在wxml里面canvas的id叫first吗
@@ -172,9 +171,6 @@ export default {
     const rect = new Shape('rect', { x: 60, y: 60, w: 40, h: 40, fillStyle: '#2FB8AC', rotate: Math.PI / 2 }, 'mix', true)
     wxCanvas.add(rect)
     rect.animate({'x': '+=100', 'y': '+=100'}, {duration: 1000}).animate('rotate', Math.PI * 5, {duration: 1000}).start(1)
-
-
-
     // 请求
     // this.hasUpdateUserInfo = false
     // try {
