@@ -60,11 +60,13 @@
     </div>
     <auth-pop :show.sync="authPopShow"/>
     <pic-pop :show.sync="signPopShow" :type="2" url="/static/img/sign.png" :coin="signCoin"/>
+    <!--<tab-bar :activeIndex="0"/>-->
   </div>
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
 import runBtn from '@/components/run-btn'
+import tabBar from '@/components/tab-bar'
 import runGift from '@/components/run-gift'
 import authPop from '@/components/auth-pop'
 import picPop from '@/components/pic-pop'
@@ -75,7 +77,8 @@ export default {
     runBtn,
     authPop,
     runGift,
-    picPop
+    picPop,
+    tabBar
     // accreditPop
   },
   data () {

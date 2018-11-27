@@ -1,8 +1,8 @@
 // 背景图片
-bg-image($url)
-  background-image: url("https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/" + $url + "%402x.png")
+bg-image($url, $type='png')
+  background-image: url("https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/" + $url + "%402x." + $type)
   @media (-webkit-min-device-pixel-ratio: 3),(min-device-pixel-ratio: 3)
-    background-image: url("https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/" + $url + "%403x.png")
+    background-image: url("https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/" + $url + "%403x." + $type)
 
 //大小和背景图片大小一致
 bg-size($w,$h)

@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-bar">
+  <div :class="['tab-bar', {'fix': fix}]">
     <div v-for="(item,index) in items"
                open-type="redirect"
                :key="index"
@@ -17,6 +17,10 @@
       activeIndex: {
         type: Number,
         default: 0
+      },
+      fix: {
+        type: Boolean,
+        default: true
       }
     },
     data () {
@@ -66,10 +70,8 @@
   .tab-bar{
     width: 100%;
     height: 100rpx;
-    left: 0;
-    bottom: 0;
-    position: fixed;
-    z-index: 1000;
+    box-sizing border-box
+    border-top: 1px solid #c8c8c8
     display: flex;
     background: #fff;
     -webkit-backdrop-filter: blur(6px);
@@ -93,5 +95,11 @@
         }
       }
     }
+  }
+  .fix{
+    left 0
+    bottom 0
+    position fixed
+    z-index 1000
   }
 </style>
