@@ -83,11 +83,14 @@
       justify-content center
       .text{
         color #999999
-        font-size 22rpx
+        font-size 25rpx
       }
       .iconfont{
         color #B3B3B3
-        font-size 38rpx
+        font-size 40rpx
+      }
+      .icon-xiezi{
+        font-size 46rpx
       }
       &.active{
         .text, .iconfont{

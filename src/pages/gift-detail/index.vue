@@ -103,6 +103,7 @@ export default {
         this.originalPrice = data.originalPrice
         this.postage = data.postage
       }
+      this.recordList = []
       for (let i = 0; i < data.recordList.length; i++) {
         let record = data.recordList[i]
         record.pojoNickName = record.nick_name.slice(0, 1) + '**'
