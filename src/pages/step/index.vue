@@ -33,19 +33,25 @@
     </div>
     <div :class="['bubble-wrap', 'bubble-wrap-' + bubbleIndex,{'up-down-animation': !bubble},{'disappear-animation': bubble}]"
          v-for="(bubble,bubbleIndex) in bubbleClicks"
-         :key="bubbleIndex" @click="_bubbleClick(bubbleIndex)">
-      <!--<button class="bubble-btn" open-type="getUserInfo" @getuserinfo=""></button>-->
+         :key="bubbleIndex">
+      <button class="bubble-btn" open-type="getUserInfo" @getuserinfo="_getuserinfo($event,bubbleIndex)"></button>
     </div>
+    <accredit-pop :show.sync="userinfoPopShow"/>
+    <auth-pop :show.sync="werunPopShow"/>
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import tabBar from '@/components/tab-bar'
+import accreditPop from '@/components/accredit-pop'
+import authPop from '@/components/auth-pop'
 import * as utils from '@/utils'
 import * as api from '@/http/api'
 export default {
   components: {
-    tabBar
+    tabBar,
+    accreditPop,
+    authPop
   },
   data () {
     return {
@@ -60,19 +66,21 @@ export default {
       nowY: 0,
       nowTime: 0,
       lastY: 0,
+      userinfoPopShow: false,
+      werunPopShow: false,
       hasMove: false // 如果是在scrollview中滑动，父元素的touchmove是被拦截的
     }
   },
   computed: {
-    ...mapState(['todayStep', 'authWerun']),
+    ...mapState(['todayStep', 'authWerun', 'authUserInfo']),
     stealMeFormatList () {
       let result = []
       let dateLabels = []
       for (let i = 0; i < this.stealMeList.length; i++) {
         let stealItem = this.stealMeList[i]
         let stealDate = new Date(stealItem.stealTime)
-        console.log('stealDateStr', stealItem.stealTime)
-        console.log('stealDate', stealDate)
+        // console.log('stealDateStr', stealItem.stealTime)
+        // console.log('stealDate', stealDate)
         let dateLabel = utils.timeGapFromNow(stealDate, new Date(), false)
         if (!dateLabels.includes(dateLabel)) {
           // console.log('dateLabels不包含' + dateLabel + '，现在将其收纳入库')
@@ -101,6 +109,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['AUTH_OF_WERUN', 'REPORT_OF_WERUN', 'FETCH_USER_INFO']),
     _touchstart (e) {
       // console.log('touchstart')
       this.startY = e.mp.touches[0].pageY
@@ -153,9 +162,9 @@ export default {
       console.log(this.bubbleClicks)
       console.log(index)
     },
-    async getuserinfo (e, index) {
+    async _getuserinfo (e, index) {
       let userInfo = e.mp.detail.userInfo
-      console.log('getuserinfo', userInfo)
+      // console.log('getuserinfo', userInfo)
       if (!userInfo) {
         console.log('没有授权用户信息')
         return
@@ -180,7 +189,7 @@ export default {
       ]
       result[index] = !result[index]
       this.bubbleClicks = result
-      console.log(this.bubbleClicks)
+      // console.log(this.bubbleClicks)
     }
   },
   async onLoad () {
@@ -192,7 +201,9 @@ export default {
         timingFunc: 'easeIn'
       }
     })
-    // this.createFakeStealList()
+    // 权限
+    console.log('步数权限', this.authWerun) // 必须
+    console.log('用户权限', this.authUserInfo) // 可选
     // 请求
     this.hasUpdateUserInfo = false
     try {
@@ -206,12 +217,14 @@ export default {
       console.log('stealMeResult', stealMeResult)
     } catch (e) {
       console.log(e)
+      utils.showError()
     } finally {
       wx.hideLoading()
     }
   },
   onShow () {
     wx.hideTabBar()
+    // this.userinfoPopShow = !this.authUserInfo
   },
   onHide () {
     wx.showTabBar()

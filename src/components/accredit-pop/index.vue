@@ -56,9 +56,11 @@ export default {
   .accredit-pop{
     .overlay{
       overlay()
+      z-index 99
     }
     .content{
       overlay()
+      z-index 100
       center()
       .dialog{
         border-radius 10rpx

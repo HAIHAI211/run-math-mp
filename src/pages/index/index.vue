@@ -103,7 +103,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['SET_SYSTEM_INFO', 'LOGIN', 'AUTH_OF_WERUN', 'REPORT_OF_WERUN', 'FETCH_USER_INFO', 'FETCH_ADVS']),
+    ...mapActions(['LOGIN', 'AUTH_OF_WERUN', 'REPORT_OF_WERUN', 'FETCH_USER_INFO', 'FETCH_ADVS']),
     _load () {
       this.netError = true
       utils.showLoading()

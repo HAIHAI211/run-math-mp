@@ -142,6 +142,17 @@ export const randomSteal = (params) => {
   return get(paramFactory('/user/get/randomSteal', params))
 }
 
+// 偷步数
+export const stealStep = (params) => {
+  return post({
+    url: '/user/stealStep',
+    data: {
+      openIdSteal: store.state.openId,
+      ...params
+    }
+  })
+}
+
 // 获取偷我步数的人列表
 export const stealMeList = () => {
   return post(paramFactory('/user/get/stealMeList'))

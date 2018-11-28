@@ -111,3 +111,5 @@ export const mixinPullToRefresh = {
     wx.startPullDownRefresh()
   }
 }
+export const mixinLoginWerun = {
+}
