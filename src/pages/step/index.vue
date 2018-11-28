@@ -31,23 +31,20 @@
       </scroll-view>
       <tab-bar :activeIndex="2" :fix="false"/>
     </div>
-    <div :class="['bubble-wrap', 'bubble-wrap-' + bubbleIndex, {'active': bubble}]"
-         v-for="(bubble,bubbleIndex) in bubbles"
-         v-if="!bubble"
-         :key="bubbleIndex">
-      <button class="bubble-btn" open-type="getUserInfo" @getuserinfo="getuserinfo($event, bubbleIndex)"></button>
+    <div :class="['bubble-wrap', 'bubble-wrap-' + bubbleIndex,{'up-down-animation': !bubble},{'disappear-animation': bubble}]"
+         v-for="(bubble,bubbleIndex) in bubbleClicks"
+         :key="bubbleIndex" @click="_bubbleClick(bubbleIndex)">
+      <!--<button class="bubble-btn" open-type="getUserInfo" @getuserinfo=""></button>-->
     </div>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
-import runBtn from '@/components/run-btn'
 import tabBar from '@/components/tab-bar'
 import * as utils from '@/utils'
 import * as api from '@/http/api'
 export default {
   components: {
-    runBtn,
     tabBar
   },
   data () {
@@ -55,7 +52,7 @@ export default {
       stealMeList: [],
       dateTags: [-1, -1],
       bubbles: [],
-      values: [],
+      bubbleClicks: [false, false, false, false, false, false],
       hasUpdateUserInfo: false,
       more: false,
       startY: 0,
@@ -74,6 +71,8 @@ export default {
       for (let i = 0; i < this.stealMeList.length; i++) {
         let stealItem = this.stealMeList[i]
         let stealDate = new Date(stealItem.stealTime)
+        console.log('stealDateStr', stealItem.stealTime)
+        console.log('stealDate', stealDate)
         let dateLabel = utils.timeGapFromNow(stealDate, new Date(), false)
         if (!dateLabels.includes(dateLabel)) {
           // console.log('dateLabels不包含' + dateLabel + '，现在将其收纳入库')
@@ -130,12 +129,12 @@ export default {
       }
       this.hasMove = false
     },
-    formateValues () {
+    setBubbleClicks () {
       let result = []
-      for (let i = 0; i < this.values.length; i++) {
+      for (let i = 0; i < this.bubbles.length; i++) {
         result.push(false)
       }
-      this.bubbles = result
+      this.bubbleClicks = result
     },
     bgImgLoad (e) {
       // console.log(e)
@@ -145,28 +144,44 @@ export default {
       // console.log(e)
       wx.hideLoading()
     },
-    drawStar () {
+    _bubbleClick (index) {
+      let result = [
+        ...this.bubbleClicks
+      ]
+      result[index] = true
+      this.bubbleClicks = result
+      console.log(this.bubbleClicks)
+      console.log(index)
+    },
+    async getuserinfo (e, index) {
+      let userInfo = e.mp.detail.userInfo
+      console.log('getuserinfo', userInfo)
+      if (!userInfo) {
+        console.log('没有授权用户信息')
+        return
+      }
+      if (!this.hasUpdateUserInfo) { // 上报用户信息
+        try {
+          await api.updateUserInfo({
+            nickName: userInfo.nickName,
+            avatarUrl: userInfo.avatarUrl,
+            gender: userInfo.gender
+          })
+          console.log('detail' + index, userInfo)
+          this.hasUpdateUserInfo = true
+        } catch (e) {
+          this.hasUpdateUserInfo = false
+        }
+      }
+      // this.bubbleClicks.splice(index, 1, true)
+      // console.log('bubbleClicks', this.bubbleClicks)
+      let result = [
+        ...this.bubbleClicks
+      ]
+      result[index] = !result[index]
+      this.bubbleClicks = result
+      console.log(this.bubbleClicks)
     }
-    // async getuserinfo (detail, index) {
-    //   console.log(detail)
-    //   if (!detail.userInfo) {
-    //     return
-    //   }
-    //   if (!this.hasUpdateUserInfo) { // 上报用户信息
-    //     try {
-    //       await updateUserInfo({
-    //         nickName: detail.userInfo.nickName,
-    //         avatarUrl: detail.userInfo.avatarUrl,
-    //         gender: detail.userInfo.gender
-    //       })
-    //       console.log('detail' + index, detail.userInfo)
-    //       this.hasUpdateUserInfo = true
-    //     } catch (e) {
-    //       this.hasUpdateUserInfo = true
-    //     }
-    //   }
-    //   this.bubbles[index] = true
-    // }
   },
   async onLoad () {
     wx.setNavigationBarColor({
@@ -183,7 +198,8 @@ export default {
     try {
       utils.showLoading()
       const result = await api.randomSteal() // 获取6个随机被偷的靓仔
-      this.values = result.data
+      this.bubbles = result.data
+      this.setBubbleClicks()
       console.log(result)
       const stealMeResult = await api.stealMeList()
       this.stealMeList = stealMeResult.data
@@ -263,7 +279,7 @@ export default {
       overflow hidden
       top 0
       left 0
-      transform translateY(75%)
+      transform translateY(79%)
       opacity 1
       background rgba(245,245,245,1)
       background rgba(255,255,255,1)
@@ -395,13 +411,19 @@ export default {
       overflow hidden
       bg-size(100rpx, 100rpx)
       bg-image('bul')
-      animation up-down-animation .5s ease-in 0s infinite alternate
+/*      transform scale(1,1)
+      opacity 1
+      transition all 2s
       &.active{
-      }
+        transform scale(0,0)
+        opacity 0
+        top 50rpx
+        right 80rpx
+      }*/
       &.bubble-wrap-0{
         top 500rpx
         left 50rpx
-        animation-delay 0s
+
       }
       &.bubble-wrap-1{
         top 200rpx

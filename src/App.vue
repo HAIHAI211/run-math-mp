@@ -27,5 +27,10 @@ export default {
     .rotate-animation{
       animation rotate-animation .5s ease-in 0s infinite alternate;
     }
+    .disappear-animation{
+      animation disappear-animation .5s ease-in 0s 1 normal;
+      animation-delay 0s!important;
+      animation-fill-mode: forwards;
+    }
   }
 </style>

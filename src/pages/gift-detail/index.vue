@@ -107,6 +107,7 @@ export default {
       for (let i = 0; i < data.recordList.length; i++) {
         let record = data.recordList[i]
         record.pojoNickName = record.nick_name.slice(0, 1) + '**'
+        console.log('change_time', record.change_time)
         let date = new Date(record.change_time)
         // let date = new Date('2018/11/20 07:00')
         let now = new Date()
