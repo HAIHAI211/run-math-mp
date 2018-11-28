@@ -23,8 +23,13 @@ export function formatTime (date, showHour = true) {
 
   return showHour ? `${t1} ${t2}` : t1
 }
+export function formatHour (date) {
+  const hour = date.getHours()
+  const minute = date.getMinutes()
+  return [hour, minute].map(formatNumber).join(':')
+}
 
-export function timeGapFromNow (date1, date2 = new Date()) {
+export function timeGapFromNow (date1, date2 = new Date(), todayDetail = true) {
   let timeGap = date2.getTime() - date1.getTime()
   let m1 = timeGap % (24 * 3600 * 1000)
   let m2 = m1 % (3600 * 1000)
@@ -32,7 +37,7 @@ export function timeGapFromNow (date1, date2 = new Date()) {
   let hours = Math.floor(m1 / (3600 * 1000))
   let minutes = Math.floor(m2 / (60 * 1000))
   if (days === 0) {
-    return hours === 0 ? `${minutes}分钟前` : `${hours}小时前`
+    return todayDetail ? (hours === 0 ? `${minutes}分钟前` : `${hours}小时前`) : '今天'
   } else if (days === 1) {
     return '昨天'
   } else if (days === 2) {

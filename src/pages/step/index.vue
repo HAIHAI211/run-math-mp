@@ -7,42 +7,30 @@
       </div>
     </div>
     <div :class="['news',{'more': more}]" @touchmove="_touchmove" @touchstart="_touchstart" @touchend="_touchend">
-      <div class="news-title">
+      <div class="news-title"  @click="more=!more">
         <span>最新动态</span>
-        <div class="news-more" @click="more=!more"><div :class="['iconfont','icon-sanjiao', {'sanjiao-more': more}]"/>{{ more ? '折叠' : '展开' }}</div>
+        <div class="news-more"><div :class="['iconfont','icon-sanjiao', {'sanjiao-more': more}]"/></div>
       </div>
-      <div class="content">
-        <div class="day-info" v-for="(dayInfo,dayInfoIndex) in dayInfos" :key="dayInfoIndex">
-          <div class="day-info-title">{{ dayInfo.title }}</div>
-          <div class="day-info-item" v-for="(item, itemIndex) in dayInfo.items" :key="itemIndex">
-            <div class="item-title">{{ item.name }}</div>
-            <div class="item-step">{{ item.step }}步</div>
-            <div class="item-time">{{ item.time }}</div>
-            <div class="item-steal"></div>
-          </div>
+      <div class="avatar-wall">
+        <div class="avatar" v-for="(item, avatarIndex) in avatars" :key="avatarIndex">
+          <image class="avatar-img" :src="item.avatarUrl"/>
+          <div class="steal-num">{{ item.stealStepNum }}</div>
         </div>
       </div>
+      <scroll-view  class="content" scroll-y>
+        <div class="wrap">
+          <div class="steal-me-item" v-for="(item, stealMeIndex) in stealMeFormatList" :key="stealMeIndex">
+            <div class="date-label" v-if="item.dateLabel">{{item.dateLabel}}</div>
+              <div class="steal-me-item-inner">
+              <div class="item-title">{{ item.nickName }} <span class="item-title-suffix">偷走你 </span><span class="item-step">{{ item.stealStepNum }}步</span></div>
+              <div class="item-time">{{ item.time }}</div>
+              <div class="item-steal" v-if="item.canBeSteal"></div>
+            </div>
+          </div>
+        </div>
+      </scroll-view>
       <tab-bar :activeIndex="2" :fix="false"/>
     </div>
-    <!--<image class="bg-img"-->
-           <!--mode="widthFix"-->
-           <!--src="https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/bg%403x.png"-->
-           <!--@load="bgImgLoad" @error="bgImgError"/>-->
-
-<!--    <div class="news">
-      <div class="news-title">最新动态</div>
-      <div class="content">
-        <div class="day-info" v-for="(dayInfo,dayInfoIndex) in dayInfos" :key="dayInfoIndex">
-          <div class="day-info-title">{{ dayInfo.title }}</div>
-          <div class="day-info-item" v-for="(item, itemIndex) in dayInfo.items" :key="itemIndex">
-            <div class="item-title">{{ item.name }}</div>
-            <div class="item-step">{{ item.step }}步</div>
-            <div class="item-time">{{ item.time }}</div>
-            <div class="item-steal"></div>
-          </div>
-        </div>
-      </div>
-    </div>-->
     <div :class="['bubble-wrap', 'bubble-wrap-' + bubbleIndex, {'active': bubble}]"
          v-for="(bubble,bubbleIndex) in bubbles"
          v-if="!bubble"
@@ -56,6 +44,7 @@ import { mapState } from 'vuex'
 import runBtn from '@/components/run-btn'
 import tabBar from '@/components/tab-bar'
 import * as utils from '@/utils'
+import * as api from '@/http/api'
 export default {
   components: {
     runBtn,
@@ -63,39 +52,9 @@ export default {
   },
   data () {
     return {
-      dayInfos: [
-        {
-          title: '今天',
-          items: [
-            {
-              type: 0,
-              name: '走在冷风中',
-              step: 2531,
-              time: '13:00'
-            },
-            {
-              type: 0,
-              name: '走在冷风中',
-              step: 2531,
-              time: '13:00'
-            },
-            {
-              type: 0,
-              name: '走在冷风中',
-              step: 2531,
-              time: '13:00'
-            }
-          ]
-        }
-      ],
-      bubbles: [
-        false,
-        false,
-        false,
-        false,
-        false,
-        false
-      ],
+      stealMeList: [],
+      dateTags: [-1, -1],
+      bubbles: [],
       values: [],
       hasUpdateUserInfo: false,
       more: false,
@@ -103,51 +62,80 @@ export default {
       startTime: 0,
       nowY: 0,
       nowTime: 0,
-      lastY: 0
+      lastY: 0,
+      hasMove: false // 如果是在scrollview中滑动，父元素的touchmove是被拦截的
     }
   },
   computed: {
-    ...mapState(['todayStep', 'authWerun'])
-  },
-  watch: {
-    async reachBottom (newV, oldV) {
-      if (this.tabBarLoading) {
-        console.log('tabBarLoading冲突')
-        return
+    ...mapState(['todayStep', 'authWerun']),
+    stealMeFormatList () {
+      let result = []
+      let dateLabels = []
+      for (let i = 0; i < this.stealMeList.length; i++) {
+        let stealItem = this.stealMeList[i]
+        let stealDate = new Date(stealItem.stealTime)
+        let dateLabel = utils.timeGapFromNow(stealDate, new Date(), false)
+        if (!dateLabels.includes(dateLabel)) {
+          // console.log('dateLabels不包含' + dateLabel + '，现在将其收纳入库')
+          dateLabels.push(dateLabel)
+        } else {
+          dateLabel = ''
+        }
+        result.push({
+          ...stealItem,
+          dateLabel: dateLabel,
+          time: utils.formatHour(stealDate)
+        })
       }
-      this.tabBarLoading = true
-      console.log('tabBarLoading开始')
-      if (newV && !oldV) {
-        console.log('显示tabbar')
-        await utils.pf('showTabBar')
-      } else if (!newV && oldV) {
-        console.log('隐藏tabbar')
-        await utils.pf('hideTabBar')
+      return result
+    },
+    avatars () {
+      let result = []
+      for (let i = 0; i < this.stealMeList.length; i++) {
+        if (i < 5) {
+          result.push({
+            ...this.stealMeList[i]
+          })
+        }
       }
-      this.tabBarLoading = false
-      console.log('tabBarLoading结束')
+      return result
     }
   },
   methods: {
     _touchstart (e) {
+      // console.log('touchstart')
       this.startY = e.mp.touches[0].pageY
       this.startTime = Date.now()
     },
     _touchmove (e) {
+      // console.log('touchmove')
+      this.hasMove = true
       this.lastY = this.nowY
       this.nowY = e.mp.touches[0].pageY
       this.nowTime = Date.now()
     },
     _touchend () {
-      let distance = this.nowY - this.startY
-      let time = (this.nowTime - this.startTime) / 1000
-      let speed = distance / time
-      if (speed < -100 && !this.more) {
-        this.more = true
+      // console.log('touchend')
+      if (this.hasMove) {
+        let distance = this.nowY - this.startY
+        let time = (this.nowTime - this.startTime) / 1000
+        let speed = distance / time
+        if (speed < -110 && !this.more) {
+          this.more = true
+        }
+        if (speed > 110 && this.more) {
+          this.more = false
+        }
+        // console.log(speed > 0 ? '下拉' : '上滑', speed)
       }
-      if (speed > 100 && this.more) {
-        this.more = false
+      this.hasMove = false
+    },
+    formateValues () {
+      let result = []
+      for (let i = 0; i < this.values.length; i++) {
+        result.push(false)
       }
+      this.bubbles = result
     },
     bgImgLoad (e) {
       // console.log(e)
@@ -181,7 +169,6 @@ export default {
     // }
   },
   async onLoad () {
-    // wx.hideTabBar()
     wx.setNavigationBarColor({
       frontColor: '#ffffff',
       backgroundColor: '#2056dd',
@@ -190,27 +177,22 @@ export default {
         timingFunc: 'easeIn'
       }
     })
-    // showLoading()
-    // canvas 动画
-    // const context = wx.createCanvasContext('first') // 还记得 在wxml里面canvas的id叫first吗
-    // wxCanvas = new WxDraw(context, 0, 0, 400, 500) // 初始化wxDraw对象 注意这里除了context的四个参数 就是canvas的位置以及长宽，😏还记得吗？
-    // console.log('wxCanvas', wxCanvas)
-    // const rect = new Shape('rect', { x: 60, y: 60, w: 40, h: 40, fillStyle: '#2FB8AC', rotate: Math.PI / 2 }, 'mix', true)
-    // wxCanvas.add(rect)
-    // rect.animate({'x': '+=100', 'y': '+=100'}, {duration: 1000}).animate('rotate', Math.PI * 5, {duration: 1000}).start(1)
+    // this.createFakeStealList()
     // 请求
-    // this.hasUpdateUserInfo = false
-    // try {
-    //   const result = await randomSteal()
-    //   this.values = result.data
-    //   console.log(result)
-    //   if (this.authWerun) {
-    //     const stealMeResult = await stealMeList()
-    //     console.log('stealMeResult', stealMeResult)
-    //   }
-    // } catch (e) {
-    //   console.log(e)
-    // }
+    this.hasUpdateUserInfo = false
+    try {
+      utils.showLoading()
+      const result = await api.randomSteal() // 获取6个随机被偷的靓仔
+      this.values = result.data
+      console.log(result)
+      const stealMeResult = await api.stealMeList()
+      this.stealMeList = stealMeResult.data
+      console.log('stealMeResult', stealMeResult)
+    } catch (e) {
+      console.log(e)
+    } finally {
+      wx.hideLoading()
+    }
   },
   onShow () {
     wx.hideTabBar()
@@ -218,61 +200,16 @@ export default {
   onHide () {
     wx.showTabBar()
   }
-  // onReachBottom () {
-  //   this.hasLastReachBottom = false
-  //   this.hasReachBottom = true
-  //   this.topDownCount += 1
-  //   console.log(`onReachBottom：hasLastReachBottom=${this.hasLastReachBottom},hasReachBottom=${this.hasReachBottom}`)
-  // },
-  // async onPageScroll (e) {
-  //   this.lastScrollTop = this.nowScrollTop
-  //   this.nowScrollTop = e.scrollTop
-  //   let gap = this.nowScrollTop - this.lastScrollTop
-  //   this.lastFromTopToDown = this.nowFromTopToDown
-  //   this.nowFromTopToDown = gap > 0 // 大于0表示自上而下 小于0表示自下而上
-  //
-  //   console.log('toShowTop', this.toShowTop)
-  //   console.log('toHideTop', this.toHideTop)
-  //   if (!this.hasLastReachBottom && this.hasReachBottom && !this.tabBarLoading && !this.hasTabBarShow) { // 自上而下越过阈值 hide->show
-  //     // 显示tabbar
-  //     console.log('显示tabBar')
-  //     this.tabBarLoading = true
-  //     await utils.pf('showTabBar')
-  //     this.tabBarLoading = false
-  //     this.hasTabBarShow = true
-  //   }
-  //   if (this.lastScrollTop > yz && this.nowScrollTop <= yz) { // 自下而上越过阈值 show->hide
-  //     // 隐藏tabbar
-  //   }
-  //
-  //   // if (!this.hasReachBottom) {
-  //   //   this.reachBottom = false
-  //   //   console.log('[false]还没有到底部', e.scrollTop)
-  //   // } else {
-  //   //   if (this.toTopWhenReachBottom === undefined) {
-  //   //     this.toTopWhenReachBottom = e.scrollTop
-  //   //     this.reachBottom = true
-  //   //     console.log('[undefined]到底部了', this.toTopWhenReachBottom)
-  //   //   } else {
-  //   //     if (e.scrollTop >= this.toTopWhenReachBottom) {
-  //   //       this.reachBottom = true
-  //   //       console.log('到底部了', e.scrollTop)
-  //   //     } else {
-  //   //       this.reachBottom = false
-  //   //       console.log('[true]还没有到底部', e.scrollTop)
-  //   //     }
-  //   //   }
-  //   // }
-  // }
 }
 </script>
 
 <style scoped lang="stylus">
   @import "~@/common/style/mixin.styl"
   @import "~@/common/style/color.styl"
+  $bg-height=1197rpx
   .step-page{
     .bg{
-      bg-size(750rpx, 1197rpx)
+      bg-size(750rpx, $bg-height)
       bg-image('step-bg', 'jpg')
       background-position 0rpx -200rpx
       background-repeat no-repeat
@@ -311,8 +248,8 @@ export default {
     }
     .news{
       &.more{
-        top 0
-        opacity .95
+        transform translateY(0)
+        opacity .98
       }
       transition all .5s
       position fixed
@@ -324,12 +261,15 @@ export default {
       border-top-left-radius 30rpx
       border-top-right-radius 30rpx
       overflow hidden
-      top 75%
-      opacity 1
+      top 0
       left 0
+      transform translateY(75%)
+      opacity 1
+      background rgba(245,245,245,1)
+      background rgba(255,255,255,1)
       .news-title{
         flex 0 0 auto
-        background rgba(255,255,255,1)
+        background rgba(245,245,245,1)
         height 100rpx
         display flex
         justify-content space-between
@@ -340,13 +280,14 @@ export default {
         padding 0 30rpx
         letter-spacing 1.5rpx
         .news-more{
-          background main-color
+          /*background #fff*/
           font-size 28rpx
-          padding 10rpx 15rpx
-          border-radius 30rpx
-          color #fff
+          padding 5rpx 8rpx
+          border-radius 8rpx
+          color #000
           center()
           .iconfont{
+            font-size 50rpx
             transform rotate(180deg)
             transition all .5s
             &.sanjiao-more{
@@ -355,45 +296,88 @@ export default {
           }
         }
       }
+      .avatar-wall{
+        flex 0 0 auto
+        display flex
+        justify-content space-between
+        padding 30rpx
+        .avatar{
+          position relative
+          .avatar-img{
+            width 90rpx
+            height 90rpx
+            border-radius 15rpx
+          }
+          .steal-num{
+            width 42rpx
+            height 42rpx
+            border-radius 50%
+            background lightseagreen
+            position absolute
+            right -10rpx
+            bottom 0rpx
+            font-size 17rpx
+            color #fff
+            center()
+          }
+        }
+      }
       .content{
         flex 1
-        background rgba(245,245,245,1)
         min-height 600rpx
-        padding 30rpx
-        .day-info{
-          .day-info-title{
-            color #999
-            font-size 28rpx
-            padding-bottom 15rpx
-          }
-          .day-info-item{
-            position relative
-            height 80rpx
-            background #fff
-            display flex
-            justify-content space-between
-            align-items center
-            padding 0 45rpx 0 12rpx
-            margin-bottom 20rpx
-            .item-title{
-              color #000
-              font-weight bold
-              font-size 28rpx
+        .wrap{
+          /*height:100%;*/
+          width 100%;
+          display: flex;
+          flex-direction: column;
+          /*flex-wrap: wrap;*/
+          box-sizing border-box
+          /*padding-top 30rpx*/
+          .steal-me-item{
+            width 750rpx
+            box-sizing border-box
+            padding 0rpx 30rpx
+            .date-label{
+              margin-top 15rpx
+              font-size 32rpx
+              font-weight bolder
+              color #333
             }
-            .item-step{
-              color main-color
-              font-size 30rpx
-            }
-            .item-time{
-              color #999999
-              font-size 26rpx
-            }
-            .item-steal{
-              bg-image('hand-up-copy')
-              bg-size(45rpx, 45rpx)
-              position absolute
-              top 0
-              right 0
+            .steal-me-item-inner{
+              position relative
+              box-sizing border-box
+              padding 0 10rpx
+              height 86rpx
+              background #fff
+              display flex
+              justify-content space-between
+              align-items center
+              .item-title{
+                color #000
+                font-weight bold
+                font-size 28rpx
+                .item-title-suffix{
+                  font-size 25rpx
+                  color #999
+                  font-weight 400
+                }
+              }
+              .item-step{
+                color lightseagreen
+                font-size 30rpx
+              }
+              .item-time{
+                color #999999
+                font-size 26rpx
+                padding-right 40rpx
+              }
+              .item-steal{
+                bg-image('hand-up-copy')
+                bg-size(45rpx, 45rpx)
+                position absolute
+                bottom 20rpx
+                right 0
+              }
             }
           }
         }
