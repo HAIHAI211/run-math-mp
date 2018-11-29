@@ -33,21 +33,23 @@
     </div>
     <div :class="['bubble-wrap', 'bubble-wrap-' + bubbleIndex,{'up-down-animation': !bubble},{'disappear-animation': bubble}]"
          v-for="(bubble,bubbleIndex) in bubbleClicks"
-         :key="bubbleIndex">
-      <button class="bubble-btn" open-type="getUserInfo" @getuserinfo="_getuserinfo($event,bubbleIndex)"></button>
+         :key="bubbleIndex" @click="_bubbleClick($event,bubbleIndex)">
+      <!--<button class="bubble-btn" open-type="getUserInfo" @getuserinfo="_bubbleClick($event,bubbleIndex)"></button>-->
     </div>
-    <accredit-pop :show.sync="userinfoPopShow"/>
+    <accredit-pop :show.sync="userinfoPopShow" @getuserinfo="_getuserinfo" @cancel="_cancel"/>
     <auth-pop :show.sync="werunPopShow"/>
   </div>
 </template>
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
+import {mixinLoginWerun} from '@/mixin'
 import tabBar from '@/components/tab-bar'
 import accreditPop from '@/components/accredit-pop'
 import authPop from '@/components/auth-pop'
 import * as utils from '@/utils'
 import * as api from '@/http/api'
 export default {
+  mixins: [mixinLoginWerun],
   components: {
     tabBar,
     accreditPop,
@@ -68,7 +70,8 @@ export default {
       lastY: 0,
       userinfoPopShow: false,
       werunPopShow: false,
-      hasMove: false // 如果是在scrollview中滑动，父元素的touchmove是被拦截的
+      hasMove: false, // 如果是在scrollview中滑动，父元素的touchmove是被拦截的
+      userinfo: null
     }
   },
   computed: {
@@ -108,8 +111,21 @@ export default {
       return result
     }
   },
+  watch: {
+    authWerun (newV, oldV) { // 因为运动授权必须是在用户授权同意的基础上实现，故此处必定两个权限都OK了
+      if (oldV === false && newV) { // 授权必须是被拒绝，然后现在同意了才能进入这儿
+        console.log('微信运动授权之前被拒绝了，现在又同意了')
+        this._getSteps()
+      }
+    },
+    authUserInfo (v) {
+      if (v) {
+        api.updateUserInfo(this.userinfo) // 更新用户信息
+      }
+    }
+  },
   methods: {
-    ...mapActions(['AUTH_OF_WERUN', 'REPORT_OF_WERUN', 'FETCH_USER_INFO']),
+    ...mapMutations(['SET_AUTH_USER_INFO']),
     _touchstart (e) {
       // console.log('touchstart')
       this.startY = e.mp.touches[0].pageY
@@ -138,6 +154,16 @@ export default {
       }
       this.hasMove = false
     },
+    _setNavigationStyle () {
+      wx.setNavigationBarColor({
+        frontColor: '#ffffff',
+        backgroundColor: '#2056dd',
+        animation: {
+          duration: 400,
+          timingFunc: 'easeIn'
+        }
+      })
+    },
     setBubbleClicks () {
       let result = []
       for (let i = 0; i < this.bubbles.length; i++) {
@@ -145,27 +171,10 @@ export default {
       }
       this.bubbleClicks = result
     },
-    bgImgLoad (e) {
-      // console.log(e)
-      wx.hideLoading()
-    },
-    bgImgError (e) {
-      // console.log(e)
-      wx.hideLoading()
-    },
-    _bubbleClick (index) {
-      let result = [
-        ...this.bubbleClicks
-      ]
-      result[index] = true
-      this.bubbleClicks = result
-      // console.log(this.bubbleClicks)
-      // console.log(index)
-    },
-    async _getuserinfo (e, index) {
+    async _dealUserinfo (e, index) {
       let userInfo = e.mp.detail.userInfo
-      // console.log('getuserinfo', userInfo)
-      if (!userInfo) {
+      this.SET_AUTH_USER_INFO(!!userInfo)
+      if (!this.authUserInfo) {
         console.log('没有授权用户信息')
         return
       }
@@ -182,28 +191,48 @@ export default {
           this.hasUpdateUserInfo = false
         }
       }
-      // this.bubbleClicks.splice(index, 1, true)
-      // console.log('bubbleClicks', this.bubbleClicks)
+    },
+    async _dealWerun () {
+      if (!this.authWerun) { // 可以用方法判断，但是会较耗时
+        this.werunPopShow = true
+      }
+    },
+    async _dealBubbles (index) {
       let result = [
         ...this.bubbleClicks
       ]
       result[index] = !result[index]
       this.bubbleClicks = result
-      // console.log(this.bubbleClicks)
+    },
+    _getuserinfo (e) {
+      console.log('userinfo', e)
+      this.userinfo = e
+      if (!this.authWerun) {
+        this.werunPopShow = true
+      }
+    },
+    _cancel () {
+    },
+    async _bubbleClick (e, index) {
+      if (!this.authUserInfo) {
+        this.userinfoPopShow = true
+        return
+      }
+      if (!this.authWerun) {
+        this.werunPopShow = true
+        return
+      }
+      this._dealBubbles(index)
     }
   },
   async onLoad () {
-    wx.setNavigationBarColor({
-      frontColor: '#ffffff',
-      backgroundColor: '#2056dd',
-      animation: {
-        duration: 400,
-        timingFunc: 'easeIn'
-      }
-    })
+    this._setNavigationStyle()
     // 权限
     console.log('步数权限', this.authWerun) // 必须
     console.log('用户权限', this.authUserInfo) // 可选
+    if (!this.authUserInfo) {
+      this.userinfoPopShow = true
+    }
     // 请求
     this.hasUpdateUserInfo = false
     try {

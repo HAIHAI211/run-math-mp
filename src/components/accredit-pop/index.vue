@@ -5,7 +5,7 @@
       <div class="dialog">
         <image class="bg" src="/static/img/shouquan@2x.png"/>
         <div class="dialog-bottom">
-          <div class="dialog-item" @click="selfShow=false">再想想</div>
+          <div class="dialog-item" @click="_cancel">再想想</div>
           <div class="dialog-item active">
             好，授权吧
             <button class="btn" open-type="getUserInfo" @getuserinfo="bindGetUserInfo"></button>
@@ -16,7 +16,7 @@
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapMutations } from 'vuex'
 export default {
   props: {
     show: {
@@ -42,9 +42,15 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['SET_SYSTEM_INFO']),
+    ...mapMutations(['SET_AUTH_USER_INFO']),
     bindGetUserInfo (e) {
-      this.$emit('getuserinfo', e.mp.detail)
+      const userInfo = e.mp.detail.userInfo
+      this.SET_AUTH_USER_INFO(!!userInfo)
+      this.$emit('getuserinfo', userInfo)
+      this.selfShow = false
+    },
+    _cancel () {
+      this.$emit('cancel')
       this.selfShow = false
     }
   }

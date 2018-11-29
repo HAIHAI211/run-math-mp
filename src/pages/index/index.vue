@@ -100,7 +100,7 @@ export default {
     authWerun (newV, oldV) {
       if (oldV === false && newV) { // 授权必须是被拒绝，然后现在同意了才能进入这儿
         console.log('微信运动授权之前被拒绝了，现在又同意了')
-        this._loginStuff() // 因为用户可能在页面长时间停留后再同意授权，此时session可能失效，故调用_loginStuff()而非只调用_getStep()
+        this._getSteps() // 因为用户可能在页面长时间停留后再同意授权，此时session可能失效，故调用_loginStuff()而非只调用_getStep()
       }
     }
   },
@@ -109,7 +109,7 @@ export default {
     _load () {
       this.netError = true
       utils.showLoading()
-      api.all([this._getRank(), this._getGifts(), this.FETCH_ADVS(), this._loginStuff()])
+      api.all([this._getRank(), this._getGifts(), this.FETCH_ADVS(), this._getSteps()])
         .then(api.spread((ranks, gifts, advs) => {
           this.netError = false
           wx.hideLoading()
