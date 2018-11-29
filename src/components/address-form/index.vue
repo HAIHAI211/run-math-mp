@@ -52,7 +52,7 @@
 @input相当于事件触发(还不能在input中修改:value对应变量，会重复赋值造成input闪烁)
 -->
 <script>
-  import areaList from '@/utils/area.js'
+  import areaList from '../../../static/js/area'
   import {mapState, mapActions} from 'vuex'
   // import { sleep } from '../../utils'
   export default {

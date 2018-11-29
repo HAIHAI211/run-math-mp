@@ -13,52 +13,52 @@
 </template>
 
 <script>
-export default {
-  data () {
-    return {
-      num: 0,
-      min: 0,
-      max: 1000,
-      step: 15,
-      useAnimation: true,
-      plus: true,
-      timeId: null,
-      seconds: 0
-    }
-  },
-  created () {
-    // const now = this.$moment()
-    // const finalGameTime = this.$moment('2018-11-03 15:00')
-    // this.seconds = finalGameTime.diff(now, 'seconds')
-  },
-  mounted () {
-    setInterval(() => {
-      this.seconds -= 1
-    }, 1000)
-  },
-  methods: {
-    c () {
-      if (this.timeId) {
-        return
+  export default {
+    data () {
+      return {
+        num: 0,
+        min: 0,
+        max: 1000,
+        step: 15,
+        useAnimation: true,
+        plus: true,
+        timeId: null,
+        seconds: 0
       }
-      const realStep = this.plus ? this.step * 1 : this.step * -1
-      const target = this.plus ? this.max : this.min
-      const compareFunc = this.plus ? Math.max : Math.min
-      if (this.useAnimation) {
-        this.timeId = setInterval(() => {
-          if (compareFunc(this.num, target) === target && this.num !== target) {
-            this.num += realStep
-          } else {
-            this.num = target
-            clearInterval(this.timeId)
-            this.timeId = null
-          }
-        }, 50)
+    },
+    created () {
+      // const now = this.$moment()
+      // const finalGameTime = this.$moment('2018-11-03 15:00')
+      // this.seconds = finalGameTime.diff(now, 'seconds')
+    },
+    mounted () {
+      setInterval(() => {
+        this.seconds -= 1
+      }, 1000)
+    },
+    methods: {
+      c () {
+        if (this.timeId) {
+          return
+        }
+        const realStep = this.plus ? this.step * 1 : this.step * -1
+        const target = this.plus ? this.max : this.min
+        const compareFunc = this.plus ? Math.max : Math.min
+        if (this.useAnimation) {
+          this.timeId = setInterval(() => {
+            if (compareFunc(this.num, target) === target && this.num !== target) {
+              this.num += realStep
+            } else {
+              this.num = target
+              clearInterval(this.timeId)
+              this.timeId = null
+            }
+          }, 50)
+        }
+        this.plus = !this.plus
       }
-      this.plus = !this.plus
     }
   }
-}
 </script>
 
 <style scoped lang="stylus">

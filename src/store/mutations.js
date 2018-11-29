@@ -62,6 +62,9 @@ const mutations = {
   },
   [types.SET_GIFT] (state, v) {
     state.gift = v
+  },
+  [types.SET_VIDEO_ORDER] (state, v) {
+    state.videoOrder = v
   }
 }
 

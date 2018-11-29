@@ -1,6 +1,7 @@
 // import runLoading from '@/components/run-loading'
 import { sleep } from '@/utils'
 import * as api from '@/http/api'
+import { mapActions, mapState } from 'vuex'
 export const mixinShow = {
   props: {
     show: {
@@ -112,4 +113,20 @@ export const mixinPullToRefresh = {
   }
 }
 export const mixinLoginWerun = {
+  computed: {
+    ...mapState(['authWerun', 'isLogin', 'openId', 'todayStep'])
+  },
+  methods: {
+    ...mapActions(['LOGIN', 'AUTH_OF_WERUN', 'REPORT_OF_WERUN', 'FETCH_USER_INFO']),
+    async _getSteps () {
+      await this.AUTH_OF_WERUN() // 申请授权
+      await this.REPORT_OF_WERUN() // 上报微信运动数据给后台，返回是否成功的标志
+      await this.FETCH_USER_INFO() // 获取用户信息
+      console.log('getSteps成功')
+    },
+    async _loginStuff () { // 登录相关
+      await this.LOGIN()
+      await this._getSteps()
+    }
+  }
 }

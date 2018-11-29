@@ -73,6 +73,7 @@ export default {
       infoPicUrlListFormat: [],
       recordList: [], // 兑换记录
       type: 0,
+      presentType: '',
       info: '',
       activeTabIndex: 0,
       current: 0,
@@ -99,6 +100,9 @@ export default {
       this.price = data.price
       this.info = data.info // 介绍
       this.infoPicUrlListFormat = data.infoPicUrlListFormat // 待定
+      if (this.type === 0) {
+        this.presentType = data.presentType
+      }
       if (this.type === 2) {
         this.originalPrice = data.originalPrice
         this.postage = data.postage
@@ -120,6 +124,9 @@ export default {
       let params = {
         type: this.type,
         presentId: this.id
+      }
+      if (this.type === 0) {
+        params.presentType = this.presentType
       }
       if (this.type === 2) { // 实物礼品
         wx.navigateTo({

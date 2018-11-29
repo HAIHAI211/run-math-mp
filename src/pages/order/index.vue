@@ -15,7 +15,7 @@
               </div>
             </div>
             <div class="bottom">
-              <div class="btn btn-see">查看</div>
+              <div class="btn btn-see" @click="_openOnline(morder)">查看</div>
               <div class="btn btn-download">下载</div>
             </div>
           </div>
@@ -49,9 +49,10 @@
   </div>
 </template>
 <script>
-import {mapState} from 'vuex'
+import {mapState, mapMutations} from 'vuex'
 import runLoading from '@/components/run-loading'
 import {mixinPullToRefresh} from '@/mixin'
+import {showError, openOnline} from '@/utils'
 export default {
   mixins: [mixinPullToRefresh],
   components: {
@@ -72,14 +73,32 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['SET_VIDEO_ORDER']),
     tabChange (v) {
       console.log(v)
       this.pageIndex = v.mp.detail.index
+    },
+    async _openOnline (mathOrder) {
+      console.log('mathOrder', mathOrder)
+      if (mathOrder.type === 0) { // 文档
+        try {
+          const openDocumentResult = await openOnline(mathOrder.fileUrl)
+          console.log('openDocumentResult', openDocumentResult)
+        } catch (e) {
+          console.log('openDocumentError', e)
+          showError('文件格式不支持在线查看')
+        }
+      } else if (mathOrder.type === 1) { // 视频
+        this.SET_VIDEO_ORDER(mathOrder)
+        wx.navigateTo({
+          url: '/pages/video/main'
+        })
+      }
     }
   },
   onLoad (options) {
     console.log(options)
-    this.pageIndex = this.gift.type === 2 ? 1 : 0
+    // this.pageIndex = this.gift.type === 2 ? 1 : 0 // gift指的是正在走流程的礼物
   }
 }
 </script>

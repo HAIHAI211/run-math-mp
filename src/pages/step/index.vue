@@ -159,8 +159,8 @@ export default {
       ]
       result[index] = true
       this.bubbleClicks = result
-      console.log(this.bubbleClicks)
-      console.log(index)
+      // console.log(this.bubbleClicks)
+      // console.log(index)
     },
     async _getuserinfo (e, index) {
       let userInfo = e.mp.detail.userInfo

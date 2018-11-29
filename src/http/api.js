@@ -59,10 +59,7 @@ const paramFactory = (url, params) => {
 
 // 签到
 export const sign = params => {
-  return post({
-    url: '/user/sign',
-    data: params
-  })
+  return post(paramFactory('/user/sign', params))
 }
 
 // 解密

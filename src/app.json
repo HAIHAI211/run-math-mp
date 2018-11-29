@@ -9,9 +9,7 @@
     "pages/address/main",
     "pages/order-confirm/main",
     "pages/order/main",
-    "pages/animationtest/main",
-    "pages/filetest/main",
-    "pages/videotest/main"
+    "pages/video/main"
   ],
   "window": {
     "backgroundTextStyle": "dark",

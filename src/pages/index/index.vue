@@ -65,6 +65,7 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
+import {mixinLoginWerun} from '@/mixin'
 import runBtn from '@/components/run-btn'
 import tabBar from '@/components/tab-bar'
 import runGift from '@/components/run-gift'
@@ -73,6 +74,7 @@ import picPop from '@/components/pic-pop'
 import * as api from '@/http/api'
 import * as utils from '@/utils'
 export default {
+  mixins: [mixinLoginWerun],
   components: {
     runBtn,
     authPop,
@@ -92,7 +94,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['authWerun', 'isLogin', 'openId', 'todayStep', 'signDayCount', 'mathCoin', 'advs'])
+    ...mapState(['signDayCount', 'mathCoin', 'advs'])
   },
   watch: {
     authWerun (newV, oldV) {
@@ -103,7 +105,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['LOGIN', 'AUTH_OF_WERUN', 'REPORT_OF_WERUN', 'FETCH_USER_INFO', 'FETCH_ADVS']),
+    ...mapActions(['FETCH_ADVS']),
     _load () {
       this.netError = true
       utils.showLoading()
@@ -131,7 +133,6 @@ export default {
       utils.showLoading()
       try {
         const result = await api.sign({
-          openId: this.openId,
           signTime: utils.formatTime(new Date())
         })
         wx.hideLoading()
@@ -154,22 +155,11 @@ export default {
       this.giftList = result.data
       return this.giftList
     },
-    async _loginStuff () { // 登录相关
-      await this.LOGIN()
-      await this._getSteps()
-    },
-    async _getSteps () {
-      await this.AUTH_OF_WERUN() // 申请授权
-      await this.REPORT_OF_WERUN() // 上报微信运动数据给后台，返回是否成功的标志
-      await this.FETCH_USER_INFO() // 获取用户信息
-      console.log('getSteps成功')
-    },
     async _coinChargeClick () { // 一键兑换数学币
       if (!this.authWerun) {
         this.authPopShow = true
         return
       }
-      // todo
       utils.showLoading()
       try {
         await api.changeStep()
@@ -183,10 +173,10 @@ export default {
   },
   async onLoad () {
     console.log('onLoad页面')
-    wx.showShareMenu({
-      // 是否使用带 shareTicket 的转发
-      withShareTicket: true
-    })
+    // wx.showShareMenu({
+    //   // 是否使用带 shareTicket 的转发
+    //   withShareTicket: true
+    // })
     this._load()
   },
   async onPullDownRefresh () { // 下拉刷新

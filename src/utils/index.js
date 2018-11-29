@@ -62,6 +62,20 @@ export function pf (method, options = {}) {
     wx[method](options)
   })
 }
+
+// 在线预览文档
+export async function openOnline (fileUrl) {
+  // 下载到本地
+  const {tempFilePath} = await pf('downloadFile', {
+    url: fileUrl
+  })
+  console.log('tempFilePath', tempFilePath)
+  // 预览文件
+  return pf('openDocument', {
+    filePath: tempFilePath
+  })
+}
+
 // 加载中
 export const showLoading = () => {
   wx.showLoading({
