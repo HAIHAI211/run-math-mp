@@ -38,7 +38,7 @@
     </div>
     <div :class="['plus-step', 'plus-step-' + bubbleIndex, {'active': bubble.hasClick}]"
          v-for="(bubble,bubbleIndex) in bubbleClicks"
-         :key="bubbleIndex" v-if="bubble.hasClick">
+         :key="bubbleIndex">
       +{{ bubble.plusStep }}
     </div>
     <accredit-pop :show.sync="userinfoPopShow" @getuserinfo="_getuserinfo" @cancel="_cancel"/>
@@ -76,8 +76,7 @@ export default {
       userinfoPopShow: false,
       werunPopShow: false,
       hasMove: false, // 如果是在scrollview中滑动，父元素的touchmove是被拦截的
-      userinfo: null,
-      plusStep: 0 // 偷完增加的步数
+      userinfo: null
     }
   },
   computed: {
@@ -185,13 +184,15 @@ export default {
       let result = [
         ...this.bubbleClicks
       ]
-      result[index].hasClick = true
-      this.bubbleClicks = result
       const stealStepResult = await api.stealStep({
         openIdBeStolen: this.bubbles[index].openId,
         type: 'steal'
       })
-      this.plusStep = stealStepResult.data.stolenStepNum
+      result[index] = {
+        hasClick: true,
+        plusStep: stealStepResult.data.stolenStepNum
+      }
+      this.bubbleClicks = result
       this.FETCH_USER_INFO()
       console.log('stealStepResult', stealStepResult)
     },
@@ -276,15 +277,18 @@ export default {
       background-repeat no-repeat
     }
     .plus-step{
-      font-size 56rpx
-      color lightcoral
+      font-size 60rpx
+      color main-color
+      opacity 0
       font-weight bold
-      transform skewX(20deg)
+      transform skewX(12deg)
       position absolute
       transform scale(1.2,1.2)
-      transition all 2s
+      transition transform .8s ease .2s
       &.active{
         transform scale(0,0)
+        opacity 1
+        z-index 2
       }
       &.plus-step-0{
         top $bubble-0-top
@@ -296,7 +300,7 @@ export default {
       }
       &.plus-step-2{
         top $bubble-2-top
-        left $bubble-2-left
+        left $bubble-2-left - 50rpx
       }
       &.plus-step-3{
         top $bubble-3-top
