@@ -7,33 +7,38 @@
                placeholder="请输入联系人姓名"
                type="text"
                maxlength="10"
-               v-model.lazy="user.contactsName" :focus="focus && !areaPickerShow"/>
+               :focus="focus"
+               v-model.lazy="user.contactsName"/>
       </div>
     </div>
     <div class="field-item">
       <div class="wrap">
         <div class="label">手机号码</div>
         <input class="input"
+               :focus="focus"
                placeholder="请输入联系人手机号"
                maxlength="11"
                type="number"
-               v-model.lazy="user.telNo" :focus="focus && !areaPickerShow"/>
+               v-model.lazy="user.telNo"/>
       </div>
     </div>
     <div class="field-item">
       <div class="wrap">
         <div class="label">选择地区</div>
-        <picker class="input" mode="region" @change="_regionChange" :value="region">
+        <picker class="input picker-wrap" mode="region" @change="_regionChange" :value="region">
           <div class="picker">
             {{region[0]}}-{{region[1]}}-{{region[2]}}
           </div>
         </picker>
       </div>
     </div>
-    <div class="field-item">
+    <div class="field-item field-item-address">
       <div class="wrap">
-        <div class="label">详细地址</div>
-        <input class="input" placeholder="如小区几栋几单元门牌号" v-model.lazy="user.address"/>
+        <div :class="['label', {'label-ios': ios}]">详细地址</div>
+        <!--<input class="input" />-->
+        <textarea class="input textarea"
+                  placeholder="如小区几栋几单元门牌号"
+                  v-model.lazy="user.address" :focus="focus"/>
       </div>
     </div>
   </div>
@@ -60,7 +65,10 @@
       }
     },
     computed: {
-      ...mapState(['contactsName', 'telNo', 'addressArea', 'address']),
+      ...mapState(['contactsName', 'telNo', 'addressArea', 'address', 'systemInfo']),
+      ios () {
+        return this.systemInfo.platform === 'ios'
+      },
       region: {
         get () {
           if (!this.user.addressArea) {
@@ -127,31 +135,49 @@
     }
     .field-item{
       background #fff
-      height 100rpx
       padding-left 35rpx
+      &.field-item-address{
+        .wrap{
+          .label{
+            padding-top 30rpx
+            align-self flex-start
+            &.label-ios{
+              padding-top 45rpx
+              width 190rpx
+            }
+          }
+        }
+      }
       .wrap{
         padding-right 35rpx
-        height 100rpx
         box-sizing border-box
         border-bottom 1rpx solid line-color
         display flex
         justify-content space-between
         align-items center
         .label{
+          width 200rpx
+          background lightseagreen
           font-size 30rpx
           color #222
           font-weight 300
         }
         .input{
-          height 90rpx
-          flex 0 0 510rpx
+          height 100rpx
+          flex 1
           color #333
           font-size 30rpx
           font-weight 00
-          .picker{
-            height 90rpx
-            line-height 90rpx
-          }
+        }
+        .picker-wrap{
+          display flex
+          align-items center
+        }
+        .textarea{
+          box-sizing border-box
+          height 120rpx
+          margin 30rpx 0
+          background orange
         }
       }
     }

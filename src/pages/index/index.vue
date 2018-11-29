@@ -105,10 +105,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['FETCH_ADVS']),
+    ...mapActions(['FETCH_ADVS', 'SET_SYSTEM_INFO']),
     _load () {
       this.netError = true
       utils.showLoading()
+      this.SET_SYSTEM_INFO()
       api.all([this._getRank(), this._getGifts(), this.FETCH_ADVS(), this._getSteps()])
         .then(api.spread((ranks, gifts, advs) => {
           this.netError = false

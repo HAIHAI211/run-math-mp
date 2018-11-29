@@ -31,12 +31,12 @@
       </scroll-view>
       <tab-bar :activeIndex="2" :fix="false"/>
     </div>
-    <div :class="['bubble-wrap', 'bubble-wrap-' + bubbleIndex,{'up-down-animation': !bubble.hasClick},{'disappear-animation': bubble.hasClick}]"
+    <div :class="['bubble-wrap', 'bubble-wrap-' + bubbleIndex,{'up-down-animation': !bubble.hasClick},{'scale-disappear-animation': bubble.hasClick}]"
          v-for="(bubble,bubbleIndex) in bubbleClicks"
          :key="bubbleIndex" @click="_bubbleClick($event,bubbleIndex)">
       <!--<button class="bubble-btn" open-type="getUserInfo" @getuserinfo="_bubbleClick($event,bubbleIndex)"></button>-->
     </div>
-    <div :class="['plus-step', 'plus-step-' + bubbleIndex, {'active': bubble.hasClick}]"
+    <div :class="['plus-step', 'plus-step-' + bubbleIndex, {'move-disappear-animation': bubble.hasClick}]"
          v-for="(bubble,bubbleIndex) in bubbleClicks"
          :key="bubbleIndex">
       +{{ bubble.plusStep }}
@@ -272,24 +272,24 @@ export default {
     $bubble-5-left=390rpx
     .bg{
       bg-size(750rpx, $bg-height)
+      background-color #2056dd
       bg-image('step-bg', 'jpg')
       background-position 0rpx -200rpx
       background-repeat no-repeat
     }
     .plus-step{
-      font-size 60rpx
+      font-size 66rpx
       color main-color
       opacity 0
       font-weight bold
-      transform skewX(12deg)
       position absolute
-      transform scale(1.2,1.2)
-      transition transform .8s ease .2s
+      transform scale(1.1,1.1)
+      /*transition transform .8s ease .2s
       &.active{
         transform scale(0,0)
         opacity 1
         z-index 2
-      }
+      }*/
       &.plus-step-0{
         top $bubble-0-top
         left $bubble-0-left
@@ -300,7 +300,7 @@ export default {
       }
       &.plus-step-2{
         top $bubble-2-top
-        left $bubble-2-left - 50rpx
+        left $bubble-2-left - 60rpx
       }
       &.plus-step-3{
         top $bubble-3-top
@@ -494,7 +494,7 @@ export default {
       z-index 1
       border-radius 50%
       overflow hidden
-      bg-size(100rpx, 100rpx)
+      bg-size(110rpx, 110rpx)
       bg-image('bul')
       &.bubble-wrap-0{
         top $bubble-0-top
