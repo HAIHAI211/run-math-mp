@@ -23,9 +23,11 @@
     <div class="field-item">
       <div class="wrap">
         <div class="label">选择地区</div>
-        <input @click="chooseAddress"
-               disabled
-               class="input" placeholder="点击选择所在地区" v-model="areaStr"/>
+        <picker class="input" mode="region" @change="_regionChange" :value="region">
+          <div class="picker">
+            {{region[0]}}-{{region[1]}}-{{region[2]}}
+          </div>
+        </picker>
       </div>
     </div>
     <div class="field-item">
@@ -34,16 +36,6 @@
         <input class="input" placeholder="如小区几栋几单元门牌号" v-model.lazy="user.address"/>
       </div>
     </div>
-    <van-popup
-      :show="areaPickerShow"
-      position="bottom">
-      <van-area :area-list="areaList"
-                :value="addressArea"
-                class="area-picker"
-                @click.stop=""
-                @cancel="areaPickerCancel"
-                @confirm="areaPickerConfirm"/>
-    </van-popup>
   </div>
 </template>
 <!--
@@ -52,18 +44,12 @@
 @input相当于事件触发(还不能在input中修改:value对应变量，会重复赋值造成input闪烁)
 -->
 <script>
-  import areaList from '../../../static/js/area'
-  import {mapState, mapActions} from 'vuex'
-  // import { sleep } from '../../utils'
+  import {mapState} from 'vuex'
   export default {
     data () {
       return {
-        // 业务逻辑
-        areaList: areaList,
-        areaPickerShow: false,
         addressArr: null,
         focus: false,
-        a: '123',
         user: {
           openId: '',
           contactsName: '',
@@ -74,16 +60,17 @@
       }
     },
     computed: {
-      ...mapState(['contactsName', 'telNo', 'addressArea', 'address', 'openId']),
-      areaStr () {
-        if (!this.user.addressArea || this.user.addressArea.length !== 6) {
-          return ''
+      ...mapState(['contactsName', 'telNo', 'addressArea', 'address']),
+      region: {
+        get () {
+          if (!this.user.addressArea) {
+            return ['四川省', '成都市', '锦江区']
+          }
+          return this.user.addressArea.split('-')
+        },
+        set (arr) {
+          this.user.addressArea = arr.join('-')
         }
-        // console.log('addressArea', this.user.addressArea)
-        let provinceName = this.areaList.province_list[this.user.addressArea.slice(0, 2) + '0000']
-        let cityName = this.areaList.city_list[this.user.addressArea.slice(0, 4) + '00']
-        let countyName = this.areaList.county_list[this.user.addressArea]
-        return provinceName + '-' + cityName + '-' + countyName
       }
     },
     watch: {
@@ -100,7 +87,6 @@
       }
     },
     methods: {
-      ...mapActions(['FETCH_USER_INFO']),
       _checkError (user) {
         if (!user.contactsName) {
           return '请输入联系人姓名'
@@ -116,25 +102,16 @@
           return ''
         }
       },
-      chooseAddress () {
-        this.areaPickerShow = true
-      },
-      areaPickerCancel () {
-        this.areaPickerShow = false
-      },
-      areaPickerConfirm (res) {
-        // console.log(res.mp.detail.values)
-        const addressValues = res.mp.detail.values
-        this.user.addressArea = addressValues[addressValues.length - 1].code
-        this.areaPickerShow = false
+      _regionChange (e) {
+        console.log('picker发送选择改变，携带值为', e.mp.detail.value)
+        this.region = e.mp.detail.value
       }
     },
     mounted () {
       this.user = {
-        openId: this.openId,
         contactsName: this.contactsName,
         telNo: this.telNo,
-        addressArea: this.addressArea, // 是区县的areaCode
+        addressArea: this.addressArea,
         address: this.address
       }
     }
@@ -154,7 +131,7 @@
       padding-left 35rpx
       .wrap{
         padding-right 35rpx
-        height 100%
+        height 100rpx
         box-sizing border-box
         border-bottom 1rpx solid line-color
         display flex
@@ -162,15 +139,19 @@
         align-items center
         .label{
           font-size 30rpx
-          color #666
+          color #222
           font-weight 300
         }
         .input{
-          height 90%
+          height 90rpx
           flex 0 0 510rpx
           color #333
           font-size 30rpx
           font-weight 00
+          .picker{
+            height 90rpx
+            line-height 90rpx
+          }
         }
       }
     }
