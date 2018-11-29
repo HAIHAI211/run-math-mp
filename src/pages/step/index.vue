@@ -31,17 +31,22 @@
       </scroll-view>
       <tab-bar :activeIndex="2" :fix="false"/>
     </div>
-    <div :class="['bubble-wrap', 'bubble-wrap-' + bubbleIndex,{'up-down-animation': !bubble},{'disappear-animation': bubble}]"
+    <div :class="['bubble-wrap', 'bubble-wrap-' + bubbleIndex,{'up-down-animation': !bubble.hasClick},{'disappear-animation': bubble.hasClick}]"
          v-for="(bubble,bubbleIndex) in bubbleClicks"
          :key="bubbleIndex" @click="_bubbleClick($event,bubbleIndex)">
       <!--<button class="bubble-btn" open-type="getUserInfo" @getuserinfo="_bubbleClick($event,bubbleIndex)"></button>-->
+    </div>
+    <div :class="['plus-step', 'plus-step-' + bubbleIndex, {'active': bubble.hasClick}]"
+         v-for="(bubble,bubbleIndex) in bubbleClicks"
+         :key="bubbleIndex" v-if="bubble.hasClick">
+      +{{ bubble.plusStep }}
     </div>
     <accredit-pop :show.sync="userinfoPopShow" @getuserinfo="_getuserinfo" @cancel="_cancel"/>
     <auth-pop :show.sync="werunPopShow"/>
   </div>
 </template>
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import {mixinLoginWerun} from '@/mixin'
 import tabBar from '@/components/tab-bar'
 import accreditPop from '@/components/accredit-pop'
@@ -60,7 +65,7 @@ export default {
       stealMeList: [],
       dateTags: [-1, -1],
       bubbles: [],
-      bubbleClicks: [false, false, false, false, false, false],
+      bubbleClicks: [],
       hasUpdateUserInfo: false,
       more: false,
       startY: 0,
@@ -71,7 +76,8 @@ export default {
       userinfoPopShow: false,
       werunPopShow: false,
       hasMove: false, // 如果是在scrollview中滑动，父元素的touchmove是被拦截的
-      userinfo: null
+      userinfo: null,
+      plusStep: 0 // 偷完增加的步数
     }
   },
   computed: {
@@ -126,6 +132,7 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_AUTH_USER_INFO']),
+    ...mapActions(['FETCH_USER_INFO']),
     _touchstart (e) {
       // console.log('touchstart')
       this.startY = e.mp.touches[0].pageY
@@ -167,42 +174,26 @@ export default {
     setBubbleClicks () {
       let result = []
       for (let i = 0; i < this.bubbles.length; i++) {
-        result.push(false)
+        result.push({
+          hasClick: false,
+          plusStep: 0
+        })
       }
       this.bubbleClicks = result
-    },
-    async _dealUserinfo (e, index) {
-      let userInfo = e.mp.detail.userInfo
-      this.SET_AUTH_USER_INFO(!!userInfo)
-      if (!this.authUserInfo) {
-        console.log('没有授权用户信息')
-        return
-      }
-      if (!this.hasUpdateUserInfo) { // 上报用户信息
-        try {
-          await api.updateUserInfo({
-            nickName: userInfo.nickName,
-            avatarUrl: userInfo.avatarUrl,
-            gender: userInfo.gender
-          })
-          console.log('detail' + index, userInfo)
-          this.hasUpdateUserInfo = true
-        } catch (e) {
-          this.hasUpdateUserInfo = false
-        }
-      }
-    },
-    async _dealWerun () {
-      if (!this.authWerun) { // 可以用方法判断，但是会较耗时
-        this.werunPopShow = true
-      }
     },
     async _dealBubbles (index) {
       let result = [
         ...this.bubbleClicks
       ]
-      result[index] = !result[index]
+      result[index].hasClick = true
       this.bubbleClicks = result
+      const stealStepResult = await api.stealStep({
+        openIdBeStolen: this.bubbles[index].openId,
+        type: 'steal'
+      })
+      this.plusStep = stealStepResult.data.stolenStepNum
+      this.FETCH_USER_INFO()
+      console.log('stealStepResult', stealStepResult)
     },
     _getuserinfo (e) {
       console.log('userinfo', e)
@@ -266,11 +257,59 @@ export default {
   @import "~@/common/style/color.styl"
   $bg-height=1197rpx
   .step-page{
+    $bubble-0-top=500rpx
+    $bubble-0-left=50rpx
+    $bubble-1-top=200rpx
+    $bubble-1-left=500rpx
+    $bubble-2-top=300rpx
+    $bubble-2-left=640rpx
+    $bubble-3-top=20rpx
+    $bubble-3-left=380rpx
+    $bubble-4-top=430rpx
+    $bubble-4-left=570rpx
+    $bubble-5-top=500rpx
+    $bubble-5-left=390rpx
     .bg{
       bg-size(750rpx, $bg-height)
       bg-image('step-bg', 'jpg')
       background-position 0rpx -200rpx
       background-repeat no-repeat
+    }
+    .plus-step{
+      font-size 56rpx
+      color lightcoral
+      font-weight bold
+      transform skewX(20deg)
+      position absolute
+      transform scale(1.2,1.2)
+      transition all 2s
+      &.active{
+        transform scale(0,0)
+      }
+      &.plus-step-0{
+        top $bubble-0-top
+        left $bubble-0-left
+      }
+      &.plus-step-1{
+        top $bubble-1-top
+        left $bubble-1-left
+      }
+      &.plus-step-2{
+        top $bubble-2-top
+        left $bubble-2-left
+      }
+      &.plus-step-3{
+        top $bubble-3-top
+        left $bubble-3-left
+      }
+      &.plus-step-4{
+        top $bubble-4-top
+        left $bubble-4-left
+      }
+      &.plus-step-5{
+        top $bubble-5-top
+        left $bubble-5-left
+      }
     }
     .bg-img{
       // scale = 1931/1125
@@ -453,43 +492,33 @@ export default {
       overflow hidden
       bg-size(100rpx, 100rpx)
       bg-image('bul')
-/*      transform scale(1,1)
-      opacity 1
-      transition all 2s
-      &.active{
-        transform scale(0,0)
-        opacity 0
-        top 50rpx
-        right 80rpx
-      }*/
       &.bubble-wrap-0{
-        top 500rpx
-        left 50rpx
-
+        top $bubble-0-top
+        left $bubble-0-left
       }
       &.bubble-wrap-1{
-        top 200rpx
-        left 500rpx
+        top $bubble-1-top
+        left $bubble-1-left
         animation-delay .5s
       }
       &.bubble-wrap-2{
-        top 300rpx
-        left 640rpx
+        top $bubble-2-top
+        left $bubble-2-left
         animation-delay .7s
       }
       &.bubble-wrap-3{
-        top 20rpx
-        left 380rpx
+        top $bubble-3-top
+        left $bubble-3-left
         animation-delay .8s
       }
       &.bubble-wrap-4{
-        top 430rpx
-        left 570rpx
+        top $bubble-4-top
+        left $bubble-4-left
         animation-delay .6s
       }
       &.bubble-wrap-5{
-        top 500rpx
-        left 390rpx
+        top $bubble-5-top
+        left $bubble-5-left
         animation-delay .9s
       }
     }
