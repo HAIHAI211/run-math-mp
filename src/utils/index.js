@@ -93,7 +93,7 @@ export const showLoading = (msg) => {
 
 // 显示toat
 export const showToast = (msg) => {
-  wx.hideLoading()
+  // wx.hideLoading()
   wx.showToast({
     title: msg,
     icon: 'none'
@@ -102,7 +102,7 @@ export const showToast = (msg) => {
 
 // 显示异常
 export const showError = (msg) => {
-  wx.hideLoading()
+  // wx.hideLoading()
   wx.showToast({
     title: msg || '网络异常，请重试',
     icon: 'none'

@@ -11,20 +11,20 @@
         <span>最新动态</span>
         <div class="news-more"><div :class="['iconfont','icon-sanjiao', {'sanjiao-more': more}]"/></div>
       </div>
-      <div class="avatar-wall">
+      <div class="avatar-wall" v-if="avatars.length">
         <div class="avatar" v-for="(item, avatarIndex) in avatars" :key="avatarIndex">
           <image class="avatar-img" :src="item.avatarUrl"/>
           <div class="steal-num">{{ item.stealStepNum }}</div>
         </div>
       </div>
-      <scroll-view  class="content" scroll-y>
+      <scroll-view  class="content" scroll-y v-if="stealMeFormatList">
         <div class="wrap">
           <div class="steal-me-item" v-for="(item, stealMeIndex) in stealMeFormatList" :key="stealMeIndex">
             <div class="date-label" v-if="item.dateLabel">{{item.dateLabel}}</div>
               <div class="steal-me-item-inner">
               <div class="item-title">{{ item.nickName }} <span class="item-title-suffix">偷走你 </span><span class="item-step">{{ item.stealStepNum }}步</span></div>
               <div class="item-time">{{ item.time }}</div>
-              <div class="item-steal" v-if="item.canBeSteal"></div>
+              <div class="item-steal" v-if="item.canBeSteal && item.isTodayBeStolen"></div>
             </div>
           </div>
         </div>
@@ -128,12 +128,16 @@ export default {
     },
     bubbleClicks (v) {
       console.log('bcw', v)
+      if (!v || !v.length) {
+        utils.showToast('今天泡泡用完啦')
+        return
+      }
       for (let i = 0; i < v.length; i++) {
         if (!v[i].hasClick) {
           return
         }
       }
-      console.log('全部点完啦，需要新的泡泡')
+      // console.log('今天泡泡用完啦')
       this._load('正在为您收集新的泡泡')
     }
   },
