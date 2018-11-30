@@ -71,9 +71,9 @@
       },
       region: {
         get () {
-          if (!this.user.addressArea) {
-            return ['四川省', '成都市', '锦江区']
-          }
+          // if (!this.user.addressArea) {
+          //   return ['四川省', '成都市', '锦江区']
+          // }
           return this.user.addressArea.split('-')
         },
         set (arr) {
@@ -119,7 +119,7 @@
       this.user = {
         contactsName: this.contactsName,
         telNo: this.telNo,
-        addressArea: this.addressArea,
+        addressArea: this.addressArea ? this.addressArea : '四川省-成都市-锦江区',
         address: this.address
       }
     }
