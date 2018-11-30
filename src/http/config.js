@@ -10,7 +10,6 @@ const fly = new Fly()
 
 class ServiceError extends Error {
 }
-
 // 配置请求基地址
 // //定义公共headers
 // fly.config.headers={xx:5,bb:6,dd:7}

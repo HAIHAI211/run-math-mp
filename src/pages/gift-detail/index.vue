@@ -82,7 +82,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['gift'])
+    ...mapState(['gift', 'mathCoin'])
   },
   methods: {
     ...mapActions(['FETCH_USER_INFO']),
@@ -128,6 +128,15 @@ export default {
       if (this.type === 0) {
         params.presentType = this.presentType
       }
+      // 点击兑换的处理
+      if (this.totalAmount === 0) {
+        utils.showError('商品已售罄', 1000)
+        return
+      }
+      if (this.mathCoin < this.price) { // 数学币不够商品标价
+        utils.showError('您的数学币余额不足', 1000)
+        return
+      }
       if (this.type === 2) { // 实物礼品
         wx.navigateTo({
           url: '/pages/order-confirm/main'
@@ -139,8 +148,8 @@ export default {
           console.log('兑换虚拟礼品', result)
           this.FETCH_USER_INFO()
           wx.hideLoading()
-          wx.navigateTo({
-            url: `/pages/change-success/main`
+          wx.redirectTo({
+            url: `/pages/change-success/main?giftId=${this.id}&giftType=${this.type}`
           })
         } catch (e) {
           console.log('err', e)
@@ -151,8 +160,11 @@ export default {
     }
   },
   async onLoad (options) {
-    this.id = this.gift.id
-    this.type = this.gift.type
+    console.log('gift-detail页面onLoad', options)
+    // this.id = this.gift.id
+    // this.type = this.gift.type
+    this.id = options.giftId
+    this.type = options.giftType
     console.log('id type', this.id, this.type)
     utils.showLoading()
     try {
@@ -175,7 +187,7 @@ export default {
     }
     return {
       title: '极客数学帮',
-      path: 'pages/gift-detail/main'
+      path: `pages/gift-detail/main?giftId=${this.id}&giftType=${this.type}`
     }
   }
 }

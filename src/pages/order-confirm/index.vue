@@ -9,7 +9,7 @@
 <script>
   import runGift from '@/components/run-gift'
   import addressForm from '@/components/address-form'
-  import {mapState} from 'vuex'
+  import {mapState, mapActions} from 'vuex'
   import * as utils from '@/utils'
   import {placeOrder} from '@/http/api'
 
@@ -28,6 +28,7 @@
       ...mapState(['gift'])
     },
     methods: {
+      ...mapActions(['FETCH_USER_INFO']),
       _updateForm (res) {
         console.log(res)
         this.user = res.user
@@ -47,8 +48,8 @@
         }
         console.log('params', params)
         try {
-          const result = await placeOrder(params)
-          console.log(result)
+          await placeOrder(params)
+          this.FETCH_USER_INFO()
           wx.hideLoading()
           wx.navigateTo({
             url: '/pages/change-success/main'
@@ -56,7 +57,7 @@
         } catch (e) {
           console.log(e)
           wx.hideLoading()
-          utils.showError()
+          utils.showError(e.message, 1500)
         }
       }
     }

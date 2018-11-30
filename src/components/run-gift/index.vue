@@ -57,7 +57,7 @@ export default {
       console.log('gift click')
       this.SET_GIFT(this.gift)
       wx.navigateTo({
-        url: '/pages/gift-detail/main'
+        url: `/pages/gift-detail/main?giftId=${this.gift.id}&giftType=${this.gift.type}`
       })
     }
   }
