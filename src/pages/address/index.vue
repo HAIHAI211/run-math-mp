@@ -27,39 +27,37 @@ export default {
   methods: {
     ...mapActions(['FETCH_USER_INFO', 'LOGIN']),
     _checkSame () {
+      console.log('old address', this.user.address)
+      console.log('now address', this.address)
       return this.contactsName === this.user.contactsName &&
         this.telNo === this.user.telNo &&
         this.addressArea === this.user.addressArea &&
         this.address === this.user.address
     },
     async _save () {
-      await sleep(50)
+      showLoading()
+      await sleep(300)
       if (this.err) {
         showToast(this.err)
         return
       }
       if (this._checkSame()) {
-        showToast('无任何修改，无需保存')
+        showToast('保存成功')
         return
       }
-      showLoading()
       console.log('save')
       try {
         await updateUserInfo(this.user)
         await this.LOGIN()
         await this.FETCH_USER_INFO()
-        wx.hideLoading()
-        wx.showToast({
-          title: '保存成功'
-        })
+        showToast('保存成功')
       } catch (e) {
-        wx.hideLoading()
         console.log('保存失败的真实原因', e)
         showError()
       }
     },
     _updateForm (param) {
-      console.log('user', param)
+      console.log('user', param.user)
       this.user = param.user
       this.err = param.err
     }

@@ -7,6 +7,7 @@ const state = {
   authUserInfo: undefined, // 用户信息权限
   mathCoin: 0, // 我的数学币
   signDayCount: 0, // 连续签到天数
+  allShareCount: 0, // 总邀请好友数
   todayChangedStep: 0, // 今日已兑步数
   todayStealStep: 0, // 今日已偷步数
   todayStep: 0, // 今日可兑步数

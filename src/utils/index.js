@@ -76,6 +76,13 @@ export async function openOnline (fileUrl) {
   })
 }
 
+// 拷贝
+export function copy (str) {
+  return pf('setClipboardData', {
+    data: str
+  })
+}
+
 // 加载中
 export const showLoading = () => {
   wx.showLoading({
@@ -86,6 +93,7 @@ export const showLoading = () => {
 
 // 显示toat
 export const showToast = (msg) => {
+  wx.hideLoading()
   wx.showToast({
     title: msg,
     icon: 'none'
@@ -94,6 +102,7 @@ export const showToast = (msg) => {
 
 // 显示异常
 export const showError = (msg) => {
+  wx.hideLoading()
   wx.showToast({
     title: msg || '网络异常，请重试',
     icon: 'none'

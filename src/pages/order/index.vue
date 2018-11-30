@@ -26,7 +26,7 @@
           <div class="physical-order" v-for="(porder,porderIndex) in activePage.list" :key="porderIndex">
             <div class="top" v-if="porder.status === 1">
               <span>运单号：{{ porder.waybillNo }}</span>
-              <div class="copy">复制运单号</div>
+              <div class="copy" @click="_copy(porder.waybillNo)">复制运单号</div>
             </div>
             <div class="main">
               <image class="icon" :src="porder.coverPicUrl"/>
@@ -52,7 +52,7 @@
 import {mapState, mapMutations} from 'vuex'
 import runLoading from '@/components/run-loading'
 import {mixinPullToRefresh} from '@/mixin'
-import {showError, openOnline} from '@/utils'
+import {showError, openOnline, copy, showToast} from '@/utils'
 export default {
   mixins: [mixinPullToRefresh],
   components: {
@@ -78,6 +78,10 @@ export default {
       console.log(v)
       this.pageIndex = v.mp.detail.index
     },
+    async _copy (no) {
+      await copy(no)
+      showToast('复制成功')
+    },
     async _openOnline (mathOrder) {
       console.log('mathOrder', mathOrder)
       if (mathOrder.type === 0) { // 文档
@@ -98,7 +102,13 @@ export default {
   },
   onLoad (options) {
     console.log(options)
-    // this.pageIndex = this.gift.type === 2 ? 1 : 0 // gift指的是正在走流程的礼物
+    if (options.from === 'meMath') {
+      this.pageIndex = 0
+    } else if (options.from === 'mePhysical') {
+      this.pageIndex = 1
+    } else { // 是从礼品页面进来
+      this.pageIndex = this.gift.type === 2 ? 1 : 0 // gift指的是正在走流程的礼物
+    }
   }
 }
 </script>
@@ -225,6 +235,7 @@ export default {
             margin-right 30rpx
           }
           .right{
+            flex 1
             display flex
             flex-direction column
             justify-content space-between

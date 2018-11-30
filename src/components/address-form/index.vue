@@ -2,7 +2,7 @@
   <div class="address-form">
     <div class="field-item">
       <div class="wrap">
-        <div class="label">联系人</div>
+        <div class="label">联 系  人</div>
         <input class="input"
                placeholder="请输入联系人姓名"
                type="text"
@@ -143,7 +143,7 @@
             align-self flex-start
             &.label-ios{
               padding-top 45rpx
-              width 190rpx
+              width 191rpx
             }
           }
         }
@@ -157,7 +157,7 @@
         align-items center
         .label{
           width 200rpx
-          background lightseagreen
+          /*background lightseagreen*/
           font-size 30rpx
           color #222
           font-weight 300
@@ -170,14 +170,17 @@
           font-weight 00
         }
         .picker-wrap{
-          display flex
-          align-items center
+          .picker{
+            height 100rpx
+            display flex
+            align-items center
+          }
         }
         .textarea{
           box-sizing border-box
           height 120rpx
           margin 30rpx 0
-          background orange
+          /*background orange*/
         }
       }
     }

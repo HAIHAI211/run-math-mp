@@ -41,6 +41,7 @@ const mutations = {
   },
   [types.SET_USER_INFO] (state, v) {
     state.todayChangedStep = getValue(state, v, 'todayChangedStep')
+    state.allShareCount = getValue(state, v, 'allShareCount')
     state.mathCoin = getValue(state, v, 'mathCoin')
     state.todayStealStep = getValue(state, v, 'todayStealStep')
     state.signDayCount = getValue(state, v, 'signDayCount')

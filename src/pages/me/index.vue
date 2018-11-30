@@ -10,7 +10,7 @@
       </div>
       <div class="run-info">
         <div class="run-item">
-          <div class="num">{{ friendNums }}</div>
+          <div class="num">{{ allShareCount }}</div>
           <div class="text">邀请好友数</div>
         </div>
         <div class="run-item">
@@ -25,7 +25,7 @@
     </div>
     <div class="order">
       <div class="title">我的订单</div>
-      <navigator class="order-item" url="/pages/order/main?tag=0">
+      <navigator class="order-item" url="/pages/order/main?from=meMath">
         <div class="left">
           <div class="icon icon-0"></div>
           <div class="name">数学资料</div>
@@ -33,7 +33,7 @@
         <span class="iconfont icon-fanhui"/>
         <div class="line"></div>
       </navigator>
-      <navigator class="order-item" style="margin-bottom: 17rpx" url="/pages/order/main?tag=1">
+      <navigator class="order-item" style="margin-bottom: 17rpx" url="/pages/order/main?from=mePhysical">
         <div class="left">
           <div class="icon icon-1"></div>
           <div class="name">实物礼品</div>
@@ -76,13 +76,12 @@ export default {
       avatar: '',
       runDays: 1,
       name: '',
-      friendNums: 60,
       ad: 'https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/index_banner%402x.png', // 广告地址
       picPopShow: false
     }
   },
   computed: {
-    ...mapState(['signDayCount', 'todayStealStep', 'todayStep', 'todayChangedStep', 'advs'])
+    ...mapState(['signDayCount', 'todayStealStep', 'todayStep', 'todayChangedStep', 'advs', 'allShareCount'])
   },
   methods: {
   },
