@@ -29,17 +29,15 @@
           </div>
         </div>
       </scroll-view>
-      <tab-bar :activeIndex="2" :fix="false"/>
+      <!--<tab-bar :activeIndex="2" :fix="false"/>-->
     </div>
-    <div :class="['bubble-wrap', 'bubble-wrap-' + bubbleIndex,{'up-down-animation': !bubble.hasClick},{'scale-disappear-animation': bubble.hasClick}]"
-         v-for="(bubble,bubbleIndex) in bubbleClicks"
-         :key="bubbleIndex" @click="_bubbleClick($event,bubbleIndex)">
-      <!--<button class="bubble-btn" open-type="getUserInfo" @getuserinfo="_bubbleClick($event,bubbleIndex)"></button>-->
-    </div>
-    <div :class="['plus-step', 'plus-step-' + bubbleIndex, {'move-disappear-animation': bubble.hasClick}]"
-         v-for="(bubble,bubbleIndex) in bubbleClicks"
-         :key="bubbleIndex">
-      +{{ bubble.plusStep }}
+    <div class="bubble-container" v-for="(bubble,bubbleIndex) in bubbleClicks" :key="bubbleIndex">
+      <div :class="['bubble-wrap', 'bubble-wrap-' + bubbleIndex,{'up-down-animation': !bubble.hasClick},{'scale-disappear-animation': bubble.hasClick}]"
+           @click="_bubbleClick($event,bubbleIndex)">
+      </div>
+      <div :class="['plus-step', 'plus-step-' + bubbleIndex, {'move-disappear-animation': bubble.hasClick}]">
+        +{{ bubble.stolenStepNum }}
+      </div>
     </div>
     <accredit-pop :show.sync="userinfoPopShow" @getuserinfo="_getuserinfo" @cancel="_cancel"/>
     <auth-pop :show.sync="werunPopShow"/>
@@ -127,11 +125,21 @@ export default {
       if (v) {
         api.updateUserInfo(this.userinfo) // 更新用户信息
       }
+    },
+    bubbleClicks (v) {
+      console.log('bcw', v)
+      for (let i = 0; i < v.length; i++) {
+        if (!v[i].hasClick) {
+          return
+        }
+      }
+      console.log('全部点完啦，需要新的泡泡')
+      this._load('正在为您收集新的泡泡')
     }
   },
   methods: {
-    ...mapMutations(['SET_AUTH_USER_INFO']),
-    ...mapActions(['FETCH_USER_INFO']),
+    ...mapMutations(['SET_AUTH_USER_INFO', 'SET_USER_INFO']),
+    ...mapActions(['FETCH_USER_INFO', 'AUTH_OF_USER_INFO']),
     _touchstart (e) {
       // console.log('touchstart')
       this.startY = e.mp.touches[0].pageY
@@ -175,26 +183,33 @@ export default {
       for (let i = 0; i < this.bubbles.length; i++) {
         result.push({
           hasClick: false,
-          plusStep: 0
+          stolenStepNum: this.bubbles[i].stolenStepNum
         })
       }
       this.bubbleClicks = result
     },
     async _dealBubbles (index) {
+      // 修改数组
       let result = [
         ...this.bubbleClicks
       ]
-      const stealStepResult = await api.stealStep({
-        openIdBeStolen: this.bubbles[index].openId,
-        type: 'steal'
-      })
-      result[index] = {
-        hasClick: true,
-        plusStep: stealStepResult.data.stolenStepNum
-      }
+      result[index].hasClick = true
       this.bubbleClicks = result
-      this.FETCH_USER_INFO()
-      console.log('stealStepResult', stealStepResult)
+      try {
+        // 上报服务器告知
+        const stealStepResult = await api.stealStep({
+          openIdBeStolen: this.bubbles[index].openId,
+          stolenStepNum: this.bubbles[index].stolenStepNum,
+          type: 'steal'
+        })
+        this.SET_USER_INFO({
+          todayStep: this.todayStep + this.bubbles[index].stolenStepNum
+        })
+        console.log('stealStepResult', stealStepResult)
+      } catch (e) {
+        utils.showError(e.message)
+        console.log('上报错误', e)
+      }
     },
     _getuserinfo (e) {
       console.log('userinfo', e)
@@ -215,41 +230,46 @@ export default {
         return
       }
       this._dealBubbles(index)
+    },
+    async _load (msg) {
+      this.hasUpdateUserInfo = false
+      try {
+        utils.showLoading(msg)
+        const result = await api.randomSteal() // 获取6个随机被偷的靓仔
+        this.bubbles = result.data
+        this.setBubbleClicks()
+        console.log(result)
+        const stealMeResult = await api.stealMeList()
+        this.stealMeList = stealMeResult.data
+        console.log('stealMeResult', stealMeResult)
+      } catch (e) {
+        console.log(e)
+        utils.showError()
+      } finally {
+        wx.hideLoading()
+      }
     }
   },
-  async onLoad () {
+  onLoad () {
     this._setNavigationStyle()
     // 权限
+    this.AUTH_OF_USER_INFO()
     console.log('步数权限', this.authWerun) // 必须
     console.log('用户权限', this.authUserInfo) // 可选
     if (!this.authUserInfo) {
       this.userinfoPopShow = true
     }
     // 请求
-    this.hasUpdateUserInfo = false
-    try {
-      utils.showLoading()
-      const result = await api.randomSteal() // 获取6个随机被偷的靓仔
-      this.bubbles = result.data
-      this.setBubbleClicks()
-      console.log(result)
-      const stealMeResult = await api.stealMeList()
-      this.stealMeList = stealMeResult.data
-      console.log('stealMeResult', stealMeResult)
-    } catch (e) {
-      console.log(e)
-      utils.showError()
-    } finally {
-      wx.hideLoading()
-    }
+    this._load()
   },
   onShow () {
-    wx.hideTabBar()
+    // this.needFetchUserInfo = false
+    // wx.hideTabBar()
     // this.userinfoPopShow = !this.authUserInfo
-  },
-  onHide () {
-    wx.showTabBar()
   }
+  // onHide () {
+  //   wx.showTabBar()
+  // }
 }
 </script>
 
@@ -276,44 +296,6 @@ export default {
       bg-image('step-bg', 'jpg')
       background-position 0rpx -200rpx
       background-repeat no-repeat
-    }
-    .plus-step{
-      font-size 66rpx
-      color main-color
-      opacity 0
-      font-weight bold
-      position absolute
-      transform scale(1.1,1.1)
-      /*transition transform .8s ease .2s
-      &.active{
-        transform scale(0,0)
-        opacity 1
-        z-index 2
-      }*/
-      &.plus-step-0{
-        top $bubble-0-top
-        left $bubble-0-left
-      }
-      &.plus-step-1{
-        top $bubble-1-top
-        left $bubble-1-left
-      }
-      &.plus-step-2{
-        top $bubble-2-top
-        left $bubble-2-left - 60rpx
-      }
-      &.plus-step-3{
-        top $bubble-3-top
-        left $bubble-3-left
-      }
-      &.plus-step-4{
-        top $bubble-4-top
-        left $bubble-4-left
-      }
-      &.plus-step-5{
-        top $bubble-5-top
-        left $bubble-5-left
-      }
     }
     .bg-img{
       // scale = 1931/1125
@@ -485,17 +467,17 @@ export default {
       }
     }
     .bubble-wrap{
-      .bubble-btn{
-        width 100%
-        height 100%
-        opacity 0
-      }
-      position absolute
+      position fixed
       z-index 1
       border-radius 50%
       overflow hidden
       bg-size(110rpx, 110rpx)
       bg-image('bul')
+/*      .bubble-btn{
+        width 100%
+        height 100%
+        opacity 0
+      }*/
       &.bubble-wrap-0{
         top $bubble-0-top
         left $bubble-0-left
@@ -524,6 +506,44 @@ export default {
         top $bubble-5-top
         left $bubble-5-left
         animation-delay .9s
+      }
+    }
+    .plus-step{
+      font-size 66rpx
+      color main-color
+      opacity 0
+      font-weight bold
+      position fixed
+      transform scale(1.1,1.1)
+      /*transition transform .8s ease .2s
+      &.active{
+        transform scale(0,0)
+        opacity 1
+        z-index 2
+      }*/
+      &.plus-step-0{
+        top $bubble-0-top
+        left $bubble-0-left
+      }
+      &.plus-step-1{
+        top $bubble-1-top
+        left $bubble-1-left
+      }
+      &.plus-step-2{
+        top $bubble-2-top
+        left $bubble-2-left - 60rpx
+      }
+      &.plus-step-3{
+        top $bubble-3-top
+        left $bubble-3-left
+      }
+      &.plus-step-4{
+        top $bubble-4-top
+        left $bubble-4-left
+      }
+      &.plus-step-5{
+        top $bubble-5-top
+        left $bubble-5-left
       }
     }
   }

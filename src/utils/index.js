@@ -84,9 +84,9 @@ export function copy (str) {
 }
 
 // 加载中
-export const showLoading = () => {
+export const showLoading = (msg) => {
   wx.showLoading({
-    title: '加载中',
+    title: msg || '加载中',
     mask: true
   })
 }

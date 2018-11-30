@@ -23,5 +23,6 @@ const state = {
   telNo: '', // 电话
   gift: null,
   videoOrder: null // 用户点击的某个videoOrder
+  // needFetchUserInfo: false // 偷步数本地计算
 }
 export default state
