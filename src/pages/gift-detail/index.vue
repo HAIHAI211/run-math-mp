@@ -137,7 +137,9 @@ export default {
         utils.showError('您的数学币余额不足', 1000)
         return
       }
+      console.log('this.type=', this.type)
       if (this.type === 2) { // 实物礼品
+        console.log('实物礼品')
         wx.navigateTo({
           url: '/pages/order-confirm/main'
         })
@@ -163,8 +165,8 @@ export default {
     console.log('gift-detail页面onLoad', options)
     // this.id = this.gift.id
     // this.type = this.gift.type
-    this.id = options.giftId
-    this.type = options.giftType
+    this.id = parseInt(options.giftId)
+    this.type = parseInt(options.giftType)
     console.log('id type', this.id, this.type)
     utils.showLoading()
     try {
