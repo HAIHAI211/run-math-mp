@@ -1,6 +1,6 @@
 <template>
   <div class="step-page">
-    <div class="bg">
+    <div class="bg" @touchstart.stop="">
       <div class="step-info">
         <open-data type="userAvatarUrl" class="avatar"></open-data>
         <div class="step-num">{{ todayStep }}</div>
