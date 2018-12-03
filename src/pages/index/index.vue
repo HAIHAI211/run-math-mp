@@ -143,7 +143,7 @@ export default {
         this.FETCH_USER_INFO()
       } catch (e) {
         wx.hideLoading()
-        utils.showError(e.message)
+        utils.showError(e.message, 1000)
       }
     },
     async _getRank () { // 获取排行榜

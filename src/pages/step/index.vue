@@ -21,7 +21,7 @@
         <div class="wrap">
           <div class="steal-me-item" v-for="(item, stealMeIndex) in stealMeFormatList" :key="stealMeIndex">
             <div class="date-label" v-if="item.dateLabel">{{item.dateLabel}}</div>
-              <div class="steal-me-item-inner">
+              <div class="steal-me-item-inner" @click="_itemInnerClick(item)">
               <div class="item-title">{{ item.nickName }} <span class="item-title-suffix">偷走你 </span><span class="item-step">{{ item.stealStepNum }}步</span></div>
               <div class="item-time">{{ item.time }}</div>
               <div class="item-steal" v-if="item.canBeSteal && item.isTodayBeStolen"></div>
@@ -127,8 +127,9 @@ export default {
       }
     },
     bubbleClicks (v) {
-      console.log('bcw', v)
+      // console.log('bcw', v)
       if (!v || !v.length) {
+        // wx.hideLoading()
         utils.showToast('今天泡泡用完啦', 2500)
         return
       }
@@ -170,6 +171,29 @@ export default {
         // console.log(speed > 0 ? '下拉' : '上滑', speed)
       }
       this.hasMove = false
+    },
+    async _itemInnerClick (item) {
+      console.log('item', item)
+      if (item.canBeSteal && item.isTodayBeStolen) { // 回偷
+        console.log('可以回偷他！！')
+        try {
+          utils.showLoading()
+          const stealStepResult = await api.stealStep({
+            openIdBeStolen: item.openIdSteal,
+            stolenStepNum: item.stealStepNum,
+            type: 'stealBack'
+          })
+          wx.hideLoading()
+          utils.showToast(`成功偷取${stealStepResult.data.stolenStepNum}步`, 1500)
+          this.SET_USER_INFO({
+            todayStep: this.todayStep + stealStepResult.data.stolenStepNum
+          })
+          console.log('回偷结果', stealStepResult)
+        } catch (e) {
+          wx.hideLoading()
+          console.log('错误', e)
+        }
+      }
     },
     _setNavigationStyle () {
       wx.setNavigationBarColor({
@@ -430,6 +454,9 @@ export default {
               color #333
             }
             .steal-me-item-inner{
+              &:hover{
+                background #ddd
+              }
               position relative
               box-sizing border-box
               padding 0 10rpx
