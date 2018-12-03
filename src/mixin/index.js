@@ -91,7 +91,11 @@ export const mixinPullToRefresh = {
         console.log(this.activeApi, result)
         this.activePage.list = isRefresh ? result.data : [...this.activePage.list, ...result.data]
         this.activePage.pageCount = result.pageCount
-        this.loadingState = 0
+        if (this.activePage.pageNum < this.activePage.pageCount) { // 继续加载
+          this.loadingState = 0 // 0:不可见 1:正在加载 2:全部加载完毕 3:异常
+        } else {
+          this.loadingState = 2
+        }
       } catch (e) {
         console.log(e)
         this.loadingState = 3
