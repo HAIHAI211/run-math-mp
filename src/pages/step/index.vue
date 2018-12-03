@@ -129,7 +129,7 @@ export default {
     bubbleClicks (v) {
       console.log('bcw', v)
       if (!v || !v.length) {
-        utils.showToast('今天泡泡用完啦')
+        utils.showToast('今天泡泡用完啦', 2500)
         return
       }
       for (let i = 0; i < v.length; i++) {
@@ -137,8 +137,7 @@ export default {
           return
         }
       }
-      // console.log('今天泡泡用完啦')
-      this._load('正在为您收集新的泡泡')
+      this._load('正在收集新泡泡')
     }
   },
   methods: {
@@ -246,11 +245,11 @@ export default {
         const stealMeResult = await api.stealMeList()
         this.stealMeList = stealMeResult.data
         console.log('stealMeResult', stealMeResult)
+        wx.hideLoading()
       } catch (e) {
         console.log(e)
-        utils.showError()
-      } finally {
         wx.hideLoading()
+        utils.showError()
       }
     }
   },
