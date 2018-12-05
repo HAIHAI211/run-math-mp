@@ -1,16 +1,21 @@
 <template>
-  <div class="change-success-page">
+  <div class="change-success-page" :style="{height:systemInfo.windowHeight + 'px'}">
     <image class="icon" src="/static/img/success@2x.png"/>
     <div class="success-info">{{ orderTypeStr }}兑换成功</div>
     <div class="btn btn-continue" @click="_continueChange">继续兑换</div>
     <div class="btn btn-order" @click="_toOrderPage">查看订单</div>
+    <adv type="exchange"/>
   </div>
 </template>
 <script>
 import {mapState} from 'vuex'
+import adv from '@/components/adv'
 export default {
+  components: {
+    adv
+  },
   computed: {
-    ...mapState(['gift']),
+    ...mapState(['gift', 'systemInfo']),
     orderTypeStr () {
       if (this.gift.type === 2) {
         return '礼品'
@@ -40,8 +45,10 @@ export default {
     display flex
     flex-direction column
     align-items center
-    height 580rpx
     background #fff
+    >*{
+      flex 0  0 auto
+    }
     .icon{
       width 140rpx
       height 140rpx
@@ -56,6 +63,7 @@ export default {
     .btn{
       width 685rpx
       height 97rpx
+      margin-bottom main-gap
       box-sizing border-box
       center()
       border-radius 47rpx
