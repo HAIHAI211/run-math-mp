@@ -6,29 +6,29 @@
         <div class="step-num">{{ todayStep }}</div>
       </div>
     </div>
-    <div :class="['news',{'more': more}]" @touchmove="_touchmove" @touchstart="_touchstart" @touchend="_touchend">
-      <div class="news-title"  @click="more=!more">
+    <div :class="['news',{'more': more}]"  :style="{height: systemInfo.windowHeight + 'px'}"  @touchmove="_touchmove" @touchstart="_touchstart" @touchend="_touchend">
+      <div class="news-title"  @click="more=!more" style="height:50px;">
         <span>最新动态</span>
         <div class="news-more"><div :class="['iconfont','icon-sanjiao', {'sanjiao-more': more}]"/></div>
       </div>
-      <div class="avatar-wall" v-if="avatars.length">
-        <div class="avatar" v-for="(item, avatarIndex) in avatars" :key="avatarIndex">
-          <image class="avatar-img" :src="item.avatarUrl"/>
-          <div class="steal-num">{{ item.stealStepNum }}</div>
-        </div>
+      <div class="avatar-wall" v-if="avatars.length" style="height:80px;box-sizing: border-box">
+      <div class="avatar" v-for="(item, avatarIndex) in avatars" :key="avatarIndex">
+        <image class="avatar-img" :src="item.avatarUrl"/>
+        <div class="steal-num">{{ item.stealStepNum }}</div>
       </div>
-      <scroll-view  class="content" scroll-y v-if="stealMeFormatList">
-        <div class="wrap">
-          <div class="steal-me-item" v-for="(item, stealMeIndex) in stealMeFormatList" :key="stealMeIndex">
-            <div class="date-label" v-if="item.dateLabel">{{item.dateLabel}}</div>
-              <div class="steal-me-item-inner" @click="_itemInnerClick(item)">
-              <div class="item-title">{{ item.nickName }} <span class="item-title-suffix">偷走你 </span><span class="item-step">{{ item.stealStepNum }}步</span></div>
-              <div class="item-time">{{ item.time }}</div>
-              <div class="item-steal" v-if="item.canBeSteal && item.isTodayBeStolen"></div>
-            </div>
+    </div>
+      <scroll-view  class="content" :style="{height: (systemInfo.windowHeight - 130) + 'px'}" scroll-y v-if="stealMeFormatList">
+      <div class="wrap">
+        <div class="steal-me-item" v-for="(item, stealMeIndex) in stealMeFormatList" :key="stealMeIndex">
+          <div class="date-label" v-if="item.dateLabel">{{item.dateLabel}}</div>
+          <div class="steal-me-item-inner" @click="_itemInnerClick(item)">
+            <div class="item-title">{{ item.nickName }} <span class="item-title-suffix">偷走你 </span><span class="item-step">{{ item.stealStepNum }}步</span></div>
+            <div class="item-time">{{ item.time }}</div>
+            <div class="item-steal" v-if="item.canBeSteal && item.isTodayBeStolen"></div>
           </div>
         </div>
-      </scroll-view>
+      </div>
+    </scroll-view>
       <!--<tab-bar :activeIndex="2" :fix="false"/>-->
     </div>
     <div class="bubble-container" v-for="(bubble,bubbleIndex) in bubbleClicks" :key="bubbleIndex">
@@ -79,7 +79,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['todayStep', 'authWerun', 'authUserInfo']),
+    ...mapState(['todayStep', 'authWerun', 'authUserInfo', 'systemInfo']),
     stealMeFormatList () {
       let result = []
       let dateLabels = []
@@ -151,19 +151,19 @@ export default {
     ...mapMutations(['SET_AUTH_WE_RUN', 'SET_USER_INFO', 'SET_AUTH_USER_INFO']),
     ...mapActions(['FETCH_USER_INFO', 'AUTH_OF_USER_INFO']),
     _touchstart (e) {
-      // console.log('touchstart')
+      console.log('touchstart')
       this.startY = e.mp.touches[0].pageY
       this.startTime = Date.now()
     },
     _touchmove (e) {
-      // console.log('touchmove')
+      console.log('touchmove')
       this.hasMove = true
       this.lastY = this.nowY
       this.nowY = e.mp.touches[0].pageY
       this.nowTime = Date.now()
     },
     _touchend () {
-      // console.log('touchend')
+      console.log('touchend')
       if (this.hasMove) {
         let distance = this.nowY - this.startY
         let time = (this.nowTime - this.startTime) / 1000
@@ -174,7 +174,7 @@ export default {
         if (speed > 110 && this.more) {
           this.more = false
         }
-        // console.log(speed > 0 ? '下拉' : '上滑', speed)
+        console.log(speed > 0 ? '下拉' : '上滑', speed)
       }
       this.hasMove = false
     },
@@ -299,6 +299,7 @@ export default {
     this._load()
   },
   onShow () {
+    console.log('windowHeight', this.systemInfo.windowHeight)
     // this.needFetchUserInfo = false
     // wx.hideTabBar()
     // this.userinfoPopShow = !this.authUserInfo
@@ -389,7 +390,7 @@ export default {
       .news-title{
         flex 0 0 auto
         background rgba(245,245,245,1)
-        height 100rpx
+        height 50px
         display flex
         justify-content space-between
         align-items center
@@ -423,8 +424,8 @@ export default {
         .avatar{
           position relative
           .avatar-img{
-            width 90rpx
-            height 90rpx
+            width 45px
+            height 45px
             border-radius 15rpx
           }
           .steal-num{
@@ -443,7 +444,6 @@ export default {
       }
       .content{
         flex 1
-        min-height 600rpx
         .wrap{
           /*height:100%;*/
           width 100%;
