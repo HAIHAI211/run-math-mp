@@ -463,9 +463,9 @@ export default {
               color #333
             }
             .steal-me-item-inner{
-              &:hover{
+/*              &:hover{
                 background #ddd
-              }
+              }*/
               position relative
               box-sizing border-box
               padding 0 10rpx

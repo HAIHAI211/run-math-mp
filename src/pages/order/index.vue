@@ -16,7 +16,7 @@
             </div>
             <div class="bottom">
               <div class="btn btn-see" @click="_openOnline(morder)">查看</div>
-              <div class="btn btn-download">下载</div>
+              <div class="btn btn-download" v-if="morder.fileKey" @click="_download(morder.fileKey)">下载</div>
             </div>
           </div>
         </div>
@@ -45,23 +45,36 @@
         </div>
       </van-tab>
     </van-tabs>
+    <div class="hint" v-if="hintShow" @click="hintShow=false">
+      <div class="content">
+        <div class="title">提示</div>
+        <div class="main">回复1，添加公众号后，在公众号回复{{fileKey}}获取文件</div>
+        <div class="btn-wrap">
+          <run-btn title="确定" openType="contact"/>
+        </div>
+      </div>
+    </div>
     <run-loading :state="loadingState"/>
   </div>
 </template>
 <script>
 import {mapState, mapMutations} from 'vuex'
 import runLoading from '@/components/run-loading'
+import runBtn from '@/components/run-btn'
 import {mixinPullToRefresh} from '@/mixin'
 import {showError, openOnline, copy, showToast} from '@/utils'
 export default {
   mixins: [mixinPullToRefresh],
   components: {
-    runLoading
+    runLoading,
+    runBtn
   },
   data () {
     return {
       pageSum: 2,
-      apis: ['getDocOrder', 'getRealOrder']
+      apis: ['getDocOrder', 'getRealOrder'],
+      fileKey: '',
+      hintShow: false
     }
   },
   computed: {
@@ -74,6 +87,10 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_VIDEO_ORDER']),
+    _download (fileKey) {
+      this.fileKey = fileKey
+      this.hintShow = true
+    },
     tabChange (v) {
       console.log(v)
       this.pageIndex = v.mp.detail.index
@@ -116,6 +133,43 @@ export default {
   @import "~@/common/style/mixin.styl"
   @import "~@/common/style/color.styl"
   .order-page{
+    .hint{
+      position: fixed;
+      z-index: 1000;
+      top:0;
+      left:0;
+      right:0;
+      bottom:0;
+      background:rgba(0,0,0,0.3);
+      center()
+      .content{
+        width 600rpx
+        height 300rpx
+        background #fff
+        border-radius 8rpx
+        display flex
+        flex-direction column
+        .title{
+          flex 0 0 auto
+          text-align center
+          padding-bottom 30rpx
+          font-size 38rpx
+          font-weight bold
+        }
+        .main{
+          flex 1
+          padding 0 20rpx
+          font-size 28rpx
+          color #999
+        }
+        .btn-wrap{
+          border-top 1rpx solid #eee
+          flex 0 0 auto
+          height 90rpx
+          color main-color
+        }
+      }
+    }
     .order-list{
       padding 0 33rpx
       .math-order{
