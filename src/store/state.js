@@ -1,5 +1,6 @@
 const state = {
   openId: '',
+  rule: '',
   isLogin: false,
   systemInfo: null,
   advs: [], // 全部广告位
