@@ -87,6 +87,10 @@ const actions = {
     const result = await api.getAdvs()
     commit(types.SET_ADVS, result.data)
     return result.data
+  },
+  async FETCH_RULE ({commit}) {
+    const result = await api.getRule()
+    commit(types.SET_RULE, result.data)
   }
 }
 export default actions

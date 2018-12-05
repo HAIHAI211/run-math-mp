@@ -169,3 +169,10 @@ export const getRealOrder = (params) => {
 export const share = (params) => {
   return post(paramFactory('/user/share', params))
 }
+
+// 获取规则文本
+export const getRule = (params) => {
+  return get({
+    url: '/common/activeRule'
+  })
+}

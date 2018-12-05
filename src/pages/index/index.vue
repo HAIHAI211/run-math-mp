@@ -105,8 +105,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['FETCH_ADVS', 'SET_SYSTEM_INFO']),
+    ...mapActions(['FETCH_ADVS', 'SET_SYSTEM_INFO', 'FETCH_RULE']),
     _load () {
+      this.FETCH_RULE()
       this.netError = true
       utils.showLoading()
       this.SET_SYSTEM_INFO()

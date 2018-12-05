@@ -1,24 +1,22 @@
 <template>
   <div class="rule-page">
-    <wxParse :content="content"/>
+    <wxParse :content="rule"/>
   </div>
 </template>
 <script>
 import wxParse from 'mpvue-wxparse'
+import {mapState} from 'vuex'
 export default {
   components: {
     wxParse
   },
   data () {
     return {
-      content: `<ul>
-  <li>发票打飞机萨芬</li>
-  <li>发票打飞机萨芬</li>
-  <li>发票打飞机萨芬</li>
-  <li>发票打飞机萨芬</li>
-  <li>发票打飞机萨芬</li>
-</ul>`
+      content: ``
     }
+  },
+  computed: {
+    ...mapState(['rule'])
   }
 }
 </script>
