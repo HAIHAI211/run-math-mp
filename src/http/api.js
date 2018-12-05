@@ -164,3 +164,8 @@ export const getDocOrder = (params) => {
 export const getRealOrder = (params) => {
   return get(paramFactory('/common/getRealOrder', params))
 }
+
+// 上报分享
+export const share = (params) => {
+  return post(paramFactory('/user/share'), params)
+}

@@ -56,7 +56,7 @@
   </div>
 </template>
 <script>
-import { getGiftDetail, placeOrder } from '@/http/api'
+import { getGiftDetail, placeOrder, share } from '@/http/api'
 import runBtn from '@/components/run-btn'
 import * as utils from '@/utils'
 import {mapActions, mapState} from 'vuex'
@@ -82,7 +82,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['gift', 'mathCoin'])
+    ...mapState(['gift', 'mathCoin', 'openId'])
   },
   methods: {
     ...mapActions(['FETCH_USER_INFO']),
@@ -163,6 +163,12 @@ export default {
   },
   async onLoad (options) {
     console.log('gift-detail页面onLoad', options)
+    // 上报分享
+    if (options.openId) {
+      share({
+        id: options.openId
+      })
+    }
     // this.id = this.gift.id
     // this.type = this.gift.type
     this.id = parseInt(options.giftId)
@@ -189,7 +195,7 @@ export default {
     }
     return {
       title: '极客数学帮',
-      path: `pages/gift-detail/main?giftId=${this.id}&giftType=${this.type}`
+      path: `pages/gift-detail/main?giftId=${this.id}&giftType=${this.type}&openId=${this.openId}`
     }
   }
 }

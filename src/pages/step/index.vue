@@ -33,7 +33,7 @@
     </div>
     <div class="bubble-container" v-for="(bubble,bubbleIndex) in bubbleClicks" :key="bubbleIndex">
       <div :class="['bubble-wrap', 'bubble-wrap-' + bubbleIndex,{'up-down-animation': !bubble.hasClick},{'scale-disappear-animation': bubble.hasClick}]">
-        <button open-type="getUserInfo" @getuserinfo="_getuserinfo($event,bubbleIndex)" style="width:100%;height:100%;background:orange;opacity:1;"></button>
+        <button open-type="getUserInfo" @getuserinfo="_getuserinfo($event,bubbleIndex)" style="width:100%;height:100%;opacity:0;"></button>
       </div>
       <div :class="['plus-step', 'plus-step-' + bubbleIndex, {'move-disappear-animation': bubble.hasClick}]">
         +{{ bubble.stolenStepNum }}
@@ -51,6 +51,7 @@ import tabBar from '@/components/tab-bar'
 import authPop from '@/components/auth-pop'
 import * as utils from '@/utils'
 import * as api from '@/http/api'
+import { pf } from '../../utils'
 export default {
   mixins: [mixinLoginWerun],
   components: {
@@ -115,12 +116,12 @@ export default {
     }
   },
   watch: {
-    authWerun (newV, oldV) { // 因为运动授权必须是在用户授权同意的基础上实现，故此处必定两个权限都OK了
-      if (oldV === false && newV) { // 授权必须是被拒绝，然后现在同意了才能进入这儿
-        console.log('微信运动授权之前被拒绝了，现在又同意了')
-        this._getSteps()
-      }
-    },
+    // authWerun (newV, oldV) { // 因为运动授权必须是在用户授权同意的基础上实现，故此处必定两个权限都OK了
+    //   if (oldV === false && newV) { // 授权必须是被拒绝，然后现在同意了才能进入这儿
+    //     console.log('微信运动授权之前被拒绝了，现在又同意了111')
+    //     this._getSteps()
+    //   }
+    // },
     authUserInfo (v) {
       if (v) {
         api.updateUserInfo(this.userinfo) // 更新用户信息
@@ -130,7 +131,11 @@ export default {
       // console.log('bcw', v)
       if (!v || !v.length) {
         // wx.hideLoading()
-        utils.showToast('今天泡泡用完啦', 2500)
+        // utils.showToast('今天泡泡用完啦', 2500)
+        pf('showModal', {
+          title: '提示',
+          content: '今天泡泡用完啦，明天再来吧'
+        })
         return
       }
       for (let i = 0; i < v.length; i++) {
@@ -142,7 +147,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['SET_AUTH_WE_RUN', 'SET_USER_INFO']),
+    ...mapMutations(['SET_AUTH_WE_RUN', 'SET_USER_INFO', 'SET_AUTH_USER_INFO']),
     ...mapActions(['FETCH_USER_INFO', 'AUTH_OF_USER_INFO']),
     _touchstart (e) {
       // console.log('touchstart')
@@ -192,6 +197,7 @@ export default {
           console.log('回偷结果', stealStepResult)
         } catch (e) {
           wx.hideLoading()
+          utils.showError(e.message, 1000)
           console.log('错误', e)
         }
       }
@@ -242,19 +248,17 @@ export default {
     _getuserinfo (e, index) {
       console.log('userinfo', e.mp.detail.userInfo)
       this.userinfo = e.mp.detail.userInfo
-      this.SET_AUTH_WE_RUN(!!this.userinfo)
+      this.SET_AUTH_USER_INFO(!!this.userinfo)
       if (!this.authUserInfo) {
         return
       }
       if (!this.authWerun) {
         this.werunPopShow = true
+        return
       }
       this._dealBubbles(index)
     },
     _cancel () {
-    },
-    async _bubbleClick (e, index) {
-
     },
     async _fetchRandomSteal () {
       const result = await api.randomSteal() // 获取6个随机被偷的靓仔
@@ -287,9 +291,9 @@ export default {
     this.AUTH_OF_USER_INFO()
     console.log('步数权限', this.authWerun) // 必须
     console.log('用户权限', this.authUserInfo) // 可选
-    if (!this.authUserInfo) {
-      this.userinfoPopShow = true
-    }
+    // if (!this.authUserInfo) {
+    //   this.userinfoPopShow = true
+    // }
     // 请求
     this._load()
   },

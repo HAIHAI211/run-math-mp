@@ -94,12 +94,12 @@ export default {
     }
   },
   computed: {
-    ...mapState(['signDayCount', 'mathCoin', 'advs'])
+    ...mapState(['signDayCount', 'mathCoin', 'advs', 'openId'])
   },
   watch: {
     authWerun (newV, oldV) {
       if (oldV === false && newV) { // 授权必须是被拒绝，然后现在同意了才能进入这儿
-        console.log('微信运动授权之前被拒绝了，现在又同意了')
+        console.log('前拒后同意')
         this._getSteps() // 因为用户可能在页面长时间停留后再同意授权，此时session可能失效，故调用_loginStuff()而非只调用_getStep()
       }
     }
@@ -172,12 +172,18 @@ export default {
       }
     }
   },
-  async onLoad () {
-    console.log('onLoad页面')
+  async onLoad (option) {
+    console.log('onLoad页面', option)
     // wx.showShareMenu({
     //   // 是否使用带 shareTicket 的转发
     //   withShareTicket: true
     // })
+    // 上报分享
+    if (option.openId) {
+      api.share({
+        id: option.openId
+      })
+    }
     this._load()
   },
   async onPullDownRefresh () { // 下拉刷新
@@ -191,7 +197,7 @@ export default {
     }
     return {
       title: '极客数学帮',
-      path: 'pages/index/main'
+      path: `pages/index/main?openId=${this.openId}`
     }
   }
 }
