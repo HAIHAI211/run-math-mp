@@ -1,17 +1,33 @@
 <template>
   <div class="video-page">
-    <txv-video :vid="videoOrder.videoVid" playerid="txv1" width="100%" height="auto" autoplay v-if="videoOrder.videoVid"></txv-video>
+    <txv-video :vid="videoOrder.videoVid" playerid="txv1" width="100%" height="auto" autoplay v-if="videoOrder"></txv-video>
     <div class="video-name">{{ videoOrder.name }}</div>
   </div>
 </template>
 <script>
 import {mapState} from 'vuex'
+// import { sleep } from '@/utils'
+// const txvContext = requirePlugin('tencentvideo')
 export default {
+  data () {
+    return {
+      txvContext: ''
+    }
+  },
   computed: {
     ...mapState(['videoOrder'])
   },
-  onShow () {
-    console.log('videoOrder', this.videoOrder.videoVid)
+  watch: {
+    async videoOrder (v) {
+      // if (v) {
+      //   this.txvContext = txvContext.getTxvContext('txv1')
+      // }
+    }
+  },
+  methods: {
+    requestFullScreen () {
+      // this.txvContext.requestFullscreen()
+    }
   }
 }
 </script>

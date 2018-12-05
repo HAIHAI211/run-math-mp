@@ -90,6 +90,7 @@ const actions = {
   },
   async FETCH_RULE ({commit}) {
     const result = await api.getRule()
+    // console.log('rule', result.data)
     commit(types.SET_RULE, result.data)
   }
 }
