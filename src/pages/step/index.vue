@@ -32,14 +32,14 @@
       <!--<tab-bar :activeIndex="2" :fix="false"/>-->
     </div>
     <div class="bubble-container" v-for="(bubble,bubbleIndex) in bubbleClicks" :key="bubbleIndex">
-      <div :class="['bubble-wrap', 'bubble-wrap-' + bubbleIndex,{'up-down-animation': !bubble.hasClick},{'scale-disappear-animation': bubble.hasClick}]"
-           @click="_bubbleClick($event,bubbleIndex)">
+      <div :class="['bubble-wrap', 'bubble-wrap-' + bubbleIndex,{'up-down-animation': !bubble.hasClick},{'scale-disappear-animation': bubble.hasClick}]">
+        <button open-type="getUserInfo" @getuserinfo="_getuserinfo($event,bubbleIndex)" style="width:100%;height:100%;background:orange;opacity:1;"></button>
       </div>
       <div :class="['plus-step', 'plus-step-' + bubbleIndex, {'move-disappear-animation': bubble.hasClick}]">
         +{{ bubble.stolenStepNum }}
       </div>
     </div>
-    <accredit-pop :show.sync="userinfoPopShow" @getuserinfo="_getuserinfo" @cancel="_cancel"/>
+    <!--<accredit-pop :show.sync="userinfoPopShow" @getuserinfo="_getuserinfo" @cancel="_cancel"/>-->
     <auth-pop :show.sync="werunPopShow"/>
   </div>
 </template>
@@ -47,7 +47,7 @@
 import { mapState, mapMutations, mapActions } from 'vuex'
 import {mixinLoginWerun} from '@/mixin'
 import tabBar from '@/components/tab-bar'
-import accreditPop from '@/components/accredit-pop'
+// import accreditPop from '@/components/accredit-pop'
 import authPop from '@/components/auth-pop'
 import * as utils from '@/utils'
 import * as api from '@/http/api'
@@ -55,7 +55,7 @@ export default {
   mixins: [mixinLoginWerun],
   components: {
     tabBar,
-    accreditPop,
+    // accreditPop,
     authPop
   },
   data () {
@@ -142,7 +142,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['SET_AUTH_USER_INFO', 'SET_USER_INFO']),
+    ...mapMutations(['SET_AUTH_WE_RUN', 'SET_USER_INFO']),
     ...mapActions(['FETCH_USER_INFO', 'AUTH_OF_USER_INFO']),
     _touchstart (e) {
       // console.log('touchstart')
@@ -183,6 +183,7 @@ export default {
             stolenStepNum: item.stealStepNum,
             type: 'stealBack'
           })
+          this._fetchStealMeList()
           wx.hideLoading()
           utils.showToast(`成功偷取${stealStepResult.data.stolenStepNum}步`, 1500)
           this.SET_USER_INFO({
@@ -238,37 +239,40 @@ export default {
         console.log('上报错误', e)
       }
     },
-    _getuserinfo (e) {
-      console.log('userinfo', e)
-      this.userinfo = e
+    _getuserinfo (e, index) {
+      console.log('userinfo', e.mp.detail.userInfo)
+      this.userinfo = e.mp.detail.userInfo
+      this.SET_AUTH_WE_RUN(!!this.userinfo)
+      if (!this.authUserInfo) {
+        return
+      }
       if (!this.authWerun) {
         this.werunPopShow = true
       }
+      this._dealBubbles(index)
     },
     _cancel () {
     },
     async _bubbleClick (e, index) {
-      if (!this.authUserInfo) {
-        this.userinfoPopShow = true
-        return
-      }
-      if (!this.authWerun) {
-        this.werunPopShow = true
-        return
-      }
-      this._dealBubbles(index)
+
+    },
+    async _fetchRandomSteal () {
+      const result = await api.randomSteal() // 获取6个随机被偷的靓仔
+      this.bubbles = result.data
+      this.setBubbleClicks()
+      // console.log(result)
+    },
+    async _fetchStealMeList () {
+      const stealMeResult = await api.stealMeList()
+      this.stealMeList = stealMeResult.data
+      console.log('stealMeResult', stealMeResult)
     },
     async _load (msg) {
       this.hasUpdateUserInfo = false
       try {
         utils.showLoading(msg)
-        const result = await api.randomSteal() // 获取6个随机被偷的靓仔
-        this.bubbles = result.data
-        this.setBubbleClicks()
-        console.log(result)
-        const stealMeResult = await api.stealMeList()
-        this.stealMeList = stealMeResult.data
-        console.log('stealMeResult', stealMeResult)
+        await this._fetchRandomSteal()
+        await this._fetchStealMeList()
         wx.hideLoading()
       } catch (e) {
         console.log(e)
