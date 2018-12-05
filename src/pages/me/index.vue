@@ -56,20 +56,23 @@
         <span class="iconfont icon-fanhui"/>
       </div>
     </div>
-    <div class="ad-wrap">
-      <div class="ad" :style="{backgroundImage: 'url(' + advs[0].picUrl +')'}" v-if="advs.length">
-      </div>
-    </div>
+    <!--<div class="ad-wrap">-->
+      <!--<div class="ad" :style="{backgroundImage: 'url(' + advs[advs.length - 1].picUrl +')'}" v-if="advs.length">-->
+      <!--</div>-->
+    <!--</div>-->
+    <adv type="me"/>
     <pic-pop :type="1" :show.sync="picPopShow"/>
   </div>
 </template>
 
 <script>
 import picPop from '@/components/pic-pop'
+import adv from '@/components/adv'
 import {mapState, mapActions} from 'vuex'
 export default {
   components: {
-    picPop
+    picPop,
+    adv
   },
   data () {
     return {
@@ -156,6 +159,7 @@ export default {
       }
     }
     .order{
+      margin-bottom main-gap
       .title{
         color #666666
         font-size 26rpx

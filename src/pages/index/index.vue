@@ -53,10 +53,11 @@
     <div class="exchange" v-if="!netError && giftList.length">
       <div class="title">礼品兑换</div>
       <run-gift v-for="gift in giftList" :key="gift.id" :gift="gift"/>
-      <div class="ad-wrap">
-        <!--<div class="ad" :style="{backgroundImage: 'url(' + advs[0].picUrl +')'}" v-if="advs[0]"></div>-->
-        <image class="ad-img" :src="advs[0].picUrl" v-if="advs[0]"/>
-      </div>
+      <!--<div class="ad-wrap">-->
+        <!--&lt;!&ndash;<div class="ad" :style="{backgroundImage: 'url(' + advs[0].picUrl +')'}" v-if="advs[0]"></div>&ndash;&gt;-->
+        <!--<image class="ad-img" :src="advs[0].picUrl" v-if="advs[0]"/>-->
+      <!--</div>-->
+      <adv type="index"/>
     </div>
     <auth-pop :show.sync="authPopShow"/>
     <pic-pop :show.sync="signPopShow" :type="2" url="/static/img/sign.png" :coin="signCoin"/>
@@ -66,8 +67,9 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import {mixinLoginWerun} from '@/mixin'
+import adv from '@/components/adv'
 import runBtn from '@/components/run-btn'
-import tabBar from '@/components/tab-bar'
+// import tabBar from '@/components/tab-bar'
 import runGift from '@/components/run-gift'
 import authPop from '@/components/auth-pop'
 import picPop from '@/components/pic-pop'
@@ -80,7 +82,8 @@ export default {
     authPop,
     runGift,
     picPop,
-    tabBar
+    // tabBar,
+    adv
     // accreditPop
   },
   data () {
@@ -452,7 +455,7 @@ export default {
         font-size 26rpx
         margin-bottom 16rpx
       }
-      .ad-wrap{
+/*      .ad-wrap{
         padding-bottom 46rpx
         .ad{
           bg-size(684rpx, 257rpx)
@@ -461,7 +464,7 @@ export default {
           width 684rpx
           height 260rpx
         }
-      }
+      }*/
     }
   }
 </style>

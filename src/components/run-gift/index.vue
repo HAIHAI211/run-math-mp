@@ -74,7 +74,7 @@ export default {
       box-sizing border-box
       padding 24rpx 18rpx 18rpx 23rpx
       display flex
-      margin-bottom 36rpx
+      margin-bottom main-gap
       .left{
         flex 0 0 auto
         bg-size(108rpx,125rpx)

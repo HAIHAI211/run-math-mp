@@ -392,7 +392,7 @@ export default {
       &.physical{
       }
       .gift-list{
-        padding 20rpx 32.5rpx 10rpx 32.5rpx
+        padding 20rpx main-padding 10rpx main-padding
       }
     }
     /*
