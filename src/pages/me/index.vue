@@ -66,7 +66,7 @@
 
 <script>
 import picPop from '@/components/pic-pop'
-import {mapState} from 'vuex'
+import {mapState, mapActions} from 'vuex'
 export default {
   components: {
     picPop
@@ -84,9 +84,16 @@ export default {
     ...mapState(['signDayCount', 'todayStealStep', 'todayStep', 'todayChangedStep', 'advs', 'allShareCount'])
   },
   methods: {
+    ...mapActions(['FETCH_USER_INFO'])
   },
-  mounted () {
-    // console.log(this.advs)
+  async onPullDownRefresh () { // 下拉刷新
+    wx.showNavigationBarLoading()
+    try {
+      await this.FETCH_USER_INFO()
+    } finally {
+      wx.hideNavigationBarLoading()
+      wx.stopPullDownRefresh()
+    }
   }
 }
 </script>
