@@ -48,7 +48,9 @@
           </div>
         </div>
       </van-tab>
-      <van-tab title="商品介绍">{{ info }}</van-tab>
+      <van-tab title="商品介绍">
+        <wxParse :content="info"/>
+      </van-tab>
     </van-tabs>
     <div class="confirm-btn-wrap">
       <div class="confirm-btn" @click="_change">立即兑换</div>
@@ -57,12 +59,14 @@
 </template>
 <script>
 import { getGiftDetail, placeOrder, share } from '@/http/api'
+import wxParse from 'mpvue-wxparse'
 import runBtn from '@/components/run-btn'
 import * as utils from '@/utils'
 import {mapActions, mapState} from 'vuex'
 export default {
   components: {
-    runBtn
+    runBtn,
+    wxParse
   },
   data () {
     return {
@@ -203,6 +207,7 @@ export default {
 <style lang="stylus" scoped>
   @import "~@/common/style/mixin.styl"
   @import "~@/common/style/color.styl"
+  @import url("~mpvue-wxparse/src/wxParse.css");
   .gift-detail-page{
     .swiper-wrap{
       position relative
