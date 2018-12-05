@@ -134,6 +134,7 @@ export default {
         // utils.showToast('今天泡泡用完啦', 2500)
         pf('showModal', {
           title: '提示',
+          showCancel: false,
           content: '今天泡泡用完啦，明天再来吧'
         })
         return

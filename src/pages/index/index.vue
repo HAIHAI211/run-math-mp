@@ -180,9 +180,12 @@ export default {
     // })
     // 上报分享
     if (option.openId) {
+      console.log('分享', option.openId)
       api.share({
         id: option.openId
       })
+    } else {
+      console.log('没有分享', option.openId)
     }
     this._load()
   },

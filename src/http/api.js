@@ -167,5 +167,5 @@ export const getRealOrder = (params) => {
 
 // 上报分享
 export const share = (params) => {
-  return post(paramFactory('/user/share'), params)
+  return post(paramFactory('/user/share', params))
 }
