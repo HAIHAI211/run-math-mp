@@ -218,7 +218,7 @@ export default {
   .index-page{
     .top-bg{
       position relative
-      height 454rpx
+      height 480rpx
       bg-image('index_bg_all')
       background-color #fff
       background-size 323rpx 290rpx

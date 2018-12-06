@@ -68,7 +68,7 @@ export default {
   @import "~@/common/style/color.styl"
   .run-gift{
     .math-gift{
-      height 180rpx
+      height 255rpx
       background #fff
       border-radius 6rpx
       box-sizing border-box
@@ -77,7 +77,7 @@ export default {
       margin-bottom main-gap
       .left{
         flex 0 0 auto
-        bg-size(108rpx,125rpx)
+        bg-size(172rpx,197rpx)
         margin-right 39rpx
         &.type-doc{
           bg-image('wps')
@@ -116,7 +116,7 @@ export default {
     .physical-gift{
       margin-bottom 36rpx
       width 685rpx
-      height 258rpx
+      height 255rpx
       border-radius 6rpx
       background #fff
       box-sizing border-box
