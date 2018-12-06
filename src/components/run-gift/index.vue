@@ -1,7 +1,7 @@
 <template>
   <div class="run-gift" @click="_giftClick">
     <div class="math-gift" v-if="gift.type === 0 || gift.type === 1">
-      <div :class="['left', 'type-' + gift.presentType, {'type-player': gift.type === 1}]"></div>
+      <div :class="['left', 'type-' + gift.presentType, {'type-player': gift.type === 1}]" :style="[{backgroundImage: 'url('+ gift.coverPicUrl + ')'}]"></div>
       <div class="right">
         <div class="name">{{ gift.name }}</div>
         <div class="price">

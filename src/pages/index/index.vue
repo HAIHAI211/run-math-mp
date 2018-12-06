@@ -53,10 +53,6 @@
     <div class="exchange" v-if="!netError && giftList.length">
       <div class="title">礼品兑换</div>
       <run-gift v-for="gift in giftList" :key="gift.id" :gift="gift"/>
-      <!--<div class="ad-wrap">-->
-        <!--&lt;!&ndash;<div class="ad" :style="{backgroundImage: 'url(' + advs[0].picUrl +')'}" v-if="advs[0]"></div>&ndash;&gt;-->
-        <!--<image class="ad-img" :src="advs[0].picUrl" v-if="advs[0]"/>-->
-      <!--</div>-->
       <adv type="index"/>
     </div>
     <auth-pop :show.sync="authPopShow"/>
@@ -188,8 +184,6 @@ export default {
       api.share({
         id: option.openId
       })
-    } else {
-      console.log('没有分享', option.openId)
     }
     this._load()
   },
@@ -254,8 +248,8 @@ export default {
         }
       }
       .coin-charge-btn{
-        bg-image('index_buttn_big')
-        bg-size(250rpx,75rpx)
+        bg-image('exchange-button')
+        bg-size(251rpx,69rpx)
         center()
         margin-top 24rpx
         color #fff
@@ -455,16 +449,6 @@ export default {
         font-size 26rpx
         margin-bottom 16rpx
       }
-/*      .ad-wrap{
-        padding-bottom 46rpx
-        .ad{
-          bg-size(684rpx, 257rpx)
-        }
-        .ad-img{
-          width 684rpx
-          height 260rpx
-        }
-      }*/
     }
   }
 </style>
