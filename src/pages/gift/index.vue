@@ -19,7 +19,10 @@
     </div>
     <div class="content physical" v-if="pageIndex === 1">
       <div class="gift-list">
-        <run-gift v-for="(gift, giftIndex) in activePage.list" :key="giftIndex" :gift="gift"/>
+        <div class="wrap" v-for="(gift, giftIndex) in activePage.list" :key="giftIndex" >
+          <run-gift :gift="gift"/>
+          <adv :type="'gift'+((giftIndex+1)/4-1)" v-if="(giftIndex+1)%4 === 0 && (giftIndex+1)/4 <= 4"/>
+        </div>
       </div>
     </div>
     <run-loading :state="loadingState"/>
