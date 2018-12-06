@@ -2,25 +2,16 @@
   <div class="pic-pop"  v-if="selfShow" @click.stop="" @touchmove.stop="" >
     <div class="overlay"></div>
     <div class="content" v-if="selfShow">
-      <!--<div class="pic-wrap">-->
-        <!--&lt;!&ndash;<image :src="selfUrl" class="pic" mode="widthFixed"/>&ndash;&gt;-->
-        <!--<image src="/static/img/delete@2x.png" class="close-btn" @click="selfShow=false"/>-->
-        <!--&lt;!&ndash;<div class="detail" v-if="type !==2">&ndash;&gt;-->
-          <!--&lt;!&ndash;<div class="title">关注<span class="bold">回复“{{ boldTitle }}”</span>，{{ suffixTitle }}</div>&ndash;&gt;-->
-          <!--&lt;!&ndash;&lt;!&ndash;<div :class="['btn','btn-'+type]">{{ detailBtnText }}</div>&ndash;&gt;&ndash;&gt;-->
-          <!--&lt;!&ndash;<button open-type="contact":class="['btn','btn-'+type]">{{ detailBtnText }}</button>&ndash;&gt;-->
-        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-      <!--</div>-->
       <div class="box box-0" v-if="type===0">
         <div class="box-title">在客服会话回复<span class="num">“{{ type }}”</span>，扫码关注公众号</div>
-        <div class="btn-wrap">
+        <div class="btn-wrap" @click="selfShow=false">
           <span>点击回复{{ type }}关注</span>
           <button open-type="contact" class="btn"></button>
         </div>
       </div>
       <div class="box box-1" v-else-if="type===1">
         <div class="box-title">在客服会话回复<span class="num">“{{ type }}”</span>，扫码进群</div>
-        <div class="btn-wrap">
+        <div class="btn-wrap"  @click="selfShow=false">
           <span>点击回复{{ type }}进群</span>
           <button open-type="contact" class="btn"></button>
         </div>

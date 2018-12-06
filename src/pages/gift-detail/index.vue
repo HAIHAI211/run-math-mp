@@ -211,13 +211,15 @@ export default {
   .gift-detail-page{
     .swiper-wrap{
       position relative
+      $swiper-width=750rpx
+      $swiper-height=600rpx
       .swiper{
-        width 750rpx
-        height 500rpx
+        width $swiper-width
+        height $swiper-height
       }
       .slide-image{
-        width 750rpx
-        height 500rpx
+        width $swiper-width
+        height $swiper-height
       }
       .my-indicator{
         position absolute
