@@ -11,7 +11,10 @@
         </div>
       </div>
       <div class="gift-list" v-if="activeBarIndex!==1">
-        <run-gift v-for="(gift, giftIndex) in activePage.list" :key="giftIndex" :gift="gift"/>
+        <div class="wrap" v-for="(gift, giftIndex) in activePage.list" :key="giftIndex">
+          <run-gift :gift="gift"/>
+          <adv :type="'gift'+((giftIndex+1)/4-1)" v-if="(giftIndex+1)%4 === 0 && (giftIndex+1)/4 <= 4"/>
+        </div>
       </div>
     </div>
     <div class="content physical" v-if="pageIndex === 1">
@@ -73,6 +76,7 @@ import runGift from '@/components/run-gift'
 import focusIcon from '@/components/focus-icon'
 import {mixinPullToRefresh} from '@/mixin'
 import runLoading from '@/components/run-loading'
+import adv from '@/components/adv'
 
 export default {
   mixins: [mixinPullToRefresh],
@@ -80,7 +84,8 @@ export default {
     tab,
     runGift,
     runLoading,
-    focusIcon
+    focusIcon,
+    adv
   },
   data () {
     return {
