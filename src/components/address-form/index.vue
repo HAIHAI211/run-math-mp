@@ -8,7 +8,7 @@
                type="text"
                maxlength="10"
                :focus="focus"
-               v-model.lazy="addressInfo.contactsName"/>
+               v-model.lazy="user.contactsName"/>
       </div>
     </div>
     <div class="field-item">
@@ -19,7 +19,7 @@
                placeholder="请输入联系人手机号"
                maxlength="11"
                type="number"
-               v-model.lazy="addressInfo.telNo"/>
+               v-model.lazy="user.telNo"/>
       </div>
     </div>
     <div class="field-item">
@@ -37,7 +37,7 @@
         <div :class="['label', {'label-ios': ios}]">详细地址</div>
         <textarea class="input textarea"
                   placeholder="如小区几栋几单元门牌号"
-                  v-model.lazy="addressInfo.address" :focus="focus"/>
+                  v-model.lazy="user.address" :focus="focus"/>
       </div>
     </div>
   </div>
@@ -64,22 +64,22 @@
       }
     },
     computed: {
-      ...mapState(['contactsName', 'telNo', 'addressArea', 'address', 'systemInfo', 'addressInfo']),
+      ...mapState(['contactsName', 'telNo', 'addressArea', 'address', 'systemInfo']),
       // ...mapGetters(['addressInfo']),
       ios () {
         return this.systemInfo.platform === 'ios'
       },
       region: {
         get () {
-          return this.addressInfo.addressArea.split('-')
+          return this.user.addressArea.split('-')
         },
         set (arr) {
-          this.addressInfo.addressArea = arr.join('-')
+          this.user.addressArea = arr.join('-')
         }
       }
     },
     watch: {
-      addressInfo: {
+      user: {
         handler (val) {
           const errMsg = this._checkError(val)
           const param = {
@@ -111,16 +111,16 @@
         console.log('picker发送选择改变，携带值为', e.mp.detail.value)
         this.region = e.mp.detail.value
       }
+    },
+    mounted () {
+      console.log('mounted')
+      this.user = {
+        contactsName: this.contactsName,
+        telNo: this.telNo,
+        addressArea: this.addressArea ? this.addressArea : '四川省-成都市-锦江区',
+        address: this.address
+      }
     }
-    // mounted () {
-    //   console.log('mounted')
-    //   this.user = {
-    //     contactsName: this.contactsName,
-    //     telNo: this.telNo,
-    //     addressArea: this.addressArea ? this.addressArea : '四川省-成都市-锦江区',
-    //     address: this.address
-    //   }
-    // }
   }
 </script>
 <style lang="stylus" scoped>
