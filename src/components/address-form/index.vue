@@ -8,7 +8,7 @@
                type="text"
                maxlength="10"
                :focus="focus"
-               v-model.lazy="user.contactsName"/>
+               v-model.lazy="addressInfo.contactsName"/>
       </div>
     </div>
     <div class="field-item">
@@ -19,7 +19,7 @@
                placeholder="请输入联系人手机号"
                maxlength="11"
                type="number"
-               v-model.lazy="user.telNo"/>
+               v-model.lazy="addressInfo.telNo"/>
       </div>
     </div>
     <div class="field-item">
@@ -35,10 +35,9 @@
     <div class="field-item field-item-address">
       <div class="wrap">
         <div :class="['label', {'label-ios': ios}]">详细地址</div>
-        <!--<input class="input" />-->
         <textarea class="input textarea"
                   placeholder="如小区几栋几单元门牌号"
-                  v-model.lazy="user.address" :focus="focus"/>
+                  v-model.lazy="addressInfo.address" :focus="focus"/>
       </div>
     </div>
   </div>
@@ -65,24 +64,22 @@
       }
     },
     computed: {
-      ...mapState(['contactsName', 'telNo', 'addressArea', 'address', 'systemInfo']),
+      ...mapState(['contactsName', 'telNo', 'addressArea', 'address', 'systemInfo', 'addressInfo']),
+      // ...mapGetters(['addressInfo']),
       ios () {
         return this.systemInfo.platform === 'ios'
       },
       region: {
         get () {
-          // if (!this.user.addressArea) {
-          //   return ['四川省', '成都市', '锦江区']
-          // }
-          return this.user.addressArea.split('-')
+          return this.addressInfo.addressArea.split('-')
         },
         set (arr) {
-          this.user.addressArea = arr.join('-')
+          this.addressInfo.addressArea = arr.join('-')
         }
       }
     },
     watch: {
-      user: {
+      addressInfo: {
         handler (val) {
           const errMsg = this._checkError(val)
           const param = {
@@ -114,15 +111,16 @@
         console.log('picker发送选择改变，携带值为', e.mp.detail.value)
         this.region = e.mp.detail.value
       }
-    },
-    mounted () {
-      this.user = {
-        contactsName: this.contactsName,
-        telNo: this.telNo,
-        addressArea: this.addressArea ? this.addressArea : '四川省-成都市-锦江区',
-        address: this.address
-      }
     }
+    // mounted () {
+    //   console.log('mounted')
+    //   this.user = {
+    //     contactsName: this.contactsName,
+    //     telNo: this.telNo,
+    //     addressArea: this.addressArea ? this.addressArea : '四川省-成都市-锦江区',
+    //     address: this.address
+    //   }
+    // }
   }
 </script>
 <style lang="stylus" scoped>
@@ -157,7 +155,6 @@
         align-items center
         .label{
           width 200rpx
-          /*background lightseagreen*/
           font-size 30rpx
           color #222
           font-weight 300
@@ -180,7 +177,6 @@
           box-sizing border-box
           height 120rpx
           margin 30rpx 0
-          /*background orange*/
         }
       }
     }

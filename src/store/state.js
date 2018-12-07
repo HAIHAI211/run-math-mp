@@ -23,7 +23,8 @@ const state = {
   contactsName: '', // 联系人姓名
   telNo: '', // 电话
   gift: null,
-  videoOrder: null // 用户点击的某个videoOrder
+  videoOrder: null, // 用户点击的某个videoOrder
+  addressInfo: null // 可以修改的用户地址信息（依赖address等字段）
   // needFetchUserInfo: false // 偷步数本地计算
 }
 export default state

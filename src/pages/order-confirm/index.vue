@@ -51,7 +51,7 @@
           await placeOrder(params)
           this.FETCH_USER_INFO()
           wx.hideLoading()
-          wx.navigateTo({
+          wx.redirectTo({
             url: '/pages/change-success/main'
           })
         } catch (e) {

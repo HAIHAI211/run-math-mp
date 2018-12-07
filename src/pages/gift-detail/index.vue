@@ -144,7 +144,7 @@ export default {
       console.log('this.type=', this.type)
       if (this.type === 2) { // 实物礼品
         console.log('实物礼品')
-        wx.navigateTo({
+        wx.redirectTo({
           url: '/pages/order-confirm/main'
         })
       } else { // 虚拟礼品

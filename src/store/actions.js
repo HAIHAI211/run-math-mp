@@ -78,10 +78,9 @@ const actions = {
     return false // 上传失败
   },
   async FETCH_USER_INFO ({commit, state}) {
-    if (state.isLogin && state.openId) {
-      const result = await api.getUserInfo({ openId: state.openId })
-      commit(types.SET_USER_INFO, result.data)
-    }
+    const result = await api.getUserInfo({ openId: state.openId })
+    // console.log('获取到了用户信息', result.data)
+    commit(types.SET_USER_INFO, result.data)
   },
   async FETCH_ADVS ({commit}) {
     const result = await api.getAdvs()
