@@ -1,6 +1,6 @@
 <template>
   <div class="address-page">
-    <address-form :focus="false"/>
+    <address-form/>
     <div class="confirm-btn-wrap">
       <div class="confirm-btn" @click="_save">保存</div>
     </div>
@@ -9,8 +9,11 @@
 <script>
 import addressForm from '@/components/address-form'
 import { updateUserInfo } from '@/http/api'
-import {mapActions, mapGetters} from 'vuex'
+import {mapActions} from 'vuex'
+import {mixinaddressInfoSubmit} from '@/mixin'
+
 export default {
+  mixins: [mixinaddressInfoSubmit],
   data () {
     return {
       focus: true
@@ -19,20 +22,14 @@ export default {
   components: {
     addressForm
   },
-  computed: {
-    ...mapGetters(['addressInfo', 'addressInfoErr'])
-  },
   methods: {
     ...mapActions(['FETCH_USER_INFO', 'LOGIN']),
     async _save () {
-      this.focus = false
+      console.log('save')
       this.utils.showLoading()
-      await this.utils.sleep(300)
-      if (this.addressInfoErr) {
-        this.utils.showToast(this.addressInfoErr)
+      if (this._checkErr()) {
         return
       }
-      console.log('save')
       try {
         await updateUserInfo()
         this.utils.showToast('保存成功')
@@ -43,7 +40,6 @@ export default {
     }
   },
   async onShow () {
-    this.focus = true
     this.utils.showLoading()
     try {
       await this.FETCH_USER_INFO()

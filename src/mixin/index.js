@@ -1,7 +1,7 @@
 // import runLoading from '@/components/run-loading'
 import { sleep } from '@/utils'
 import * as api from '@/http/api'
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState, mapGetters } from 'vuex'
 export const mixinShow = {
   props: {
     show: {
@@ -128,6 +128,21 @@ export const mixinLoginWerun = {
       await this.REPORT_OF_WERUN() // 上报微信运动数据给后台，返回是否成功的标志
       await this.FETCH_USER_INFO() // 获取用户信息
       console.log('getSteps成功')
+    }
+  }
+}
+export const mixinaddressInfoSubmit = {
+  computed: {
+    ...mapGetters(['addressInfo', 'addressInfoErr'])
+  },
+  methods: {
+    async _checkErr () {
+      await this.utils.sleep(300) // 避免submit早于blur事件
+      if (this.addressInfoErr) {
+        this.utils.showToast(this.addressInfoErr)
+        return true
+      }
+      return false
     }
   }
 }

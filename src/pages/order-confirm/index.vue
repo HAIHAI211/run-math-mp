@@ -2,7 +2,7 @@
   <div class="order-confirm-page">
     <run-gift :gift="gift"/>
     <div class="confirm-address-title">确认收货地址</div>
-    <address-form @update="_updateForm"/>
+    <address-form/>
     <div class="submit-btn" @click="_submitOrder">提交</div>
   </div>
 </template>
@@ -10,41 +10,29 @@
   import runGift from '@/components/run-gift'
   import addressForm from '@/components/address-form'
   import {mapState, mapActions} from 'vuex'
-  import * as utils from '@/utils'
   import {placeOrder} from '@/http/api'
+  import {mixinaddressInfoSubmit} from '@/mixin'
 
   export default {
+    mixins: [mixinaddressInfoSubmit],
     components: {
       runGift,
       addressForm
-    },
-    data () {
-      return {
-        user: null,
-        err: ''
-      }
     },
     computed: {
       ...mapState(['gift'])
     },
     methods: {
       ...mapActions(['FETCH_USER_INFO']),
-      _updateForm (res) {
-        console.log(res)
-        this.user = res.user
-        this.err = res.err
-      },
       async _submitOrder () {
-        await utils.sleep(50)
-        if (this.err) {
-          utils.showError(this.err)
+        this.utils.showLoading()
+        if (this._checkErr()) {
           return
         }
-        utils.showLoading()
         let params = {
           type: this.gift.type,
           presentId: this.gift.id,
-          ...this.user
+          ...this.addressInfo
         }
         console.log('params', params)
         try {
@@ -57,7 +45,7 @@
         } catch (e) {
           console.log(e)
           wx.hideLoading()
-          utils.showError(e.message, 1500)
+          this.utils.showError(e.message, 1500)
         }
       }
     }
