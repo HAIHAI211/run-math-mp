@@ -43,6 +43,7 @@ const mutations = {
     state.signDayCount = v
   },
   [types.SET_USER_INFO] (state, v) {
+    // console.log('SET_USER_INFO', v)
     state.todayChangedStep = getValue(state, v, 'todayChangedStep')
     state.allShareCount = getValue(state, v, 'allShareCount')
     state.mathCoin = getValue(state, v, 'mathCoin')
@@ -60,13 +61,6 @@ const mutations = {
     state.telNo = getValue(state, v, 'telNo')
     state.addressArea = getValue(state, v, 'addressArea')
     state.address = getValue(state, v, 'address')
-    // state.addressInfo = {
-    //   contactsName: state.contactsName,
-    //   telNo: state.telNo,
-    //   addressArea: state.addressArea ? state.addressArea : '四川省-成都市-锦江区',
-    //   address: state.address
-    // }
-    // console.log('state LALA', state)
   },
   [types.SET_ADVS] (state, v) {
     state.advs = v

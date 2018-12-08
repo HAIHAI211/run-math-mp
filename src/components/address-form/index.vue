@@ -6,9 +6,10 @@
         <input class="input"
                placeholder="请输入联系人姓名"
                type="text"
-               maxlength="10"
+               maxlength="12"
                :focus="focus"
-               v-model.lazy="user.contactsName"/>
+               :value="contactsName"
+               @blur="_inputHandler($event,'contactsName')"/>
       </div>
     </div>
     <div class="field-item">
@@ -19,7 +20,8 @@
                placeholder="请输入联系人手机号"
                maxlength="11"
                type="number"
-               v-model.lazy="user.telNo"/>
+               :value="telNo"
+               @blur="_inputHandler($event,'telNo')"/>
       </div>
     </div>
     <div class="field-item">
@@ -34,10 +36,10 @@
     </div>
     <div class="field-item field-item-address">
       <div class="wrap">
-        <div :class="['label', {'label-ios': ios}]">详细地址</div>
+        <div :class="['label', {'label-ios': isIos}]">详细地址</div>
         <textarea class="input textarea"
                   placeholder="如小区几栋几单元门牌号"
-                  v-model.lazy="user.address" :focus="focus"/>
+                  :focus="focus" :value="address" @blur="_inputHandler($event, 'address')"/>
       </div>
     </div>
   </div>
@@ -48,77 +50,41 @@
 @input相当于事件触发(还不能在input中修改:value对应变量，会重复赋值造成input闪烁)
 -->
 <script>
-  import {mapState} from 'vuex'
+  import {mapState, mapGetters, mapMutations} from 'vuex'
   export default {
-    data () {
-      return {
-        addressArr: null,
-        focus: false,
-        user: {
-          openId: '',
-          contactsName: '',
-          telNo: '',
-          addressArea: '', // 是区县的areaCode
-          address: '' // 详细地址
-        }
+    props: {
+      focus: {
+        type: Boolean,
+        default: false
       }
     },
     computed: {
       ...mapState(['contactsName', 'telNo', 'addressArea', 'address', 'systemInfo']),
-      // ...mapGetters(['addressInfo']),
-      ios () {
-        return this.systemInfo.platform === 'ios'
-      },
+      ...mapGetters(['addressInfo', 'addressInfoErr', 'isIos']),
       region: {
         get () {
-          return this.user.addressArea.split('-')
+          return this.addressArea.split('-')
         },
         set (arr) {
-          this.user.addressArea = arr.join('-')
+          let addressArea = arr.join('-')
+          this.SET_USER_INFO({
+            addressArea
+          })
         }
-      }
-    },
-    watch: {
-      user: {
-        handler (val) {
-          const errMsg = this._checkError(val)
-          const param = {
-            user: val,
-            err: errMsg
-          }
-          this.$emit('update', param)
-        },
-        deep: true
       }
     },
     methods: {
-      _checkError (user) {
-        if (!user.contactsName) {
-          return '请输入联系人姓名'
-        } else if (!user.telNo) {
-          return '请输入联系人手机号'
-        } else if (user.telNo.length !== 11) {
-          return '请输入正确的手机号格式'
-        } else if (!user.addressArea) {
-          return '请选择所在地区'
-        } else if (!user.address) {
-          return '请填写详细地址'
-        } else {
-          return ''
-        }
-      },
+      ...mapMutations(['SET_USER_INFO']),
       _regionChange (e) {
         console.log('picker发送选择改变，携带值为', e.mp.detail.value)
         this.region = e.mp.detail.value
-      }
-    },
-    mounted () {
-      console.log('mounted')
-      this.user = {
-        contactsName: this.contactsName,
-        telNo: this.telNo,
-        addressArea: this.addressArea ? this.addressArea : '四川省-成都市-锦江区',
-        address: this.address
+      },
+      _inputHandler (e, key) {
+        console.log(key, e.mp.detail.value)
+        console.log('_inputHandler')
+        this.SET_USER_INFO({
+          [key]: e.mp.detail.value
+        })
       }
     }
   }

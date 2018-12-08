@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import App from './App'
 import store from './store'
-import {pf} from './utils'
+import * as utils from './utils'
 import '@/common/style/iconfont.css'
 Vue.prototype.$store = store
-Vue.prototype.pf = pf
+Vue.prototype.utils = utils
 Vue.config.productionTip = false
 App.mpType = 'app'
 

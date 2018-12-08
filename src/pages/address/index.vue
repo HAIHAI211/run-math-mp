@@ -1,6 +1,6 @@
 <template>
   <div class="address-page">
-    <address-form @update="_updateForm"/>
+    <address-form :focus="false"/>
     <div class="confirm-btn-wrap">
       <div class="confirm-btn" @click="_save">保存</div>
     </div>
@@ -9,57 +9,48 @@
 <script>
 import addressForm from '@/components/address-form'
 import { updateUserInfo } from '@/http/api'
-import { showError, showLoading, showToast, sleep } from '@/utils'
-import {mapActions, mapState} from 'vuex'
+import {mapActions, mapGetters} from 'vuex'
 export default {
+  data () {
+    return {
+      focus: true
+    }
+  },
   components: {
     addressForm
   },
-  data () {
-    return {
-      user: null,
-      err: ''
-    }
-  },
   computed: {
-    ...mapState(['contactsName', 'telNo', 'addressArea', 'address'])
+    ...mapGetters(['addressInfo', 'addressInfoErr'])
   },
   methods: {
     ...mapActions(['FETCH_USER_INFO', 'LOGIN']),
-    _checkSame () {
-      console.log('old address', this.user.address)
-      console.log('now address', this.address)
-      return this.contactsName === this.user.contactsName &&
-        this.telNo === this.user.telNo &&
-        this.addressArea === this.user.addressArea &&
-        this.address === this.user.address
-    },
     async _save () {
-      showLoading()
-      await sleep(300)
-      if (this.err) {
-        showToast(this.err)
-        return
-      }
-      if (this._checkSame()) {
-        showToast('保存成功')
+      this.focus = false
+      this.utils.showLoading()
+      await this.utils.sleep(300)
+      if (this.addressInfoErr) {
+        this.utils.showToast(this.addressInfoErr)
         return
       }
       console.log('save')
       try {
-        await updateUserInfo(this.user)
-        await this.LOGIN()
-        await this.FETCH_USER_INFO()
-        showToast('保存成功')
+        await updateUserInfo()
+        this.utils.showToast('保存成功')
       } catch (e) {
         console.log('保存失败的真实原因', e)
-        showError()
+        this.utils.showError()
       }
-    },
-    _updateForm (param) {
-      console.log('user', param.user)
-      this.user = param.user
-      this.err = param.err
+    }
+  },
+  async onShow () {
+    this.focus = true
+    this.utils.showLoading()
+    try {
+      await this.FETCH_USER_INFO()
+    } catch (e) {
+      console.log(e)
+    } finally {
+      wx.hideLoading()
     }
   }
 }
