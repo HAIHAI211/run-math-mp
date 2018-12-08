@@ -27,7 +27,8 @@ export default {
     async _save () {
       console.log('save')
       this.utils.showLoading()
-      if (this._checkErr()) {
+      const hasErr = await this._checkErr()
+      if (hasErr) {
         return
       }
       try {

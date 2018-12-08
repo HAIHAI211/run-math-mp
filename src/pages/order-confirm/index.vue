@@ -26,7 +26,9 @@
       ...mapActions(['FETCH_USER_INFO']),
       async _submitOrder () {
         this.utils.showLoading()
-        if (this._checkErr()) {
+        const hasErr = await this._checkErr()
+        console.log('hasErr', hasErr)
+        if (hasErr) {
           return
         }
         let params = {
