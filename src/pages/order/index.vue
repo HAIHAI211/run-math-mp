@@ -71,8 +71,8 @@ export default {
   },
   data () {
     return {
-      pageSum: 2,
       apis: ['getDocOrder', 'getRealOrder'],
+      initPageNum: 1,
       fileKey: '',
       hintShow: false
     }

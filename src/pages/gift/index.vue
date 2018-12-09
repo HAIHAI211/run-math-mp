@@ -92,8 +92,8 @@ export default {
   },
   data () {
     return {
-      pageSum: 2, // 本页共有两个列表需要加载
       apis: ['getDocList', 'getRealList'],
+      initPageNum: 1,
       tabItems: ['数学资料', '实物礼品'],
       types: [
         {

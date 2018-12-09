@@ -27,13 +27,15 @@ export const mixinShow = {
  ** 引入mixinPullToRefresh的页面
  * 需要自定义如下data或computed
  * data
- *   pageSum 本页面有多少个列表需要请求
  *   apis 列表请求所对应的api名称数组
+ *   initPageNum pageNum的初始页码
+ *   listKeyName 返回对象的list的键名
+ *   pageCount 返回对象的pageCount的键名
  * computed
  *   params 自定义的请求参数
-*  components
+ *  components
  *   run-loading 加载组件（mpvue存在bug）
-* */
+ * */
 export const mixinPullToRefresh = {
   components: {
     // runLoading
@@ -41,15 +43,19 @@ export const mixinPullToRefresh = {
   data () {
     return {
       loadingState: 0, // 0:不可见 1:正在加载 2:全部加载完毕 3:异常
-      pageIndex: 0
+      pageIndex: 0,
+      apis: [],
+      initPageNum: 0, // pageNum的初始页码
+      listKeyName: 'data',
+      pageCountKeyName: 'pageCount'
     }
   },
   computed: {
     pages () {
       let result = []
-      for (let i = 0; i < this.pageSum; i++) {
+      for (let i = 0; i < this.apis.length; i++) {
         result.push({
-          pageNum: 1, // 当前页
+          pageNum: this.initPageNum, // 当前页
           pageSize: 10, // 一页多少条数据
           pageCount: 10, // 一共多少页
           list: []
@@ -67,7 +73,7 @@ export const mixinPullToRefresh = {
   methods: {
     async fetchList (isRefresh = true) {
       if (isRefresh) {
-        this.activePage.pageNum = 1
+        this.activePage.pageNum = this.initPageNum
         this.activePage.pageCount = 0
       } else {
         this.activePage.pageNum += 1
@@ -89,8 +95,8 @@ export const mixinPullToRefresh = {
       try {
         const result = await api[this.activeApi](params)
         console.log(this.activeApi, result)
-        this.activePage.list = isRefresh ? result.data : [...this.activePage.list, ...result.data]
-        this.activePage.pageCount = result.pageCount
+        this.activePage.list = isRefresh ? result[this.listKeyName] : [...this.activePage.list, ...result[this.listKeyName]]
+        this.activePage.pageCount = result[this.pageCountKeyName]
         if (this.activePage.pageNum < this.activePage.pageCount) { // 继续加载
           this.loadingState = 0 // 0:不可见 1:正在加载 2:全部加载完毕 3:异常
         } else {
