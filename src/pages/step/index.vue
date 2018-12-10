@@ -46,11 +46,8 @@
 import { mapState, mapMutations, mapActions } from 'vuex'
 import {mixinLoginWerun} from '@/mixin'
 import tabBar from '@/components/tab-bar'
-// import accreditPop from '@/components/accredit-pop'
 import authPop from '@/components/auth-pop'
-import * as utils from '@/utils'
 import * as api from '@/http/api'
-import { pf } from '../../utils'
 export default {
   mixins: [mixinLoginWerun],
   components: {
@@ -89,15 +86,15 @@ export default {
         // console.log('stealDate', stealDate)
         let dateLabel = ''
         let time = ''
-        if (utils.isToday(stealDate)) {
+        if (this.utils.isToday(stealDate)) {
           dateLabel = '今天'
-          time = utils.formatHour(stealDate)
-        } else if (utils.isYesterday(stealDate)) {
+          time = this.utils.formatHour(stealDate)
+        } else if (this.utils.isYesterday(stealDate)) {
           dateLabel = '昨天'
-          time = utils.formatHour(stealDate)
+          time = this.utils.formatHour(stealDate)
         } else {
           dateLabel = ''
-          time = utils.formatDate(stealDate)
+          time = this.utils.formatDate(stealDate)
         }
         // let dateLabel = utils.timeGapFromNow(stealDate, new Date(), false)
         if (!dateLabels.includes(dateLabel)) {
@@ -127,23 +124,9 @@ export default {
     }
   },
   watch: {
-    // authWerun (newV, oldV) { // 因为运动授权必须是在用户授权同意的基础上实现，故此处必定两个权限都OK了
-    //   if (oldV === false && newV) { // 授权必须是被拒绝，然后现在同意了才能进入这儿
-    //     console.log('微信运动授权之前被拒绝了，现在又同意了111')
-    //     this._getSteps()
-    //   }
-    // },
-    authUserInfo (v) {
-      if (v) {
-        api.updateUserInfo(this.userinfo) // 更新用户信息
-      }
-    },
     bubbleClicks (v) {
-      // console.log('bcw', v)
       if (!v || !v.length) {
-        // wx.hideLoading()
-        // utils.showToast('今天泡泡用完啦', 2500)
-        pf('showModal', {
+        this.utils.pf('showModal', {
           title: '提示',
           showCancel: false,
           content: '今天泡泡用完啦，明天再来吧'
@@ -194,7 +177,7 @@ export default {
       if (item.canBeSteal && item.isTodayBeStolen) { // 回偷
         console.log('可以回偷他！！')
         try {
-          utils.showLoading()
+          this.utils.showLoading()
           const stealStepResult = await api.stealStep({
             openIdBeStolen: item.openIdSteal,
             stolenStepNum: item.stealStepNum,
@@ -202,14 +185,14 @@ export default {
           })
           this._fetchStealMeList()
           wx.hideLoading()
-          utils.showToast(`成功偷取${stealStepResult.data.stolenStepNum}步`, 1500)
+          this.utils.showToast(`成功偷取${stealStepResult.data.stolenStepNum}步`, 1500)
           this.SET_USER_INFO({
             todayStep: this.todayStep + stealStepResult.data.stolenStepNum
           })
           console.log('回偷结果', stealStepResult)
         } catch (e) {
           wx.hideLoading()
-          utils.showError(e.message, 1000)
+          this.utils.showError(e.message, 1000)
           console.log('错误', e)
         }
       }
@@ -254,7 +237,7 @@ export default {
         this._fetchStealMeList()
         console.log('stealStepResult', stealStepResult)
       } catch (e) {
-        utils.showError(e.message)
+        this.utils.showError(e.message)
         console.log('上报错误', e)
       }
     },
@@ -270,6 +253,10 @@ export default {
         return
       }
       this._dealBubbles(index)
+      if (!this.hasUpdateUserInfo) {
+        api.updateUserInfo(this.userinfo) // 更新用户信息
+        this.hasUpdateUserInfo = true
+      }
     },
     _cancel () {
     },
@@ -287,14 +274,14 @@ export default {
     async _load (msg) {
       this.hasUpdateUserInfo = false
       try {
-        utils.showLoading(msg)
+        this.utils.showLoading(msg)
         await this._fetchRandomSteal()
         await this._fetchStealMeList()
         wx.hideLoading()
       } catch (e) {
         console.log(e)
         wx.hideLoading()
-        utils.showError()
+        this.utils.showError()
       }
     }
   },

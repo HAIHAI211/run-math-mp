@@ -89,7 +89,10 @@ export const getUserInfo = params => {
 // 更新用户信息
 export const updateUserInfo = params => {
   // console.log('更新用户信息哦', store.getters.addressInfo)
-  return post(paramFactory('/user/update', store.getters.addressInfo))
+  return post(paramFactory('/user/update', {
+    ...store.getters.addressInfo,
+    ...params
+  }))
 }
 
 // 全部广告位
