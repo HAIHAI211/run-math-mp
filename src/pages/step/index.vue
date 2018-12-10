@@ -39,7 +39,6 @@
         +{{ bubble.stolenStepNum }}
       </div>
     </div>
-    <!--<accredit-pop :show.sync="userinfoPopShow" @getuserinfo="_getuserinfo" @cancel="_cancel"/>-->
     <auth-pop :show.sync="werunPopShow"/>
   </div>
 </template>
