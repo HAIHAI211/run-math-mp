@@ -28,7 +28,7 @@
       <navigator class="order-item" url="/pages/order/main?from=meMath">
         <div class="left">
           <div class="icon icon-0"></div>
-          <div class="name">数学资料</div>
+          <div class="name">我的资料</div>
         </div>
         <span class="iconfont icon-fanhui"/>
         <div class="line"></div>

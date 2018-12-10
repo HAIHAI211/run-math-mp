@@ -23,6 +23,51 @@ export function formatTime (date, showHour = true) {
 
   return showHour ? `${t1} ${t2}` : t1
 }
+export function formatDate (date) {
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1
+  const day = date.getDate()
+
+  const hour = date.getHours()
+  const minute = date.getMinutes()
+  // const second = date.getSeconds()
+
+  const t1 = [year, month, day].map(formatNumber).join('-')
+  const t2 = [hour, minute].map(formatNumber).join(':')
+
+  return `${t1} ${t2}`
+}
+export function isToday (date) {
+  // 今天的时间
+  let day = new Date()
+  const yearOfToday = day.getFullYear()
+  const monthOfToday = day.getMonth() + 1
+  const dateOfToday = day.getDate()
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1
+  const d = date.getDate()
+
+  if (yearOfToday === year && monthOfToday === month && dateOfToday === d) {
+    return true
+  }
+  return false
+}
+export function isYesterday (date) {
+  // 昨天的时间
+  let day = new Date()
+  day.setDate(day.getDate() - 1)
+  const yearOfYesterday = day.getFullYear()
+  const monthOfYesterday = day.getMonth() + 1
+  const dateOfYesterday = day.getDate()
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1
+  const d = date.getDate()
+  if (yearOfYesterday === year && monthOfYesterday === month && dateOfYesterday === d) {
+    return true
+  }
+  return false
+}
+
 export function formatHour (date) {
   const hour = date.getHours()
   const minute = date.getMinutes()

@@ -133,6 +133,7 @@ export const mixinLoginWerun = {
       await this.AUTH_OF_WERUN() // 申请授权
       await this.REPORT_OF_WERUN() // 上报微信运动数据给后台，返回是否成功的标志
       await this.FETCH_USER_INFO() // 获取用户信息
+      await this._getRank()
       console.log('getSteps成功')
     }
   }

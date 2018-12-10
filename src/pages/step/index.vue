@@ -88,7 +88,19 @@ export default {
         let stealDate = new Date(stealItem.stealTime)
         // console.log('stealDateStr', stealItem.stealTime)
         // console.log('stealDate', stealDate)
-        let dateLabel = utils.timeGapFromNow(stealDate, new Date(), false)
+        let dateLabel = ''
+        let time = ''
+        if (utils.isToday(stealDate)) {
+          dateLabel = '今天'
+          time = utils.formatHour(stealDate)
+        } else if (utils.isYesterday(stealDate)) {
+          dateLabel = '昨天'
+          time = utils.formatHour(stealDate)
+        } else {
+          dateLabel = ''
+          time = utils.formatDate(stealDate)
+        }
+        // let dateLabel = utils.timeGapFromNow(stealDate, new Date(), false)
         if (!dateLabels.includes(dateLabel)) {
           // console.log('dateLabels不包含' + dateLabel + '，现在将其收纳入库')
           dateLabels.push(dateLabel)
@@ -97,8 +109,8 @@ export default {
         }
         result.push({
           ...stealItem,
-          dateLabel: dateLabel,
-          time: utils.formatHour(stealDate)
+          dateLabel,
+          time
         })
       }
       return result
@@ -240,6 +252,7 @@ export default {
         this.SET_USER_INFO({
           todayStep: this.todayStep + this.bubbles[index].stolenStepNum
         })
+        this._fetchStealMeList()
         console.log('stealStepResult', stealStepResult)
       } catch (e) {
         utils.showError(e.message)
@@ -419,13 +432,13 @@ export default {
       .avatar-wall{
         flex 0 0 auto
         display flex
-        justify-content space-between
-        padding 30rpx
+        padding 30rpx 0
         .avatar{
           position relative
           .avatar-img{
-            width 45px
-            height 45px
+            width 90rpx
+            height 90rpx
+            margin 0 30rpx
             border-radius 15rpx
           }
           .steal-num{
@@ -434,7 +447,7 @@ export default {
             border-radius 50%
             background lightseagreen
             position absolute
-            right -10rpx
+            right 20rpx
             bottom 0rpx
             font-size 17rpx
             color #fff
