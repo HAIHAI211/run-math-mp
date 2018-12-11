@@ -72,6 +72,7 @@ export default {
   },
   data () {
     return {
+      submitLoading: false,
       id: 0,
       price: 0,
       postage: 0, // 2
@@ -150,10 +151,15 @@ export default {
           url: '/pages/order-confirm/main'
         })
       } else { // 虚拟礼品
+        if (this.submitLoading) {
+          return
+        }
+        this.submitLoading = true
         utils.showLoading()
         try {
           const result = await placeOrder(params)
           console.log('兑换虚拟礼品', result)
+          this.submitLoading = false
           this.FETCH_USER_INFO()
           wx.hideLoading()
           wx.redirectTo({
@@ -161,6 +167,7 @@ export default {
           })
         } catch (e) {
           console.log('err', e)
+          this.submitLoading = false
           wx.hideLoading()
           utils.showError(e.message)
         }

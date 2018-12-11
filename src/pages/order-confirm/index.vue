@@ -19,12 +19,21 @@
       runGift,
       addressForm
     },
+    data () {
+      return {
+        submitLoading: false
+      }
+    },
     computed: {
       ...mapState(['gift'])
     },
     methods: {
       ...mapActions(['FETCH_USER_INFO']),
       async _submitOrder () {
+        if (this.submitLoading) {
+          return
+        }
+        this.submitLoading = true
         this.utils.showLoading()
         const hasErr = await this._checkErr()
         console.log('hasErr', hasErr)
@@ -40,12 +49,14 @@
         try {
           await placeOrder(params)
           this.FETCH_USER_INFO()
+          this.submitLoading = false
           wx.hideLoading()
           wx.redirectTo({
             url: '/pages/change-success/main'
           })
         } catch (e) {
           console.log(e)
+          this.submitLoading = false
           wx.hideLoading()
           this.utils.showError(e.message, 1500)
         }
