@@ -48,7 +48,7 @@
     <div class="hint" v-if="hintShow" @click="hintShow=false">
       <div class="content">
         <div class="title">提示</div>
-        <div class="main">回复1，添加公众号后，在公众号回复{{fileKey}}获取文件</div>
+        <div class="main">回复0，添加公众号后，在公众号回复{{fileKey}}获取文件</div>
         <div class="btn-wrap">
           <run-btn title="确定" openType="contact"/>
         </div>
@@ -146,21 +146,22 @@ export default {
         width 600rpx
         height 300rpx
         background #fff
-        border-radius 8rpx
+        border-radius 12rpx
         display flex
         flex-direction column
         .title{
           flex 0 0 auto
           text-align center
-          padding-bottom 30rpx
+          padding 30rpx 0
           font-size 38rpx
           font-weight bold
         }
         .main{
           flex 1
-          padding 0 20rpx
-          font-size 28rpx
+          padding 0 50rpx
+          font-size 32rpx
           color #999
+          text-align center
         }
         .btn-wrap{
           border-top 1rpx solid #eee
