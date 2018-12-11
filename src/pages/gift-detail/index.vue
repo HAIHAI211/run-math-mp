@@ -49,7 +49,9 @@
         </div>
       </van-tab>
       <van-tab title="商品介绍">
-        <wxParse :content="info"/>
+        <div class="html-wrap">
+          <wxParse :content="info"/>
+        </div>
       </van-tab>
     </van-tabs>
     <div class="confirm-btn-wrap">
@@ -209,6 +211,9 @@ export default {
   @import "~@/common/style/color.styl"
   @import url("~mpvue-wxparse/src/wxParse.css");
   .gift-detail-page{
+    .html-wrap{
+      padding 0 20rpx 130rpx 20rpx
+    }
     .swiper-wrap{
       position relative
       $swiper-width=750rpx
