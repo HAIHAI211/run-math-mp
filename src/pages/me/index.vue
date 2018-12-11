@@ -18,7 +18,7 @@
           <div class="text">今日已偷步数</div>
         </div>
         <div class="run-item" style="border-right:none;">
-          <div class="num">{{ todayStep + todayChangedStep }}</div>
+          <div class="num">{{ todayAllStep }}</div>
           <div class="text">今日总步数</div>
         </div>
       </div>
@@ -84,19 +84,26 @@ export default {
     }
   },
   computed: {
-    ...mapState(['signDayCount', 'todayStealStep', 'todayStep', 'todayChangedStep', 'advs', 'allShareCount'])
+    ...mapState(['signDayCount', 'todayStealStep', 'todayAllStep', 'advs', 'allShareCount'])
   },
   methods: {
-    ...mapActions(['FETCH_USER_INFO'])
+    ...mapActions(['FETCH_USER_INFO']),
+    async _load () {
+      console.log('_load')
+      wx.showNavigationBarLoading()
+      try {
+        await this.FETCH_USER_INFO()
+      } finally {
+        wx.hideNavigationBarLoading()
+        wx.stopPullDownRefresh()
+      }
+    }
+  },
+  async onShow () {
+    this._load()
   },
   async onPullDownRefresh () { // 下拉刷新
-    wx.showNavigationBarLoading()
-    try {
-      await this.FETCH_USER_INFO()
-    } finally {
-      wx.hideNavigationBarLoading()
-      wx.stopPullDownRefresh()
-    }
+    await this._load()
   }
 }
 </script>
