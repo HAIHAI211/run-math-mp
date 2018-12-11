@@ -4,7 +4,7 @@
       <div class="coin-center">
         <span class="coin-hint">我的数学币</span>
         <span class="coin-num">{{ netError ? '--' : mathCoin }}</span>
-        <span class="step-hint">可兑换步数{{ netError ? '--' : todayStep }}</span>
+        <span class="step-hint">可兑换步数{{ netError ? '--' : todayCanChangeStep }}</span>
       </div>
       <div class="coin-charge-btn" @click="_coinChargeClick"  v-if="!netError">一键兑换数学币</div>
       <div class="check-day">连续签到{{netError ? '--' : signDayCount}}天</div>

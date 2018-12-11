@@ -3,7 +3,7 @@
     <div class="bg" @touchstart.stop="">
       <div class="step-info">
         <open-data type="userAvatarUrl" class="avatar"></open-data>
-        <div class="step-num">{{ todayStep }}</div>
+        <div class="step-num">{{ todayCanChangeStep }}</div>
       </div>
     </div>
     <div :class="['news',{'more': more}]"  :style="{height: systemInfo.windowHeight + 'px'}"  @touchmove="_touchmove" @touchstart="_touchstart" @touchend="_touchend">
@@ -75,7 +75,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['todayStep', 'authWerun', 'authUserInfo', 'systemInfo']),
+    ...mapState(['authWerun', 'authUserInfo', 'systemInfo']),
     stealMeFormatList () {
       let result = []
       let dateLabels = []

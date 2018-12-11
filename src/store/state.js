@@ -12,6 +12,8 @@ const state = {
   todayChangedStep: 0, // 今日已兑步数
   todayStealStep: 0, // 今日已偷步数
   todayStep: 0, // 今日可兑步数
+  todayCanChangeStep: 0, // 首页的可兑换步数
+  todayAllStep: 0, // 我的页面的总步数
   city: '',
   gender: 1, // 1:男 2：女
   avatarUrl: '',

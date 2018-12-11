@@ -124,7 +124,7 @@ export const mixinPullToRefresh = {
 }
 export const mixinLoginWerun = {
   computed: {
-    ...mapState(['authWerun', 'isLogin', 'openId', 'todayStep'])
+    ...mapState(['authWerun', 'isLogin', 'openId', 'todayCanChangeStep'])
   },
   methods: {
     ...mapActions(['LOGIN', 'AUTH_OF_WERUN', 'REPORT_OF_WERUN', 'FETCH_USER_INFO']),
