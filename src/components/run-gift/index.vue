@@ -114,7 +114,7 @@ export default {
       }
     }
     .physical-gift{
-      margin-bottom 36rpx
+      margin-bottom main-gap
       width 685rpx
       height 255rpx
       border-radius 6rpx
