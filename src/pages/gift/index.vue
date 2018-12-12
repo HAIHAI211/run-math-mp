@@ -36,7 +36,7 @@
           @click="pickType(typeIndex)"
         >{{ type.name }}</div>
       </div>
-      <scroll-view class="wrap-1" scroll-y :style="{height: '100%'}"v-if="activeBarIndex === 1" @click.stop="">
+      <div class="wrap-1" style="height:100%;" v-if="activeBarIndex === 1" @click.stop="">
         <div class="wrap-item"  v-for="(cla, claIndex) in classes" :key="claIndex">
           <div class="title">{{ cla.name }}</div>
           <div class="btns-container">
@@ -48,7 +48,7 @@
             </div>
           </div>
         </div>
-        <div class="wrap-item" :style="{paddingBottom: '160rpx'}">
+        <div class="wrap-item" :style="{paddingBottom: '60rpx'}">
           <div class="title" style="padding-bottom: 16rpx">其他</div>
           <switch-cell
             class="vsc"
@@ -56,10 +56,8 @@
             :checked=ShowSwitchCellchecked
             @change="onSwitchCellChange"></switch-cell>
         </div>
-        <div class="confirm-btn-wrap">
-          <div class="confirm-btn" @click="pickSx()">确定</div>
-        </div>
-      </scroll-view>
+        <div class="confirm-btn" @click="pickSx()" style="margin: 0 auto;">确定</div>
+      </div>
       <div class="wrap-2" v-if="activeBarIndex === 2">
         <div
           :class="['wrap-item',
@@ -343,7 +341,7 @@ export default {
             font-size 30rpx
             color #000
             font-weight 400
-            padding 50rpx 0 30rpx 0
+            padding 30rpx 0
           }
           .btns-container{
             display flex
@@ -372,25 +370,15 @@ export default {
             }
           }
         }
-        .confirm-btn-wrap{
-          position fixed
-          bottom 0
-          left 0
-          z-index 101
-          width 750rpx
-          padding-bottom 13rpx
-          display flex
-          justify-content center
-          .confirm-btn{
-            background main-color
-            center()
-            width 685rpx
-            height 97rpx
-            border-radius 47rpx
-            color #fff
-            font-size 34rpx
-            letter-spacing 1rpx
-          }
+        .confirm-btn{
+          background main-color
+          center()
+          width 685rpx
+          height 97rpx
+          border-radius 47rpx
+          color #fff
+          font-size 34rpx
+          letter-spacing 1rpx
         }
       }
     }

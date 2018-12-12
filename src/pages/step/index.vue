@@ -29,7 +29,6 @@
         </div>
       </div>
     </scroll-view>
-      <!--<tab-bar :activeIndex="2" :fix="false"/>-->
     </div>
     <div class="bubble-container" v-for="(bubble,bubbleIndex) in bubbleClicks" :key="bubbleIndex">
       <div :class="['bubble-wrap', 'bubble-wrap-' + bubbleIndex,{'up-down-animation': !bubble.hasClick},{'scale-disappear-animation': bubble.hasClick}]">
@@ -58,7 +57,6 @@ export default {
   data () {
     return {
       stealMeList: [],
-      dateTags: [-1, -1],
       bubbles: [],
       bubbleClicks: [],
       hasUpdateUserInfo: false,
@@ -68,7 +66,6 @@ export default {
       nowY: 0,
       nowTime: 0,
       lastY: 0,
-      userinfoPopShow: false,
       werunPopShow: false,
       hasMove: false, // 如果是在scrollview中滑动，父元素的touchmove是被拦截的
       userinfo: null
@@ -82,8 +79,6 @@ export default {
       for (let i = 0; i < this.stealMeList.length; i++) {
         let stealItem = this.stealMeList[i]
         let stealDate = new Date(stealItem.stealTime)
-        // console.log('stealDateStr', stealItem.stealTime)
-        // console.log('stealDate', stealDate)
         let dateLabel = ''
         let time = ''
         if (this.utils.isToday(stealDate)) {
@@ -145,19 +140,16 @@ export default {
     ...mapMutations(['SET_AUTH_WE_RUN', 'SET_USER_INFO', 'SET_AUTH_USER_INFO']),
     ...mapActions(['FETCH_USER_INFO', 'AUTH_OF_USER_INFO']),
     _touchstart (e) {
-      console.log('touchstart')
       this.startY = e.mp.touches[0].pageY
       this.startTime = Date.now()
     },
     _touchmove (e) {
-      console.log('touchmove')
       this.hasMove = true
       this.lastY = this.nowY
       this.nowY = e.mp.touches[0].pageY
       this.nowTime = Date.now()
     },
     _touchend () {
-      console.log('touchend')
       if (this.hasMove) {
         let distance = this.nowY - this.startY
         let time = (this.nowTime - this.startTime) / 1000
@@ -183,12 +175,14 @@ export default {
             stolenStepNum: item.stealStepNum,
             type: 'stealBack'
           })
-          this._fetchStealMeList()
           wx.hideLoading()
-          this.utils.showToast(`成功偷取${stealStepResult.data.stolenStepNum}步`, 1500)
-          this.SET_USER_INFO({
-            todayStep: this.todayStep + stealStepResult.data.stolenStepNum
+          this.utils.pf('showModal', {
+            title: '提示',
+            showCancel: false,
+            content: `成功偷取${stealStepResult.data.stolenStepNum}步`
           })
+          this.FETCH_USER_INFO()
+          this._fetchStealMeList()
           console.log('回偷结果', stealStepResult)
         } catch (e) {
           wx.hideLoading()
@@ -207,7 +201,40 @@ export default {
         }
       })
     },
-    setBubbleClicks () {
+    async _getuserinfo (e, index) { // 点击泡泡
+      console.log('userinfo', e.mp.detail.userInfo)
+      this.userinfo = e.mp.detail.userInfo
+      this.SET_AUTH_USER_INFO(!!this.userinfo)
+      if (!this.authUserInfo) {
+        return
+      }
+      console.log('嘿嘿继续')
+      if (!this.authWerun) {
+        this.werunPopShow = true
+        return
+      }
+      // 修改数组
+      let result = [
+        ...this.bubbleClicks
+      ]
+      result[index].hasClick = true
+      this.bubbleClicks = result
+      // 上报服务器告知
+      await api.stealStep({
+        openIdBeStolen: this.bubbles[index].openId,
+        stolenStepNum: this.bubbles[index].stolenStepNum,
+        type: 'steal'
+      })
+      this.FETCH_USER_INFO()
+      this._fetchStealMeList()
+      if (!this.hasUpdateUserInfo) {
+        api.updateUserInfo(this.userinfo) // 更新用户信息
+        this.hasUpdateUserInfo = true
+      }
+    },
+    async _fetchRandomSteal () {
+      const {data} = await api.randomSteal() // 获取6个随机被偷的靓仔
+      this.bubbles = data
       let result = []
       for (let i = 0; i < this.bubbles.length; i++) {
         result.push({
@@ -216,55 +243,6 @@ export default {
         })
       }
       this.bubbleClicks = result
-    },
-    async _dealBubbles (index) {
-      // 修改数组
-      let result = [
-        ...this.bubbleClicks
-      ]
-      result[index].hasClick = true
-      this.bubbleClicks = result
-      try {
-        // 上报服务器告知
-        const stealStepResult = await api.stealStep({
-          openIdBeStolen: this.bubbles[index].openId,
-          stolenStepNum: this.bubbles[index].stolenStepNum,
-          type: 'steal'
-        })
-        this.SET_USER_INFO({
-          todayStep: this.todayStep + this.bubbles[index].stolenStepNum
-        })
-        this._fetchStealMeList()
-        console.log('stealStepResult', stealStepResult)
-      } catch (e) {
-        this.utils.showError(e.message)
-        console.log('上报错误', e)
-      }
-    },
-    _getuserinfo (e, index) {
-      console.log('userinfo', e.mp.detail.userInfo)
-      this.userinfo = e.mp.detail.userInfo
-      this.SET_AUTH_USER_INFO(!!this.userinfo)
-      if (!this.authUserInfo) {
-        return
-      }
-      if (!this.authWerun) {
-        this.werunPopShow = true
-        return
-      }
-      this._dealBubbles(index)
-      if (!this.hasUpdateUserInfo) {
-        api.updateUserInfo(this.userinfo) // 更新用户信息
-        this.hasUpdateUserInfo = true
-      }
-    },
-    _cancel () {
-    },
-    async _fetchRandomSteal () {
-      const result = await api.randomSteal() // 获取6个随机被偷的靓仔
-      this.bubbles = result.data
-      this.setBubbleClicks()
-      // console.log(result)
     },
     async _fetchStealMeList () {
       const stealMeResult = await api.stealMeList()
@@ -287,21 +265,14 @@ export default {
   },
   onLoad () {
     this._setNavigationStyle()
+  },
+  onShow () {
+    console.log('windowHeight', this.systemInfo.windowHeight)
     // 权限
     this.AUTH_OF_USER_INFO()
     console.log('步数权限', this.authWerun) // 必须
     console.log('用户权限', this.authUserInfo) // 可选
-    // if (!this.authUserInfo) {
-    //   this.userinfoPopShow = true
-    // }
-    // 请求
     this._load()
-  },
-  onShow () {
-    console.log('windowHeight', this.systemInfo.windowHeight)
-    // this.needFetchUserInfo = false
-    // wx.hideTabBar()
-    // this.userinfoPopShow = !this.authUserInfo
   }
   // onHide () {
   //   wx.showTabBar()
@@ -312,7 +283,7 @@ export default {
 <style scoped lang="stylus">
   @import "~@/common/style/mixin.styl"
   @import "~@/common/style/color.styl"
-  $bg-height=1197rpx
+  $bg-height=950rpx
   .step-page{
     $bubble-0-top=500rpx
     $bubble-0-left=50rpx
@@ -329,8 +300,9 @@ export default {
     .bg{
       bg-size(750rpx, $bg-height)
       background-color #2056dd
-      bg-image('step-bg', 'jpg')
-      background-position 0rpx -200rpx
+      // bg-image('step-bg', 'jpg')
+      simple-bg-image('steal-step', 'jpg')
+      background-position 0rpx 0rpx
       background-repeat no-repeat
     }
     .bg-img{
