@@ -303,7 +303,7 @@ export default {
       // bg-size(750rpx, $bg-height)
       background-color #2056dd
       // bg-image('step-bg', 'jpg')
-      simple-bg-image('steal-step-bg', 'png')
+      simple-bg-image('sss', 'png')
       background-size cover
       background-position 0rpx 0rpx
       background-repeat no-repeat
