@@ -41,7 +41,6 @@
             <div class="index">{{(itemIndex + 1) >= 10 ? (itemIndex + 1) : '0' + (itemIndex + 1)}}</div>
             <div class="avatar">
               <div :class="['crown', 'crown-'+itemIndex]" v-if="itemIndex<=2"></div>
-              <!--<image class="circle" :src="item.avatar"/>-->
               <div class="circle" :style="{backgroundImage: 'url(' + item.avatarUrl + ')'}"></div>
             </div>
             <div class="name">{{item.nickName}}</div>
@@ -57,7 +56,6 @@
     </div>
     <auth-pop :show.sync="authPopShow"/>
     <pic-pop :show.sync="signPopShow" :type="2" url="/static/img/sign.png" :coin="signCoin"/>
-    <!--<tab-bar :activeIndex="0"/>-->
   </div>
 </template>
 <script>
@@ -65,7 +63,6 @@ import { mapActions, mapState } from 'vuex'
 import {mixinLoginWerun} from '@/mixin'
 import adv from '@/components/adv'
 import runBtn from '@/components/run-btn'
-// import tabBar from '@/components/tab-bar'
 import runGift from '@/components/run-gift'
 import authPop from '@/components/auth-pop'
 import picPop from '@/components/pic-pop'
