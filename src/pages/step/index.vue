@@ -285,6 +285,7 @@ export default {
   @import "~@/common/style/color.styl"
   $bg-height=950rpx
   .step-page{
+    height: 100%;
     $bubble-0-top=500rpx
     $bubble-0-left=50rpx
     $bubble-1-top=200rpx
@@ -298,10 +299,12 @@ export default {
     $bubble-5-top=500rpx
     $bubble-5-left=390rpx
     .bg{
-      bg-size(750rpx, $bg-height)
+      height 100%
+      // bg-size(750rpx, $bg-height)
       background-color #2056dd
       // bg-image('step-bg', 'jpg')
-      simple-bg-image('steal-step', 'jpg')
+      simple-bg-image('steal-step-bg', 'png')
+      background-size cover
       background-position 0rpx 0rpx
       background-repeat no-repeat
     }
@@ -338,6 +341,7 @@ export default {
       }
     }
     .news{
+      opacity 0
       &.more{
         transform translateY(0)
         opacity .98
