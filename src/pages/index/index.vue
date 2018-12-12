@@ -165,7 +165,12 @@ export default {
         wx.hideLoading()
       } catch (e) {
         wx.hideLoading()
-        utils.showError(e.message)
+        this.utils.pf('showModal', {
+          title: '提示',
+          showCancel: false,
+          content: e.message
+        })
+        // utils.showError(e.message, 1500)
       }
     }
   },
