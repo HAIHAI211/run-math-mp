@@ -3,27 +3,40 @@ import {pf} from '@/utils'
 import * as api from '@/http/api'
 import auths from '@/utils/auths'
 
+// async function reLogin (commit) {
+//   try {
+//     // console.log('登录')
+//     const loginResult = await pf('login') // 重新登录
+//     // console.log('loginResult', loginResult)
+//     try {
+//       const result = await api.login({ code: loginResult.code }) // 将code发送给后台获取openid
+//       commit(types.SET_IS_LOGIN, true)
+//       commit(types.SET_OPEN_ID, result.data.openId)
+//       // console.log('登录成功')
+//     } catch (e) {
+//       // console.log('获取openid失败', e)
+//       commit(types.SET_IS_LOGIN, false)
+//       return Promise.reject(new Error('【self.server】登录失败'))
+//     }
+//   } catch (e) {
+//     // console.log('登录失败', e)
+//     commit(types.SET_IS_LOGIN, false)
+//     return Promise.reject(new Error('【wx.server】登录失败'))
+//   }
+// }
+
 async function reLogin (commit) {
   try {
-    console.log('登录')
     const loginResult = await pf('login') // 重新登录
-    console.log('loginResult', loginResult)
-    try {
-      const result = await api.login({ code: loginResult.code }) // 将code发送给后台获取openid
-      commit(types.SET_IS_LOGIN, true)
-      commit(types.SET_OPEN_ID, result.data.openId)
-      console.log('登录成功')
-    } catch (e) {
-      console.log('获取openid失败', e)
-      commit(types.SET_IS_LOGIN, false)
-      return Promise.reject(new Error('【self.server】登录失败'))
-    }
+    const result = await api.login({ code: loginResult.code }) // 将code发送给后台获取openid
+    commit(types.SET_IS_LOGIN, true)
+    commit(types.SET_OPEN_ID, result.data.openId)
   } catch (e) {
-    console.log('登录失败', e)
     commit(types.SET_IS_LOGIN, false)
-    return Promise.reject(new Error('【wx.server】登录失败'))
+    return Promise.reject(new Error('登录失败'))
   }
 }
+
 const actions = {
   [types.SET_SYSTEM_INFO] ({commit}) {
     wx.getSystemInfo({
@@ -32,25 +45,37 @@ const actions = {
       }
     })
   },
+  // async LOGIN ({commit, state}) {
+  //   // console.log('LOGIN')
+  //   try {
+  //     await pf('checkSession')
+  //     // console.log('checkSessionResult', checkSessionResult)
+  //     if (!state.openId) { // 本地openid缓存被清
+  //       // console.log('本地openid缓存被清')
+  //       try {
+  //         await reLogin(commit) // 不让reLogin抛出异常，否则会执行下面的【2次登陆】
+  //       } catch (e) {
+  //         return Promise.reject(e)
+  //       }
+  //     } else {
+  //       // console.log('session有效且openId存在')
+  //     }
+  //   } catch (e) { // session过期
+  //     // console.log('session过期', e)
+  //     await reLogin(commit) // 【2次登录】
+  //   }
+  // },
   async LOGIN ({commit, state}) {
-    console.log('LOGIN')
-    try {
-      const checkSessionResult = await pf('checkSession')
-      console.log('checkSessionResult', checkSessionResult)
-      if (!state.openId) { // 本地openid缓存被清
-        console.log('本地openid缓存被清')
-        try {
+    wx.checkSession({
+      success: async () => {
+        if (!state.openId) { // 本地openid缓存被清
           await reLogin(commit) // 不让reLogin抛出异常，否则会执行下面的【2次登陆】
-        } catch (e) {
-          return Promise.reject(e)
         }
-      } else {
-        console.log('session有效且openId存在')
+      },
+      fail: async () => {
+        await reLogin(commit)
       }
-    } catch (e) { // session过期
-      console.log('session过期', e)
-      await reLogin(commit) // 【2次登录】
-    }
+    })
   },
   async AUTH_OF_WERUN ({commit}) {
     const isAuthOfWerun = await auths.auth('scope.werun')
@@ -62,10 +87,10 @@ const actions = {
   },
   async REPORT_OF_WERUN ({commit, state}) {
     if (state.isLogin && state.openId && state.authWerun) {
-      console.log('【可以获取步数了哦哦哦哦】')
+      // console.log('【可以获取步数了哦哦哦哦】')
       const {encryptedData, iv} = await pf('getWeRunData')
-      console.log('ed', encryptedData)
-      console.log('iv', iv)
+      // console.log('ed', encryptedData)
+      // console.log('iv', iv)
       await api.decrypt({
         encryptedData,
         iv,

@@ -95,7 +95,7 @@ export default {
   watch: {
     authWerun (newV, oldV) {
       if (oldV === false && newV) { // 授权必须是被拒绝，然后现在同意了才能进入这儿
-        console.log('前拒后同意')
+        // console.log('前拒后同意')
         this._getSteps() // 因为用户可能在页面长时间停留后再同意授权，此时session可能失效，故调用_loginStuff()而非只调用_getStep()
       }
     }
@@ -112,10 +112,10 @@ export default {
           this.netError = false
           wx.hideLoading()
           wx.stopPullDownRefresh()
-          console.log('ranks、gifts、advs', ranks, gifts, advs)
+          // console.log('ranks、gifts、advs', ranks, gifts, advs)
         }))
         .catch((e) => {
-          console.log('错误原因', e)
+          // console.log('错误原因', e)
           this.netError = true
           wx.hideLoading()
           wx.stopPullDownRefresh()
@@ -136,7 +136,7 @@ export default {
         wx.hideLoading()
         this.signCoin = result.data.getMathCoin
         this.signPopShow = true
-        console.log('签到结果天数+兑换得到的数学币', result)
+        // console.log('签到结果天数+兑换得到的数学币', result)
         this.FETCH_USER_INFO()
       } catch (e) {
         wx.hideLoading()
@@ -175,14 +175,14 @@ export default {
     }
   },
   async onLoad (option) {
-    console.log('onLoad页面', option)
+    // console.log('onLoad页面', option)
     // wx.showShareMenu({
     //   // 是否使用带 shareTicket 的转发
     //   withShareTicket: true
     // })
     // 上报分享
     if (option.openId) {
-      console.log('分享', option.openId)
+      // console.log('分享', option.openId)
       api.share({
         id: option.openId
       })
@@ -190,13 +190,13 @@ export default {
     this._load()
   },
   async onPullDownRefresh () { // 下拉刷新
-    console.log('下拉刷新')
+    // console.log('下拉刷新')
     this._load()
   },
   onShareAppMessage: function (res) {
     if (res.from === 'button') {
       // 来自页面内转发按钮
-      console.log(res.target)
+      // console.log(res.target)
     }
     return {
       title: '极客数学帮',

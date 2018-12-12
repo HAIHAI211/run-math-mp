@@ -190,7 +190,6 @@ export default {
     pageIndex (v) {
       this.activeBarIndex = -1
       this.loadingState = 0
-      // wx.showTabBar()
       wx.startPullDownRefresh()
     },
     activeBarIndex (v) {
@@ -218,25 +217,10 @@ export default {
     },
     pickActiveItem (item, index) {
       if (this.activeBarIndex === index) {
-        // wx.showTabBar({
-        //   complete: () => {
-        //     this.activeBarIndex = -1
-        //   }
-        // })
         this.activeBarIndex = -1
         return
       }
-      if (index === 1) { // 如果是筛选下拉框，就隐藏系统的tabbar(此处代码无业务逻辑，单纯是为了样式美观一些)
-        // wx.hideTabBar({
-        //   complete: () => {
-        //
-        //   }
-        // })
-        this.activeBarIndex = index
-      } else {
-        // wx.showTabBar()
-        this.activeBarIndex = index
-      }
+      this.activeBarIndex = index
     },
     pickType (index) {
       this.activeTypeIndex = index
@@ -252,11 +236,6 @@ export default {
     },
     pickSx () {
       this.barClosedByConfirmBtn = true
-      // wx.showTabBar({
-      //   complete: () => {
-      //     this.activeBarIndex = -1
-      //   }
-      // })
       this.activeBarIndex = -1
       this.switchCellchecked = this.ShowSwitchCellchecked
       for (let i = 0; i < this.classes.length; i++) {
