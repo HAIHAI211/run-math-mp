@@ -36,7 +36,7 @@
           @click="pickType(typeIndex)"
         >{{ type.name }}</div>
       </div>
-      <div class="wrap-1" style="height:100%;" v-if="activeBarIndex === 1" @click.stop="">
+      <scroll-view scroll-y class="wrap-1" style="height:100%;" v-if="activeBarIndex === 1" @click.stop="">
         <div class="wrap-item"  v-for="(cla, claIndex) in classes" :key="claIndex">
           <div class="title">{{ cla.name }}</div>
           <div class="btns-container">
@@ -48,7 +48,7 @@
             </div>
           </div>
         </div>
-        <div class="wrap-item" :style="{paddingBottom: '60rpx'}">
+        <div class="wrap-item" :style="{paddingBottom: '45rpx'}">
           <div class="title" style="padding-bottom: 16rpx">其他</div>
           <switch-cell
             class="vsc"
@@ -57,7 +57,7 @@
             @change="onSwitchCellChange"></switch-cell>
         </div>
         <div class="confirm-btn" @click="pickSx()" style="margin: 0 auto;">确定</div>
-      </div>
+      </scroll-view>
       <div class="wrap-2" v-if="activeBarIndex === 2">
         <div
           :class="['wrap-item',
@@ -190,7 +190,7 @@ export default {
     pageIndex (v) {
       this.activeBarIndex = -1
       this.loadingState = 0
-      wx.showTabBar()
+      // wx.showTabBar()
       wx.startPullDownRefresh()
     },
     activeBarIndex (v) {
@@ -218,21 +218,23 @@ export default {
     },
     pickActiveItem (item, index) {
       if (this.activeBarIndex === index) {
-        wx.showTabBar({
-          complete: () => {
-            this.activeBarIndex = -1
-          }
-        })
+        // wx.showTabBar({
+        //   complete: () => {
+        //     this.activeBarIndex = -1
+        //   }
+        // })
+        this.activeBarIndex = -1
         return
       }
       if (index === 1) { // 如果是筛选下拉框，就隐藏系统的tabbar(此处代码无业务逻辑，单纯是为了样式美观一些)
-        wx.hideTabBar({
-          complete: () => {
-            this.activeBarIndex = index
-          }
-        })
+        // wx.hideTabBar({
+        //   complete: () => {
+        //
+        //   }
+        // })
+        this.activeBarIndex = index
       } else {
-        wx.showTabBar()
+        // wx.showTabBar()
         this.activeBarIndex = index
       }
     },
@@ -250,11 +252,12 @@ export default {
     },
     pickSx () {
       this.barClosedByConfirmBtn = true
-      wx.showTabBar({
-        complete: () => {
-          this.activeBarIndex = -1
-        }
-      })
+      // wx.showTabBar({
+      //   complete: () => {
+      //     this.activeBarIndex = -1
+      //   }
+      // })
+      this.activeBarIndex = -1
       this.switchCellchecked = this.ShowSwitchCellchecked
       for (let i = 0; i < this.classes.length; i++) {
         let cla = this.classes[i]
@@ -341,7 +344,7 @@ export default {
             font-size 30rpx
             color #000
             font-weight 400
-            padding 30rpx 0
+            padding 25rpx 0
           }
           .btns-container{
             display flex
