@@ -49,8 +49,11 @@
         </div>
       </van-tab>
       <van-tab title="商品介绍">
-        <div class="html-wrap">
-          <wxParse :content="info"/>
+        <!--<div class="html-wrap">-->
+          <!--<wxParse :content="info"/>-->
+        <!--</div>-->
+        <div class="introduce">
+          <image :src="url" v-for="url in info" class="introduce-img" mode="widthFix"/>
         </div>
       </van-tab>
     </van-tabs>
@@ -81,7 +84,7 @@ export default {
       recordList: [], // 兑换记录
       type: 0,
       presentType: '',
-      info: '',
+      info: '', // 介绍图片列表
       activeTabIndex: 0,
       current: 0,
       name: '',
@@ -220,6 +223,13 @@ export default {
   .gift-detail-page{
     .html-wrap{
       padding 0 20rpx 130rpx 20rpx
+    }
+    .introduce{
+      display flex
+      flex-direction column
+      .introduce-img{
+        width 750rpx
+      }
     }
     .swiper-wrap{
       position relative
