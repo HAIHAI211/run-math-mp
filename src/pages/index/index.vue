@@ -56,6 +56,7 @@
     </div>
     <auth-pop :show.sync="authPopShow"/>
     <pic-pop :show.sync="signPopShow" :type="2" url="/static/img/sign.png" :coin="signCoin"/>
+    <adv type="modal"/>
   </div>
 </template>
 <script>

@@ -10,7 +10,8 @@
     "pages/address/main",
     "pages/order-confirm/main",
     "pages/order/main",
-    "pages/video/main"
+    "pages/video/main",
+    "pages/web/main"
   ],
   "window": {
     "backgroundTextStyle": "dark",
