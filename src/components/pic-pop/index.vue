@@ -43,50 +43,6 @@ export default {
       type: Number, // 签到时获得的奖励币
       default: 0
     }
-  },
-  data () {
-    return {
-    }
-  },
-  computed: {
-    // selfUrl () {
-    //   if (this.type === 0) {
-    //     return '/static/img/Popup_window@2x.png'
-    //   } else if (this.type === 1) {
-    //     return '/static/img/Dialog_q@2x.png'
-    //   } else {
-    //     return this.url
-    //   }
-    // },
-    boldTitle () {
-      if (this.type === 0) {
-        return '6'
-      } else if (this.type === 1) {
-        return 'Q'
-      } else {
-        return ''
-      }
-    },
-    suffixTitle () {
-      if (this.type === 0) {
-        return '领精美礼品!'
-      } else if (this.type === 1) {
-        return '客服小姐姐为您解答'
-      } else {
-        return ''
-      }
-    },
-    detailBtnText () {
-      if (this.type === 0) {
-        return '关注公众号'
-      } else if (this.type === 1) {
-        return '联系客服'
-      } else {
-        return ''
-      }
-    }
-  },
-  methods: {
   }
 }
 </script>

@@ -6,8 +6,6 @@
 </template>
 <script>
 import {mapState} from 'vuex'
-// import { sleep } from '@/utils'
-// const txvContext = requirePlugin('tencentvideo')
 export default {
   data () {
     return {
@@ -16,18 +14,6 @@ export default {
   },
   computed: {
     ...mapState(['videoOrder'])
-  },
-  watch: {
-    async videoOrder (v) {
-      // if (v) {
-      //   this.txvContext = txvContext.getTxvContext('txv1')
-      // }
-    }
-  },
-  methods: {
-    requestFullScreen () {
-      // this.txvContext.requestFullscreen()
-    }
   }
 }
 </script>

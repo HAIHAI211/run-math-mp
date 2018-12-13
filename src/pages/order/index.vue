@@ -5,7 +5,8 @@
         <div class="order-list math">
           <div class="math-order" v-for="(morder,morderIndex) in activePage.list" :key="morderIndex">
             <div class="main">
-              <div class="icon type-doc"></div>
+              <!--<div class="icon type-doc"></div>-->
+              <image class="icon" :src="morder.coverPicUrl"/>
               <div class="right">
                 <div class="name">{{ morder.name }}</div>
                 <div class="price">
@@ -62,7 +63,6 @@ import {mapState, mapMutations} from 'vuex'
 import runLoading from '@/components/run-loading'
 import runBtn from '@/components/run-btn'
 import {mixinPullToRefresh} from '@/mixin'
-import {showError, openOnline, copy, showToast} from '@/utils'
 export default {
   mixins: [mixinPullToRefresh],
   components: {
@@ -96,18 +96,18 @@ export default {
       this.pageIndex = v.mp.detail.index
     },
     async _copy (no) {
-      await copy(no)
-      showToast('复制成功')
+      await this.utils.copy(no)
+      this.utils.showToast('复制成功')
     },
     async _openOnline (mathOrder) {
-      console.log('mathOrder', mathOrder)
+      // console.log('mathOrder', mathOrder)
       if (mathOrder.type === 0) { // 文档
         try {
-          const openDocumentResult = await openOnline(mathOrder.fileUrl)
-          console.log('openDocumentResult', openDocumentResult)
+          await this.utils.openOnline(mathOrder.fileUrl)
+          // console.log('openDocumentResult', openDocumentResult)
         } catch (e) {
-          console.log('openDocumentError', e)
-          showError('文件格式不支持在线查看')
+          // console.log('openDocumentError', e)
+          this.utils.showError('文件格式不支持在线查看')
         }
       } else if (mathOrder.type === 1) { // 视频
         this.SET_VIDEO_ORDER(mathOrder)
@@ -328,12 +328,6 @@ export default {
           }
         }
       }
-    }
-    .empty{
-      padding-top 300rpx
-      text-align center
-      color #333333
-      font-size 26rpx
     }
   }
 </style>

@@ -76,12 +76,12 @@
     methods: {
       ...mapMutations(['SET_USER_INFO']),
       _regionChange (e) {
-        console.log('picker发送选择改变，携带值为', e.mp.detail.value)
+        // console.log('picker发送选择改变，携带值为', e.mp.detail.value)
         this.region = e.mp.detail.value
       },
       _inputHandler (e, key) {
-        console.log(key, e.mp.detail.value)
-        console.log('_inputHandler')
+        // console.log(key, e.mp.detail.value)
+        // console.log('_inputHandler')
         this.SET_USER_INFO({
           [key]: e.mp.detail.value
         })

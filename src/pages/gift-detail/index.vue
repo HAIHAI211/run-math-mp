@@ -118,7 +118,7 @@ export default {
       for (let i = 0; i < data.recordList.length; i++) {
         let record = data.recordList[i]
         record.pojoNickName = record.nick_name.slice(0, 1) + '**'
-        console.log('change_time', record.change_time)
+        // console.log('change_time', record.change_time)
         let date = new Date(record.change_time)
         // let date = new Date('2018/11/20 07:00')
         let now = new Date()
@@ -146,7 +146,7 @@ export default {
       }
       console.log('this.type=', this.type)
       if (this.type === 2) { // 实物礼品
-        console.log('实物礼品')
+        // console.log('实物礼品')
         wx.redirectTo({
           url: '/pages/order-confirm/main'
         })
@@ -157,8 +157,8 @@ export default {
         this.submitLoading = true
         utils.showLoading()
         try {
-          const result = await placeOrder(params)
-          console.log('兑换虚拟礼品', result)
+          await placeOrder(params)
+          // console.log('兑换虚拟礼品', result)
           this.submitLoading = false
           this.FETCH_USER_INFO()
           wx.hideLoading()
@@ -166,7 +166,7 @@ export default {
             url: `/pages/change-success/main?giftId=${this.id}&giftType=${this.type}`
           })
         } catch (e) {
-          console.log('err', e)
+          // console.log('err', e)
           this.submitLoading = false
           wx.hideLoading()
           utils.showError(e.message)
@@ -175,7 +175,7 @@ export default {
     }
   },
   async onLoad (options) {
-    console.log('gift-detail页面onLoad', options)
+    // console.log('gift-detail页面onLoad', options)
     // 上报分享
     if (options.openId) {
       share({
@@ -186,7 +186,7 @@ export default {
     // this.type = this.gift.type
     this.id = parseInt(options.giftId)
     this.type = parseInt(options.giftType)
-    console.log('id type', this.id, this.type)
+    // console.log('id type', this.id, this.type)
     utils.showLoading()
     try {
       const { data } = await getGiftDetail({
@@ -196,7 +196,7 @@ export default {
       this._pojo(data)
       wx.hideLoading()
     } catch (e) {
-      console.log('yichang', e)
+      // console.log('yichang', e)
       wx.hideLoading()
       utils.showError()
     }
@@ -204,7 +204,7 @@ export default {
   onShareAppMessage: function (res) {
     if (res.from === 'button') {
       // 来自页面内转发按钮
-      console.log(res.target)
+      // console.log(res.target)
     }
     return {
       title: '极客数学帮',

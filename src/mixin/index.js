@@ -90,11 +90,11 @@ export const mixinPullToRefresh = {
         ...this.params
       }
       // 开始请求
-      console.log('请求列表的参数', params)
+      // console.log('请求列表的参数', params)
       this.loadingState = 1
       try {
         const result = await api[this.activeApi](params)
-        console.log(this.activeApi, result)
+        // console.log(this.activeApi, result)
         this.activePage.list = isRefresh ? result[this.listKeyName] : [...this.activePage.list, ...result[this.listKeyName]]
         this.activePage.pageCount = result[this.pageCountKeyName]
         if (this.activePage.pageNum < this.activePage.pageCount) { // 继续加载
@@ -103,18 +103,18 @@ export const mixinPullToRefresh = {
           this.loadingState = 2
         }
       } catch (e) {
-        console.log(e)
+        // console.log(e)
         this.loadingState = 3
       }
     }
   },
   async onPullDownRefresh () { // 下拉刷新
-    console.log('下拉刷新')
+    // console.log('下拉刷新')
     await this.fetchList()
     wx.stopPullDownRefresh()
   },
   async onReachBottom () { // 上拉加载
-    console.log('上拉加载')
+    // console.log('上拉加载')
     await this.fetchList(false)
   },
   async mounted () {
@@ -134,7 +134,7 @@ export const mixinLoginWerun = {
       await this.REPORT_OF_WERUN() // 上报微信运动数据给后台，返回是否成功的标志
       await this.FETCH_USER_INFO() // 获取用户信息
       await this._getRank()
-      console.log('getSteps成功')
+      // console.log('getSteps成功')
     }
   }
 }

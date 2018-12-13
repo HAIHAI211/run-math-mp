@@ -56,10 +56,6 @@
         <span class="iconfont icon-fanhui"/>
       </div>
     </div>
-    <!--<div class="ad-wrap">-->
-      <!--<div class="ad" :style="{backgroundImage: 'url(' + advs[advs.length - 1].picUrl +')'}" v-if="advs.length">-->
-      <!--</div>-->
-    <!--</div>-->
     <adv type="me"/>
     <pic-pop :type="1" :show.sync="picPopShow"/>
   </div>
@@ -76,10 +72,6 @@ export default {
   },
   data () {
     return {
-      avatar: '',
-      runDays: 1,
-      name: '',
-      ad: 'https://profile-1257124244.cos.ap-chengdu.myqcloud.com/micoapp/index_banner%402x.png', // 广告地址
       picPopShow: false
     }
   },
@@ -89,7 +81,7 @@ export default {
   methods: {
     ...mapActions(['FETCH_USER_INFO']),
     async _load () {
-      console.log('_load')
+      // console.log('_load')
       wx.showNavigationBarLoading()
       try {
         await this.FETCH_USER_INFO()
@@ -218,18 +210,5 @@ export default {
         }
       }
     }
-    .ad-wrap{
-      margin-top 20rpx
-      padding-bottom 30rpx
-      .ad{
-        bg-size(750rpx, 250rpx)
-      }
-    }
-/*    .contact{
-      position absolute
-      width 100%
-      height 100%
-      opacity 0
-    }*/
   }
 </style>

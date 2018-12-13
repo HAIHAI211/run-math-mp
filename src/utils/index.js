@@ -114,7 +114,7 @@ export async function openOnline (fileUrl) {
   const {tempFilePath} = await pf('downloadFile', {
     url: fileUrl
   })
-  console.log('tempFilePath', tempFilePath)
+  // console.log('tempFilePath', tempFilePath)
   // 预览文件
   return pf('openDocument', {
     filePath: tempFilePath

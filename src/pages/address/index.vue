@@ -25,7 +25,7 @@ export default {
   methods: {
     ...mapActions(['FETCH_USER_INFO', 'LOGIN']),
     async _save () {
-      console.log('save')
+      // console.log('save')
       this.utils.showLoading()
       const hasErr = await this._checkErr()
       if (hasErr) {
@@ -35,7 +35,7 @@ export default {
         await updateUserInfo()
         this.utils.showToast('保存成功')
       } catch (e) {
-        console.log('保存失败的真实原因', e)
+        // console.log('保存失败的真实原因', e)
         this.utils.showError()
       }
     }
@@ -44,8 +44,6 @@ export default {
     this.utils.showLoading()
     try {
       await this.FETCH_USER_INFO()
-    } catch (e) {
-      console.log(e)
     } finally {
       wx.hideLoading()
     }

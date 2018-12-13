@@ -160,14 +160,14 @@ export default {
         if (speed > 110 && this.more) {
           this.more = false
         }
-        console.log(speed > 0 ? '下拉' : '上滑', speed)
+        // console.log(speed > 0 ? '下拉' : '上滑', speed)
       }
       this.hasMove = false
     },
     async _itemInnerClick (item) {
-      console.log('item', item)
+      // console.log('item', item)
       if (item.canBeSteal && item.isTodayBeStolen) { // 回偷
-        console.log('可以回偷他！！')
+        // console.log('可以回偷他！！')
         try {
           this.utils.showLoading()
           const stealStepResult = await api.stealStep({
@@ -183,11 +183,11 @@ export default {
           })
           this.FETCH_USER_INFO()
           this._fetchStealMeList()
-          console.log('回偷结果', stealStepResult)
+          // console.log('回偷结果', stealStepResult)
         } catch (e) {
           wx.hideLoading()
           this.utils.showError(e.message, 1000)
-          console.log('错误', e)
+          // console.log('错误', e)
         }
       }
     },
@@ -202,13 +202,12 @@ export default {
       })
     },
     async _getuserinfo (e, index) { // 点击泡泡
-      console.log('userinfo', e.mp.detail.userInfo)
+      // console.log('userinfo', e.mp.detail.userInfo)
       this.userinfo = e.mp.detail.userInfo
       this.SET_AUTH_USER_INFO(!!this.userinfo)
       if (!this.authUserInfo) {
         return
       }
-      console.log('嘿嘿继续')
       if (!this.authWerun) {
         this.werunPopShow = true
         return
@@ -247,7 +246,7 @@ export default {
     async _fetchStealMeList () {
       const stealMeResult = await api.stealMeList()
       this.stealMeList = stealMeResult.data
-      console.log('stealMeResult', stealMeResult)
+      // console.log('stealMeResult', stealMeResult)
     },
     async _load (msg) {
       this.hasUpdateUserInfo = false
@@ -257,7 +256,7 @@ export default {
         await this._fetchStealMeList()
         wx.hideLoading()
       } catch (e) {
-        console.log(e)
+        // console.log(e)
         wx.hideLoading()
         this.utils.showError()
       }
@@ -267,11 +266,11 @@ export default {
     this._setNavigationStyle()
   },
   onShow () {
-    console.log('windowHeight', this.systemInfo.windowHeight)
+    // console.log('windowHeight', this.systemInfo.windowHeight)
     // 权限
     this.AUTH_OF_USER_INFO()
-    console.log('步数权限', this.authWerun) // 必须
-    console.log('用户权限', this.authUserInfo) // 可选
+    // console.log('步数权限', this.authWerun) // 必须
+    // console.log('用户权限', this.authUserInfo) // 可选
     this._load()
   }
   // onHide () {

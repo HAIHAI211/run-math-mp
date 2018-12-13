@@ -36,7 +36,7 @@
         this.submitLoading = true
         this.utils.showLoading()
         const hasErr = await this._checkErr()
-        console.log('hasErr', hasErr)
+        // console.log('hasErr', hasErr)
         if (hasErr) {
           return
         }
@@ -45,7 +45,7 @@
           presentId: this.gift.id,
           ...this.addressInfo
         }
-        console.log('params', params)
+        // console.log('params', params)
         try {
           await placeOrder(params)
           this.FETCH_USER_INFO()
@@ -55,7 +55,7 @@
             url: '/pages/change-success/main'
           })
         } catch (e) {
-          console.log(e)
+          // console.log(e)
           this.submitLoading = false
           wx.hideLoading()
           this.utils.showError(e.message, 1500)

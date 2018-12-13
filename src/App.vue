@@ -1,12 +1,5 @@
 <script>
 export default {
-  created () {
-    // console.log('App created')
-    // wx.hideTabBar()
-  },
-  mounted () {
-    // console.log('APP mounted')
-  }
 }
 </script>
 

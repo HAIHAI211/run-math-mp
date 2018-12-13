@@ -242,17 +242,17 @@ export default {
         let cla = this.classes[i]
         cla.values = [...cla.showValues]
       }
-      console.log('fg', this.fitGrade)
+      // console.log('fg', this.fitGrade)
       wx.startPullDownRefresh()
     },
     classBtnSelect (classIndex, i) {
       this.classes[classIndex].showValues[i] = !this.classes[classIndex].showValues[i]
       this.classes = [...this.classes]
-      console.log('values', this.classes[0].values)
-      console.log('showValues', this.classes[0].showValues)
+      // console.log('values', this.classes[0].values)
+      // console.log('showValues', this.classes[0].showValues)
     },
     onSwitchCellChange (e) {
-      console.log(e.mp)
+      // console.log(e.mp)
       this.ShowSwitchCellchecked = e.mp.detail
     }
   }
