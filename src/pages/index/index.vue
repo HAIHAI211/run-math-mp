@@ -56,7 +56,7 @@
     </div>
     <auth-pop :show.sync="authPopShow"/>
     <pic-pop :show.sync="signPopShow" :type="2" url="/static/img/sign.png" :coin="signCoin"/>
-    <adv type="modal"/>
+    <adv type="modal" :show.sync="modalShow"/>
   </div>
 </template>
 <script>
@@ -87,7 +87,8 @@ export default {
       signCoin: 0, // 签到成功后获得的奖励币数
       netError: true,
       rankList: [],
-      giftList: []
+      giftList: [],
+      modalShow: false
     }
   },
   computed: {
@@ -189,6 +190,9 @@ export default {
       })
     }
     this._load()
+  },
+  mounted () {
+    this.modalShow = true
   },
   async onPullDownRefresh () { // 下拉刷新
     // console.log('下拉刷新')

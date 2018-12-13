@@ -1,11 +1,11 @@
 <template>
-  <div class="adv-component" v-if="show">
+  <div class="adv-component" v-if="selfShow">
     <div class="adv-wrap" v-if="adUrl && type !== 'modal'">
       <div class="adv" :style="{backgroundImage: 'url('+ adUrl +')'}" @click="_toWebView"></div>
     </div>
     <div class="index-pop" v-if="adUrl && type === 'modal'">
       <image :src="adUrl" class="adv-img" @click="_toWebView"/>
-      <image src="/static/img/delete@2x.png" class="close" @click="show=false"/>
+      <image src="/static/img/delete@2x.png" class="close" @click="selfShow=false"/>
     </div>
   </div>
 </template>
@@ -13,6 +13,10 @@
 import {mapState} from 'vuex'
 export default {
   props: {
+    show: {
+      type: Boolean,
+      default: true
+    },
     type: {
       type: String,
       default: 'index'
@@ -20,7 +24,7 @@ export default {
   },
   data () {
     return {
-      show: true
+      selfShow: this.show
     }
   },
   computed: {
@@ -64,6 +68,14 @@ export default {
         case 'exchange':
           return this.getJumpUrlById(8)
       }
+    }
+  },
+  watch: {
+    show (v) {
+      this.selfShow = v
+    },
+    selfShow (v) {
+      this.$emit('update:show', v)
     }
   },
   methods: {
