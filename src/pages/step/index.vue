@@ -88,8 +88,9 @@ export default {
           dateLabel = '昨天'
           time = this.utils.formatHour(stealDate)
         } else {
-          dateLabel = ''
-          time = this.utils.formatDate(stealDate)
+          let moment = this.utils.moment(stealDate)
+          dateLabel = moment[0]
+          time = moment[1]
         }
         // let dateLabel = utils.timeGapFromNow(stealDate, new Date(), false)
         if (!dateLabels.includes(dateLabel)) {

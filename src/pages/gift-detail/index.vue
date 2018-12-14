@@ -2,12 +2,12 @@
   <div class="gift-detail-page">
     <div class="swiper-wrap">
       <swiper class="swiper" :current="current" @change="swiperChange" :interval="2000" autoplay>
-        <swiper-item v-for="(imgUrl,imgUrlIndex) in infoPicUrlListFormat" :key="imgUrlIndex">
+        <swiper-item v-for="(imgUrl,imgUrlIndex) in InfoPicUrlListFormat" :key="imgUrlIndex">
           <image :src="imgUrl" class="slide-image"/>
         </swiper-item>
       </swiper>
       <div class="my-indicator">
-        <span class="current">{{ current + 1 }}</span> /<span>{{ infoPicUrlListFormat.length }}</span>
+        <span class="current">{{ current + 1 }}</span> /<span>{{ InfoPicUrlListFormat.length }}</span>
       </div>
     </div>
     <div class="gift-info">
@@ -53,7 +53,7 @@
           <!--<wxParse :content="info"/>-->
         <!--</div>-->
         <div class="introduce">
-          <image :src="url" v-for="url in info" class="introduce-img" mode="widthFix"/>
+          <image :src="url" v-for="(url,urlIndex) in infoFormat" :key="urlIndex" class="introduce-img" mode="widthFix"/>
         </div>
       </van-tab>
     </van-tabs>
@@ -80,11 +80,11 @@ export default {
       price: 0,
       postage: 0, // 2
       originalPrice: 0, // 2
-      infoPicUrlListFormat: [],
+      InfoPicUrlListFormat: [],
       recordList: [], // 兑换记录
       type: 0,
       presentType: '',
-      info: '', // 介绍图片列表
+      infoFormat: '', // 介绍图片列表
       activeTabIndex: 0,
       current: 0,
       name: '',
@@ -108,8 +108,8 @@ export default {
       this.name = data.name
       this.totalAmount = data.totalAmount // 剩余总数
       this.price = data.price
-      this.info = data.info // 介绍
-      this.infoPicUrlListFormat = data.infoPicUrlListFormat // 待定
+      this.infoFormat = data.infoFormat // 介绍
+      this.InfoPicUrlListFormat = data.InfoPicUrlListFormat // 待定
       if (this.type === 0) {
         this.presentType = data.presentType
       }
