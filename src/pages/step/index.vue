@@ -47,6 +47,7 @@ import {mixinLoginWerun} from '@/mixin'
 import tabBar from '@/components/tab-bar'
 import authPop from '@/components/auth-pop'
 import * as api from '@/http/api'
+import { sleep } from '../../utils'
 export default {
   mixins: [mixinLoginWerun],
   components: {
@@ -120,7 +121,7 @@ export default {
     }
   },
   watch: {
-    bubbleClicks (v) {
+    async bubbleClicks (v) {
       if (!v || !v.length) {
         this.utils.pf('showModal', {
           title: '提示',
@@ -134,6 +135,7 @@ export default {
           return
         }
       }
+      await sleep(500)
       this._load('正在收集新泡泡')
     }
   },
