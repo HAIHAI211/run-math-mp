@@ -25,9 +25,7 @@
           <div class="old" v-if="type===2">原价￥{{ originalPrice }}</div>
         </div>
         <div class="share">
-          <div class="btn-wrap">
-            <run-btn openType="share"/>
-          </div>
+          <button open-type="share" style="position:absolute;width:100%;height:100%;opacity: 0;"></button>
           <span class="share-title">分享好友</span>
           <span class="iconfont icon-fenxiang"/>
         </div>
@@ -327,6 +325,7 @@ export default {
           display flex
           align-items center
           color main-color
+          position relative
           .btn-wrap{
             position absolute
             top 0
