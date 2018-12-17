@@ -16,7 +16,7 @@
               </div>
             </div>
             <div class="bottom">
-              <div class="btn btn-see" @click="_openOnline(morder)">查看</div>
+              <div class="btn btn-see" @click="_openOn(morder)">查看</div>
               <div class="btn btn-download" v-if="morder.fileKey" @click="_download(morder.fileKey)">下载</div>
             </div>
           </div>
@@ -103,13 +103,46 @@ export default {
       // console.log('mathOrder', mathOrder)
       if (mathOrder.type === 0) { // 文档
         try {
+          this.utils.showLoading()
           await this.utils.openOnline(mathOrder.fileUrl)
+          wx.hideLoading()
           // console.log('openDocumentResult', openDocumentResult)
         } catch (e) {
-          // console.log('openDocumentError', e)
-          this.utils.showError('文件格式不支持在线查看')
+          console.log('openDocumentError', e)
+          wx.hideLoading()
+          this.utils.showError(e.message)
         }
       } else if (mathOrder.type === 1) { // 视频
+        this.SET_VIDEO_ORDER(mathOrder)
+        wx.navigateTo({
+          url: '/pages/video/main'
+        })
+      }
+    },
+    async _openOn (mathOrder) {
+      if (mathOrder.type === 0) {
+        this.utils.showLoading()
+        wx.downloadFile({
+          url: mathOrder.fileUrl,
+          success (res) {
+            const filePath = res.tempFilePath
+            wx.openDocument({
+              filePath,
+              success (res) {
+                console.log('打开文档成功')
+              },
+              fail (e) {
+                wx.hideLoading()
+                console.log(e)
+              }
+            })
+          },
+          fail (e) {
+            wx.hideLoading()
+            console.log(e)
+          }
+        })
+      } else if (mathOrder.type === 1) {
         this.SET_VIDEO_ORDER(mathOrder)
         wx.navigateTo({
           url: '/pages/video/main'

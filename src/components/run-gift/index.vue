@@ -77,7 +77,7 @@ export default {
       margin-bottom main-gap
       .left{
         flex 0 0 auto
-        bg-size(172rpx,197rpx)
+        bg-size(200rpx,200rpx)
         margin-right 39rpx
         &.type-doc{
           bg-image('wps')
@@ -124,7 +124,7 @@ export default {
       display flex
       .left{
         flex 0 0 auto
-        bg-size(205rpx,205rpx)
+        bg-size(200rpx,200rpx)
         margin-right 31rpx
       }
       .right{
