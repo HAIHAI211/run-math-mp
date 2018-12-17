@@ -50,7 +50,7 @@
         <!--<div class="html-wrap">-->
           <!--<wxParse :content="info"/>-->
         <!--</div>-->
-        <div class="introduce">
+        <div class="introduce" style="padding-bottom: 130rpx;">
           <image :src="url" v-for="(url,urlIndex) in infoFormat" :key="urlIndex" class="introduce-img" mode="widthFix"/>
         </div>
       </van-tab>
