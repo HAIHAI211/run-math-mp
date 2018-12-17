@@ -129,17 +129,20 @@ export default {
             wx.openDocument({
               filePath,
               success (res) {
-                console.log('打开文档成功')
+                // console.log('打开文档成功')
+                wx.hideLoading()
               },
               fail (e) {
                 wx.hideLoading()
-                console.log(e)
+                this.utils.showError(e.message)
+                // console.log(e)
               }
             })
           },
           fail (e) {
             wx.hideLoading()
-            console.log(e)
+            this.utils.showError(e.message)
+            // console.log(e)
           }
         })
       } else if (mathOrder.type === 1) {
