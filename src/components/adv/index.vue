@@ -28,7 +28,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['advs']),
+    ...mapState(['advs', 'openId']),
     adUrl () {
       switch (this.type) {
         case 'index':
@@ -68,6 +68,26 @@ export default {
         case 'exchange':
           return this.getJumpUrlById(8)
       }
+    },
+    reportName () {
+      switch (this.type) {
+        case 'index':
+          return 'index_adv'
+        case 'modal':
+          return 'modal_adv'
+        case 'gift0':
+          return 'gift1_adv'
+        case 'gift1':
+          return 'gift2_adv'
+        case 'gift2':
+          return 'gift3_adv'
+        case 'gift3':
+          return 'gift4_adv'
+        case 'me':
+          return 'me_adv'
+        case 'exchange':
+          return 'exchange_adv'
+      }
     }
   },
   watch: {
@@ -80,6 +100,9 @@ export default {
   },
   methods: {
     _toWebView () {
+      wx.reportAnalytics(this.reportName, {
+        user_openid: this.openId
+      })
       wx.navigateTo({
         url: `/pages/web/main?src=${this.jumpUrl}`
       })

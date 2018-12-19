@@ -17,7 +17,7 @@
             </div>
             <div class="bottom">
               <div class="btn btn-see" @click="_openOn(morder)">查看</div>
-              <div class="btn btn-download" v-if="morder.fileKey" @click="_download(morder.fileKey)">下载</div>
+              <div class="btn btn-download" v-if="morder.fileKey" @click="_download(morder)">下载</div>
             </div>
           </div>
         </div>
@@ -87,8 +87,12 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_VIDEO_ORDER']),
-    _download (fileKey) {
-      this.fileKey = fileKey
+    _download (morder) {
+      wx.reportAnalytics('doc_download', {
+        doc_id: morder.id,
+        doc_name: morder.name
+      })
+      this.fileKey = morder.fileKey
       this.hintShow = true
     },
     tabChange (v) {
@@ -120,6 +124,10 @@ export default {
       }
     },
     async _openOn (mathOrder) {
+      wx.reportAnalytics('doc_preview', {
+        doc_id: mathOrder.id,
+        doc_name: mathOrder.name
+      })
       if (mathOrder.type === 0) {
         this.utils.showLoading()
         wx.downloadFile({
