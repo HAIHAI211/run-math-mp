@@ -47,6 +47,8 @@ export default {
           return this.getPicUrlById(7)
         case 'exchange':
           return this.getPicUrlById(8)
+        default:
+          return null
       }
     },
     jumpUrl () {
