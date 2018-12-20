@@ -12,7 +12,7 @@
         <div class="icon"></div>
         <span class="text">签到</span>
       </div>
-      <navigator class="rule" url="/pages/rule/main">活动规则></navigator>
+      <div class="rule">活动规则></div>
       <div class="share-btn up-down-animation"  v-if="!netError">
         <div class="icon"></div>
         <span class="text">分享即领数学币</span>
@@ -32,7 +32,7 @@
     </div>
     <div class="rank" v-if="!netError && rankList.length">
       <div class="rank-head">
-        <div class="icon"></div>
+        <navigator class="icon" url="/pages/download/main"></navigator>
         <div class="title" @click="_toStealCoinPage">偷步数赚数学币<div class="arrow"></div></div>
       </div>
       <scroll-view class="rank-scroll-view" scroll-x>

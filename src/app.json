@@ -11,7 +11,8 @@
     "pages/order-confirm/main",
     "pages/order/main",
     "pages/video/main",
-    "pages/web/main"
+    "pages/web/main",
+    "pages/download/main"
   ],
   "window": {
     "backgroundTextStyle": "dark",
