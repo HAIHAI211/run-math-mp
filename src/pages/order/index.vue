@@ -17,7 +17,7 @@
             </div>
             <div class="bottom">
               <div class="btn btn-see" @click="_openOn(morder)">查看</div>
-              <div class="btn btn-download" v-if="morder.fileKey" @click="_download(morder)">下载</div>
+              <div class="btn btn-download" @click="_download(morder)">下载</div>
             </div>
           </div>
         </div>
@@ -104,7 +104,7 @@ export default {
     },
     async _copy (no) {
       await this.utils.copy(no)
-      this.utils.showToast('复制成功')
+      // this.utils.showToast('复制成功')
     },
     async _openOnline (mathOrder) {
       // console.log('mathOrder', mathOrder)
