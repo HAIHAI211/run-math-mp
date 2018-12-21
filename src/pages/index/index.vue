@@ -12,7 +12,7 @@
         <div class="icon"></div>
         <span class="text">签到</span>
       </div>
-      <div class="rule">活动规则></div>
+      <navigator class="rule" url="/pages/rule/main">活动规则></navigator>
       <div class="share-btn up-down-animation"  v-if="!netError">
         <div class="icon"></div>
         <span class="text">分享即领数学币</span>
