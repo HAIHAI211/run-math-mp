@@ -47,7 +47,6 @@ import {mixinLoginWerun} from '@/mixin'
 import tabBar from '@/components/tab-bar'
 import authPop from '@/components/auth-pop'
 import * as api from '@/http/api'
-import { sleep } from '../../utils'
 export default {
   mixins: [mixinLoginWerun],
   components: {
@@ -80,20 +79,10 @@ export default {
       for (let i = 0; i < this.stealMeList.length; i++) {
         let stealItem = this.stealMeList[i]
         let stealDate = new Date(stealItem.stealTime)
-        let dateLabel = ''
-        let time = ''
-        if (this.utils.isToday(stealDate)) {
-          dateLabel = '今天'
-          time = this.utils.formatHour(stealDate)
-        } else if (this.utils.isYesterday(stealDate)) {
-          dateLabel = '昨天'
-          time = this.utils.formatHour(stealDate)
-        } else {
-          let moment = this.utils.moment(stealDate)
-          dateLabel = moment[0]
-          time = moment[1]
-        }
-        // let dateLabel = utils.timeGapFromNow(stealDate, new Date(), false)
+        let detailStealDate = this.$utils.harrisonDate.getDate(stealDate)
+        console.log('isToday', detailStealDate)
+        let dateLabel = detailStealDate.isToday ? '今天' : detailStealDate.isYesterday ? '昨天' : detailStealDate.formatDate
+        let time = detailStealDate.formatTime
         if (!dateLabels.includes(dateLabel)) {
           // console.log('dateLabels不包含' + dateLabel + '，现在将其收纳入库')
           dateLabels.push(dateLabel)
@@ -135,7 +124,7 @@ export default {
           return
         }
       }
-      await sleep(500)
+      await this.$utils.rest.sleep(500)
       this._load('正在收集新泡泡')
     }
   },

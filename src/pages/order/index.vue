@@ -53,17 +53,20 @@
 import {mapState, mapMutations} from 'vuex'
 import runLoading from '@/components/run-loading'
 import runBtn from '@/components/run-btn'
-import {mixinPullToRefresh} from '@/mixin'
+import PullToRefreshMixin from 'harrison-mp-utils/mixin/pullToRefreshMixin'
+import {getDocOrder, getRealOrder} from '@/http/api'
+
 export default {
-  mixins: [mixinPullToRefresh],
+  mixins: [PullToRefreshMixin],
   components: {
     runLoading,
     runBtn
   },
   data () {
     return {
-      apis: ['getDocOrder', 'getRealOrder'],
+      apis: [getDocOrder, getRealOrder],
       initPageNum: 1,
+      params: {},
       fileKey: '',
       hintShow: false
     }

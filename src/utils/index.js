@@ -4,11 +4,6 @@ function formatNumber (n) {
   return str[1] ? str : `0${str}`
 }
 
-export async function sleep (time = 1000) {
-  return new Promise((resolve, reject) => {
-    setTimeout(resolve, time)
-  })
-}
 export function formatTime (date, showHour = true) {
   const year = date.getFullYear()
   const month = date.getMonth() + 1
@@ -22,19 +17,6 @@ export function formatTime (date, showHour = true) {
   const t2 = [hour, minute, second].map(formatNumber).join(':')
 
   return showHour ? `${t1} ${t2}` : t1
-}
-export function moment (date) {
-  const year = date.getFullYear()
-  const month = date.getMonth() + 1
-  const day = date.getDate()
-
-  const hour = date.getHours()
-  const minute = date.getMinutes()
-
-  const t1 = [year, month, day].map(formatNumber).join('-')
-  const t2 = [hour, minute].map(formatNumber).join(':')
-
-  return [t1, t2]
 }
 
 export function formatDate (date) {

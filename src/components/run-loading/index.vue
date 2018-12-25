@@ -14,11 +14,11 @@
     computed: {
       loadingMsg () {
         let msg = ''
-        if (this.state === 1) {
+        if (this.state === this.$utils.harrisonEnum.LOADING_STATE_ENUM.IS_LOADING) {
           msg = '正在加载'
-        } else if (this.state === 2) {
+        } else if (this.state === this.$utils.harrisonEnum.LOADING_STATE_ENUM.ALL_OVER) {
           msg = '已显示全部'
-        } else if (this.state === 3) {
+        } else if (this.state === this.$utils.harrisonEnum.LOADING_STATE_ENUM.ERROR) {
           msg = '加载异常 请稍后重试'
         }
         return `${msg}`
