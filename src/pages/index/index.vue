@@ -133,7 +133,7 @@ export default {
       utils.showLoading()
       try {
         const result = await api.sign({
-          signTime: utils.formatTime(new Date())
+          signTime: this.$utils.harrisonDate.getDate(new Date()).fullFormatDate
         })
         wx.hideLoading()
         this.signCoin = result.data.getMathCoin
