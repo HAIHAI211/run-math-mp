@@ -111,9 +111,9 @@ export default {
       if (mathOrder.type === 0) { // 文档
         try {
           this.utils.showLoading()
-          await this.utils.openOnline(mathOrder.fileUrl)
+          const openDocumentResult = await this.utils.openOnline(mathOrder.fileUrl)
           wx.hideLoading()
-          // console.log('openDocumentResult', openDocumentResult)
+          console.log('openDocumentResult', openDocumentResult)
         } catch (e) {
           console.log('openDocumentError', e)
           wx.hideLoading()
