@@ -106,56 +106,50 @@ export default {
       await this.utils.copy(no)
       // this.utils.showToast('复制成功')
     },
-    async _openOnline (mathOrder) {
-      // console.log('mathOrder', mathOrder)
-      if (mathOrder.type === 0) { // 文档
-        try {
-          this.utils.showLoading()
-          const openDocumentResult = await this.utils.openOnline(mathOrder.fileUrl)
-          wx.hideLoading()
-          console.log('openDocumentResult', openDocumentResult)
-        } catch (e) {
-          console.log('openDocumentError', e)
-          wx.hideLoading()
-          this.utils.showError(e.message)
-        }
-      } else if (mathOrder.type === 1) { // 视频
-        this.SET_VIDEO_ORDER(mathOrder)
-        wx.navigateTo({
-          url: '/pages/video/main'
-        })
-      }
-    },
     async _openOn (mathOrder) {
       wx.reportAnalytics('doc_preview', {
         doc_id: mathOrder.id,
         doc_name: mathOrder.name
       })
       if (mathOrder.type === 0) {
-        this.utils.showLoading()
-        wx.downloadFile({
-          url: mathOrder.fileUrl,
-          success (res) {
-            const filePath = res.tempFilePath
-            wx.openDocument({
-              filePath,
-              success (res) {
-                // console.log('打开文档成功')
-                wx.hideLoading()
-              },
-              fail (e) {
-                wx.hideLoading()
-                this.utils.showError(e.message)
-                // console.log(e)
+        if (mathOrder.presentType === 'rar' || mathOrder.presentType === 'zip') {
+          wx.showModal({
+            title: '提示',
+            content: '文档为压缩包，无法在线预览，请复制链接到电脑端下载使用。如有问题，请加客服微信咨询。',
+            success (res) {
+              if (res.confirm) {
+                // console.log('用户点击确定')
+              } else if (res.cancel) {
+                // console.log('用户点击取消')
               }
-            })
-          },
-          fail (e) {
-            wx.hideLoading()
-            this.utils.showError(e.message)
-            // console.log(e)
-          }
-        })
+            }
+          })
+        } else {
+          this.utils.showLoading()
+          wx.downloadFile({
+            url: mathOrder.fileUrl,
+            success (res) {
+              const filePath = res.tempFilePath
+              wx.openDocument({
+                filePath,
+                success (res) {
+                  // console.log('打开文档成功')
+                  wx.hideLoading()
+                },
+                fail (e) {
+                  wx.hideLoading()
+                  this.utils.showError(e.message)
+                  // console.log(e)
+                }
+              })
+            },
+            fail (e) {
+              wx.hideLoading()
+              this.utils.showError(e.message)
+              // console.log(e)
+            }
+          })
+        }
       } else if (mathOrder.type === 1) {
         this.SET_VIDEO_ORDER(mathOrder)
         wx.navigateTo({
@@ -165,7 +159,7 @@ export default {
     }
   },
   onLoad (options) {
-    console.log(options)
+    // console.log(options)
     if (options.from === 'meMath') {
       this.pageIndex = 0
     } else if (options.from === 'mePhysical') {

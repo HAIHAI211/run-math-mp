@@ -76,11 +76,13 @@ import tab from '@/components/tab'
 import runGift from '@/components/run-gift'
 import focusIcon from '@/components/focus-icon'
 import {mixinPullToRefresh} from '@/mixin'
+// import PullToRefreshMixin from 'harrison-mp-utils/mixin/pullToRefreshMixin'
 import runLoading from '@/components/run-loading'
 import adv from '@/components/adv'
 
 export default {
   mixins: [mixinPullToRefresh],
+  // mixins: [PullToRefreshMixin],
   components: {
     tab,
     runGift,
@@ -132,7 +134,7 @@ export default {
           id: 1,
           name: '初中',
           tags: [6, 7, 8],
-          labels: ['初一', '初二', '初三'],
+          labels: ['七年级', '八年级', '九年级'],
           values: [false, false, false],
           showValues: [false, false, false]
         },

@@ -1,6 +1,7 @@
 // import runLoading from '@/components/run-loading'
 import { sleep } from '@/utils'
 import * as api from '@/http/api'
+import {LOADING_STATE_ENUM} from '@/enum'
 import { mapActions, mapState, mapGetters } from 'vuex'
 export const mixinShow = {
   props: {
@@ -42,7 +43,7 @@ export const mixinPullToRefresh = {
   },
   data () {
     return {
-      loadingState: 0, // 0:不可见 1:正在加载 2:全部加载完毕 3:异常
+      loadingState: LOADING_STATE_ENUM.NO_SHOW, // 0:不可见 1:正在加载 2:全部加载完毕 3:异常
       pageIndex: 0,
       apis: [],
       initPageNum: 0, // pageNum的初始页码
@@ -79,7 +80,7 @@ export const mixinPullToRefresh = {
         this.activePage.pageNum += 1
         if (this.activePage.pageNum > this.activePage.pageCount) {
           // todo 数据已经请求到了最后一页
-          this.loadingState = 2
+          this.loadingState = LOADING_STATE_ENUM.ALL_OVER
           this.activePage.pageNum -= 1
           return
         }
@@ -97,14 +98,10 @@ export const mixinPullToRefresh = {
         // console.log(this.activeApi, result)
         this.activePage.list = isRefresh ? result[this.listKeyName] : [...this.activePage.list, ...result[this.listKeyName]]
         this.activePage.pageCount = result[this.pageCountKeyName]
-        if (this.activePage.pageNum < this.activePage.pageCount) { // 继续加载
-          this.loadingState = 0 // 0:不可见 1:正在加载 2:全部加载完毕 3:异常
-        } else {
-          this.loadingState = 2
-        }
+        this.loadingState = this.activePage.pageNum < this.activePage.pageCount ? LOADING_STATE_ENUM.NO_SHOW : LOADING_STATE_ENUM.ALL_OVER // 0:不可见 1:正在加载 2:全部加载完毕 3:异常
       } catch (e) {
         // console.log(e)
-        this.loadingState = 3
+        this.loadingState = LOADING_STATE_ENUM.ERROR
       }
     }
   },
