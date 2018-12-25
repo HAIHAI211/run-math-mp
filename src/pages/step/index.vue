@@ -47,6 +47,7 @@ import {mixinLoginWerun} from '@/mixin'
 import tabBar from '@/components/tab-bar'
 import authPop from '@/components/auth-pop'
 import * as api from '@/http/api'
+import RUN_ENUM from '@/enum'
 export default {
   mixins: [mixinLoginWerun],
   components: {
@@ -81,7 +82,7 @@ export default {
         let stealDate = new Date(stealItem.stealTime)
         let detailStealDate = this.$utils.harrisonDate.getDate(stealDate)
         console.log('isToday', detailStealDate)
-        let dateLabel = detailStealDate.isToday ? '今天' : detailStealDate.isYesterday ? '昨天' : detailStealDate.formatDate
+        let dateLabel = detailStealDate.isToday ? RUN_ENUM.TODAY : detailStealDate.isYesterday ? RUN_ENUM.YESTERDAY : detailStealDate.formatDate
         let time = detailStealDate.formatTime
         if (!dateLabels.includes(dateLabel)) {
           // console.log('dateLabels不包含' + dateLabel + '，现在将其收纳入库')
