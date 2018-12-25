@@ -26,7 +26,7 @@ export const mixinShow = {
 }
 /**
  ** 引入mixinPullToRefresh的页面
- * 需要自定义如下data或computed
+ * 需要自定义如下data或computed或func
  * data
  *   apis 列表请求所对应的api名称数组
  *   initPageNum pageNum的初始页码
@@ -34,6 +34,8 @@ export const mixinShow = {
  *   pageCount 返回对象的pageCount的键名
  * computed
  *   params 自定义的请求参数
+ * func
+ *   api 接口方法
  *  components
  *   run-loading 加载组件（mpvue存在bug）
  * */
@@ -101,6 +103,9 @@ export const mixinPullToRefresh = {
         this.loadingState = this.activePage.pageNum < this.activePage.pageCount ? LOADING_STATE_ENUM.NO_SHOW : LOADING_STATE_ENUM.ALL_OVER // 0:不可见 1:正在加载 2:全部加载完毕 3:异常
       } catch (e) {
         // console.log(e)
+        if (!api) {
+          throw e
+        }
         this.loadingState = LOADING_STATE_ENUM.ERROR
       }
     }

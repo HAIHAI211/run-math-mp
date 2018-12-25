@@ -75,14 +75,13 @@
 import tab from '@/components/tab'
 import runGift from '@/components/run-gift'
 import focusIcon from '@/components/focus-icon'
-import {mixinPullToRefresh} from '@/mixin'
-// import PullToRefreshMixin from 'harrison-mp-utils/mixin/pullToRefreshMixin'
+import {getDocList, getRealList} from '@/http/api'
+import PullToRefreshMixin from 'harrison-mp-utils/mixin/pullToRefreshMixin'
 import runLoading from '@/components/run-loading'
 import adv from '@/components/adv'
 
 export default {
-  mixins: [mixinPullToRefresh],
-  // mixins: [PullToRefreshMixin],
+  mixins: [PullToRefreshMixin],
   components: {
     tab,
     runGift,
@@ -92,7 +91,7 @@ export default {
   },
   data () {
     return {
-      apis: ['getDocList', 'getRealList'],
+      apis: [getDocList, getRealList],
       initPageNum: 1,
       tabItems: ['数学资料', '实物礼品'],
       types: [

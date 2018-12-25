@@ -46,15 +46,6 @@
         </div>
       </van-tab>
     </van-tabs>
-    <!--<div class="hint" v-if="hintShow" @click="hintShow=false">-->
-      <!--<div class="content">-->
-        <!--<div class="title">提示</div>-->
-        <!--<div class="main">回复0，添加公众号后，在公众号回复{{fileKey}}获取文件</div>-->
-        <!--<div class="btn-wrap">-->
-          <!--<run-btn title="确定" openType="contact"/>-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
     <run-loading :state="loadingState"/>
   </div>
 </template>
