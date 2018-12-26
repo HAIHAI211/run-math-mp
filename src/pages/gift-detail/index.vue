@@ -122,7 +122,7 @@ export default {
         // console.log('change_time', record.change_time)
         let date = new Date(record.change_time)
         // let date = new Date('2018/11/20 07:00')
-        record.pojoTime = this.$utils.harrisonDate.timeGapFromNow(date)
+        record.pojoTime = this.$utils.harrisonDate.timeGapFromNow(date, {showDetail: false})
         this.recordList.push(record)
       }
       // this.recordList = data.recordList

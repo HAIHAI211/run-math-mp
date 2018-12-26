@@ -1,5 +1,5 @@
 <template>
-  <div class="run-gift" @click="_giftClick">
+  <div :class="['run-gift', {'hasChanged': gift.hasChanged}]" @click="_giftClick">
     <div class="math-gift" v-if="gift.type === 0 || gift.type === 1">
       <div :class="['left', 'type-' + gift.presentType, {'type-player': gift.type === 1}]" :style="[{backgroundImage: 'url('+ gift.coverPicUrl + ')'}]"></div>
       <div class="right">
@@ -67,6 +67,14 @@ export default {
   @import "~@/common/style/mixin.styl"
   @import "~@/common/style/color.styl"
   .run-gift{
+    &.hasChanged{
+      .math-gift,.physical-gift{
+        bg-image('icon_yin')
+        background-size 112rpx 83rpx
+        background-position 516rpx 110rpx
+        background-repeat no-repeat
+      }
+    }
     .math-gift{
       height 255rpx
       background #fff

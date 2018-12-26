@@ -32,7 +32,9 @@
     font-size 26rpx
     color #666
     height 70rpx
-    text-align center
     letter-spacing 1rpx
+    display flex
+    justify-content center
+    align-items center
   }
 </style>
