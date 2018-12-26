@@ -2,7 +2,7 @@
   <div class="index-page">
     <div class="top-bg">
       <div class="coin-center">
-        <span class="coin-hint">我的数学币</span>
+        <span class="coin-hint">我的数学币{{ scene }}</span>
         <span class="coin-num">{{ netError ? '--' : mathCoin }}</span>
         <span class="step-hint">可兑换步数{{ netError ? '--' : todayCanChangeStep }}</span>
       </div>
@@ -88,7 +88,8 @@ export default {
       netError: true,
       rankList: [],
       giftList: [],
-      modalShow: false
+      modalShow: false,
+      scene: 'xxx'
     }
   },
   computed: {
@@ -190,6 +191,24 @@ export default {
       })
     }
     this._load()
+    // if (option.scene) {
+    //   console.log('has scene')
+    //   let scene = decodeURIComponent(option.scene)
+    //   console.log('scene is ', scene)
+    //   this.scene = scene
+    //   // let arrPara = scene.split('&')
+    //   // let arr = []
+    //   // for (let i in arrPara) {
+    //   //   arr = arrPara[i].split('=')
+    //   //   wx.setStorageSync(arr[0], arr[1])
+    //   //   console.log('setStorageSync:', arr[0], '=', arr[1])
+    //   // }
+    // } else {
+    //   console.log('no scene')
+    //   this.scene = 'no scene'
+    // }
+    const result = wx.getLaunchOptionsSync()
+    console.log('xx', result)
   },
   mounted () {
     this.modalShow = true

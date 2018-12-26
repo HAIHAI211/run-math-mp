@@ -32,9 +32,10 @@
 			"current": 0,
 			"list": [
 				{
-					"id": -1,
+					"id": 0,
 					"name": "二维码扫描进入",
 					"pathName": "pages/index/main",
+					"query": "schoolname='紫金小区'",
 					"scene": "1011"
 				}
 			]
