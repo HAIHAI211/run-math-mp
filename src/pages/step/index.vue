@@ -17,7 +17,7 @@
         <div class="steal-num">{{ item.stealStepNum }}</div>
       </div>
     </div>
-      <scroll-view  class="content" :style="{height: (systemInfo.windowHeight - 130) + 'px'}" scroll-y v-if="stealMeFormatList">
+    <scroll-view  class="content" :style="{height: (systemInfo.windowHeight - 130) + 'px'}" scroll-y v-if="stealMeFormatList">
       <div class="wrap">
         <div class="steal-me-item" v-for="(item, stealMeIndex) in stealMeFormatList" :key="stealMeIndex">
           <div class="date-label" v-if="item.dateLabel">{{item.dateLabel}}</div>

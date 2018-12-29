@@ -2,7 +2,7 @@
   <div class="index-page">
     <div class="top-bg">
       <div class="coin-center">
-        <span class="coin-hint">我的数学币{{ scene }}</span>
+        <span class="coin-hint">我的数学币</span>
         <span class="coin-num">{{ netError ? '--' : mathCoin }}</span>
         <span class="step-hint">可兑换步数{{ netError ? '--' : todayCanChangeStep }}</span>
       </div>
@@ -88,8 +88,7 @@ export default {
       netError: true,
       rankList: [],
       giftList: [],
-      modalShow: false,
-      scene: 'xxx'
+      modalShow: false
     }
   },
   computed: {
@@ -207,8 +206,8 @@ export default {
     //   console.log('no scene')
     //   this.scene = 'no scene'
     // }
-    const result = wx.getLaunchOptionsSync()
-    console.log('xx', result)
+    // const result = wx.getLaunchOptionsSync()
+    // console.log('xx', result)
   },
   mounted () {
     this.modalShow = true

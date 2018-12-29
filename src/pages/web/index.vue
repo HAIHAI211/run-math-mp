@@ -5,7 +5,7 @@
 export default {
   data () {
     return {
-      src: 'https://mp.weixin.qq.com'
+      src: ''
     }
   },
   onLoad (options) {
