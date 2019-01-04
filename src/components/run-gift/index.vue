@@ -11,8 +11,7 @@
       </div>
     </div>
     <div class="physical-gift" v-if="gift.type === 2">
-      <div class="left"
-           :style="{backgroundImage: 'url(' + gift.coverPicUrl + ')'}"></div>
+      <div class="left"></div>
       <div class="right">
         <div class="right-top">{{ gift.name }}</div>
         <div class="right-middle">
