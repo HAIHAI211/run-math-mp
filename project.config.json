@@ -11,6 +11,8 @@
 	"compileType": "miniprogram",
 	"appid": "wx4badd3f7b610bc77",
 	"projectname": "run-math-mp",
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
 	"condition": {
 		"search": {
 			"current": -1,
